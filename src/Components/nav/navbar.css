@@ -1,0 +1,61 @@
+:root {
+  --navbar: #2f55ac;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+.brand {
+}
+.logo {
+  background-repeat: no-repeat;
+  width: auto;
+}
+.navbar-toggler {
+  display: block;
+  background-color: aliceblue;
+}
+
+.navlinks {
+  align-content: center;
+  background-color: var(--navbar);
+}
+.navlink {
+  opacity: 1;
+  text-decoration: none;
+  color: rgb(238, 237, 237);
+  font-weight: 350;
+  font-size: 3.5ch;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.navlink:hover {
+  color: #2c2c30;
+}
+@media screen and (max-width: 1200px) {
+  .profile {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 768px) {
+  .navlink {
+    font-size: 3ch;
+  }
+}
+/* 769 px higher */
+@media screen and (min-width: 768px) {
+  .navbar-toggler {
+       margin-right: 5ch;
+  }
+}
+@media screen and (max-width: 480px) {
+  .navlink {
+    font-size: 2.5ch;
+    text-align: center;
+  }
+  .nav-item {
+    text-align: center;
+  }
+}
+
