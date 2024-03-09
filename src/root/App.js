@@ -1,6 +1,7 @@
 import { BrowserRouter,Route ,Routes } from "react-router-dom";
 import DormReview from "../Pages/dormReview/DormReview";
 import Navi from "../Components/nav/Navi";
+import Dorms from "../Pages/dorms/Dorms";
 function App() {
   return (
     <div >
@@ -8,9 +9,11 @@ function App() {
      <Navi/>
 
      <Routes>
-      <Route path="/DormReview" Component={DormReview}>
+     
+      <Route path="/DormReview" Component={DormReview}/>
+      {/* <Route path="/Dorms" Component={Dorms}/> */}
+      
 
-      </Route>
      </Routes>
      </BrowserRouter>
     </div>

@@ -49,7 +49,7 @@ function Navi(args) {
   */
 
   return (
-    <div className="navlinks fluid mb-1">
+    <div className="navlinks fluid ">
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
           <Navbar className="navbar" fixed="fixed" expand="xl" {...args}>
