@@ -130,6 +130,8 @@ body.active-modal {
  height: 50%;
  background-color: rgb(44, 39, 39);
 }
+
+
 @media screen and (min-width: 1201px) {
   .slider-card {
     width: 30%;
@@ -141,6 +143,19 @@ body.active-modal {
     justify-content: center;
     align-items: center;
     align-content: center;
+    
+  }
+  .svgbH{
+    font-size: large;
+    
+  }
+}
+@media screen and (max-width: 320px) {
+  .roomsDropdown{
+    width: 100%;
+  }
+  .svgbH{
+    font-size: smaller;
     
   }
 }

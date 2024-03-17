@@ -30,6 +30,9 @@ import {
   Offcanvas,
   OffcanvasHeader,
   OffcanvasBody,
+  Form,
+  FormGroup,
+  Container,
 } from "reactstrap";
 import ReactCardSlider from "react-card-slider-component";
 
@@ -38,8 +41,12 @@ import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
 import roomimage2 from "../../Components/images/dorms/grandaras.png";
 
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
+import { BsCardImage, BsFillPeopleFill } from "react-icons/bs";
+import { IoPeopleSharp } from "react-icons/io5";
 
 import "../dormReview/dormReview.css";
+import "../dormReview/dormReviewComment.css";
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -332,8 +339,10 @@ function DormReview(args, Rargs, direction, ...argss) {
   } else {
     document.body.classList.remove("active-modal");
   }
-  //canvas visible
+  //Rezervation canvas visible
   const [visible, setVisible] = useState(false);
+  //comment canvas visible
+  const [commentvisible, setRezVisible] = useState(false);
   return (
     <div>
       <Row noGutters>
@@ -439,11 +448,12 @@ function DormReview(args, Rargs, direction, ...argss) {
 
         <Col xs={12} sm={12} md={12} lg={5} xl={5}>
           <div className="d-flex">
-            <h3 className="mx-5">Oda Müsaitlik Durumu </h3>
+            <h3 className="">Oda Müsaitlik Durumu </h3>
             <Dropdown
               isOpen={dropdownOpen}
               toggle={toggleDropdown}
               direction={"down"}
+              className="roomsDropdown"
             >
               <DropdownToggle color="success" style={{ fontWeight: 700 }} caret>
                 Blok ve Kat Seçimi
@@ -529,24 +539,45 @@ function DormReview(args, Rargs, direction, ...argss) {
 
         <Row noGutters>
           {occupancy.map((ocp) => (
-            <Col xs={12} sm={6} md={6} lg={4} xl={3}>
+            <Col xs={12} sm={6} md={6} lg={4} xl={3} xxl={2}>
               <div className=" roomCard ">
                 <Card inverse className="mb-5 my-2   " color={ocp.color}>
-                  <CardTitle style={{ textAlign: "end" }} tag="h5">
-                    Oda No : {ocp.person}
-                  </CardTitle>
-                  <CardText>
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
-                  </CardText>
+                  <Row>
+                    <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
+                      <IoPeopleSharp
+                        className="mx-2"
+                        style={{ width: 50, height: 75 }}
+                      />
+                    </Col>
+                    <Col noGutters xs={9} sm={9} md={9} lg={9} xl={9} xxl={9}>
+                      <CardTitle
+                        className="mx-4"
+                        style={{ textAlign: "end" }}
+                        tag="h5"
+                      >
+                        Oda No : {ocp.person}
+                      </CardTitle>
+                      <CardTitle
+                        className="mx-4 "
+                        tag="h5"
+                        style={{ textAlign: "end" }}
+                      >
+                        {ocp.person} Kişilik Oda
+                      </CardTitle>
+                    </Col>
+                  </Row>
                   <CardText className="svgb d-flex ">
-                    <h5 className="mt-2 mx-2 ">
-                      Toplam Kapasite: {ocp.person}
+                    <h5 className="svgbH mt-2 mx-2 ">
+                      Güncel Kapasite: 2/{ocp.person}
                     </h5>
-                    <CButton color="success" onClick={() => setVisible(true)}>
+                    <CButton
+                      className=""
+                      color="success"
+                      onClick={() => setVisible(true)}
+                    >
                       Rezervasyon Yap
                     </CButton>
+                    {/* Warning Canvas */}
                     <COffcanvas
                       placement="bottom"
                       visible={visible}
@@ -560,7 +591,8 @@ function DormReview(args, Rargs, direction, ...argss) {
                         />
                       </COffcanvasHeader>
                       <COffcanvasBody className="text-center">
-                        Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır. <br/>  Rezervasyonu Onaylıyor musunuz? <br/>
+                        Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır.{" "}
+                        <br /> Rezervasyonu Onaylıyor musunuz? <br />
                         <Button color="success" className="mt-2">
                           Gönder
                         </Button>
@@ -573,6 +605,100 @@ function DormReview(args, Rargs, direction, ...argss) {
           ))}
         </Row>
       </Row>
+      <Container >
+        <Row  >
+          <Col
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+            className="pb-4"
+          >
+            
+            <h2 className="text-center">Yorum Ve Değerlendirmeler</h2>
+            <CButton
+            className="w-25 CommentButton  "
+            style={{}}
+            color="success"
+            onClick={() => setRezVisible(true)}
+          >
+            Yorum Yap
+          </CButton>
+            <div className="comment mt-4 text-justify float-left">
+              <img
+                src="https://i.imgur.com/yTFUilP.jpg"
+                alt=""
+                className=" mx-1 rounded-circle"
+                width="40"
+                height="40"
+              />
+              <h4 className="text-white mx-2">Jhon Doe</h4>
+              <span>- 20 October, 2018</span>
+              <br />
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Accusamus numquam assumenda hic aliquam vero sequi velit
+                molestias doloremque molestiae dicta?
+              </p>
+            </div>
+            <div class="text-justify darker mt-4 float-right">
+                    <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40" height="40"/>
+                    <h4 className="text-white mx-2">Rob Simpson</h4>
+                    <span>- 20 October, 2018</span>
+                    <br/>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus numquam assumenda hic aliquam vero sequi velit molestias doloremque molestiae dicta?</p>
+                </div>
+          </Col>
+          
+          {/* Warning Canvas */}
+          <COffcanvas
+            placement="end"
+            visible={commentvisible}
+            onHide={() => setRezVisible(false)}
+          >
+            <COffcanvasHeader>
+              <COffcanvasTitle>
+                ! Lütfen Uygunsuz Kelimelerle Yorum Yapmayınız{" "}
+              </COffcanvasTitle>
+              <CCloseButton
+                className="text-reset"
+                onClick={() => setRezVisible(false)}
+              />
+            </COffcanvasHeader>
+            <COffcanvasBody className="text-center">
+              <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                <form className="Commentform">
+                  <div className="">
+                    <h4 className="text-white">Yorum Yap</h4>
+                    <label className="commentLabel" for="message"></label>
+                    <textarea
+                      name="msg"
+                      id=""
+                      msg
+                      cols="100"
+                      rows="15"
+                      class="form-control"
+                      placeholder="Yorum Yaz"
+                    ></textarea>
+                  </div>
+                  <div className="">
+                    <Button
+                      className="mt-5"
+                      color="success"
+                      type="button"
+                      id="post"
+                      class="btn"
+                    >
+                     Paylaş 
+                    </Button>
+                  </div>
+                </form>
+              </Col>
+            </COffcanvasBody>
+          </COffcanvas>
+        </Row>
+      </Container>
       {/* Room Properties shows */}
       {modal && (
         <div className="roomProps">
