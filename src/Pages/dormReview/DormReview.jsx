@@ -34,6 +34,9 @@ import {
   FormGroup,
   Container,
 } from "reactstrap";
+import { DataGrid } from "@mui/x-data-grid";
+
+
 import ReactCardSlider from "react-card-slider-component";
 
 import dormphoto from "../../Components/images/dorms/grandaras.png";
@@ -52,6 +55,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import PropTypes from "prop-types";
+import { Outlet } from "react-router-dom";
+import { Box, useTheme } from "@mui/material";
+import { tokens } from "../../theme";
 
 const items = [
   {
@@ -272,6 +278,8 @@ function DormReview(args, Rargs, direction, ...argss) {
         key={item.src}
       >
         <img
+          className="carouselimg"
+
           src={item.src}
           alt={item.altText}
           style={{
@@ -346,7 +354,7 @@ function DormReview(args, Rargs, direction, ...argss) {
   return (
     <div>
       <Row noGutters>
-        <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-5">
+        <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-5  ">
           <Carousel
             activeIndex={activeIndex}
             next={next}
@@ -404,14 +412,14 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
 
-        <Col xl={8} className="mt-5 ">
+        <Col xl={10} className="mt-5 ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider className="mb-5" {...settings}>
+          <Slider className="mb-5 " {...settings}>
             {rooms.map((room) => (
               <Col>
                 <Card
-                  className="mb-5 mt-1"
+                  className="mb-5 mt-1 "
                   color="light"
                   style={{
                     maxWidth: "18rem",
@@ -433,8 +441,8 @@ function DormReview(args, Rargs, direction, ...argss) {
                       {room.pricingText}
                     </CardSubtitle>
                     <CardText>{room.features}</CardText>
-                    <Button key={room.id} onClick={toggle}>
-                      Button
+                    <Button key={room.name} onClick={toggle}>
+                      Read More
                     </Button>
                   </CardBody>
                 </Card>
@@ -600,11 +608,15 @@ function DormReview(args, Rargs, direction, ...argss) {
                     </COffcanvas>
                   </CardText>
                 </Card>
+               
               </div>
             </Col>
           ))}
         </Row>
       </Row>
+
+
+      
       <Container >
         <Row  >
           <Col
@@ -721,6 +733,7 @@ function DormReview(args, Rargs, direction, ...argss) {
         </div>
       )}
     </div>
+    
   );
 }
 

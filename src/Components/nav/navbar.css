@@ -16,10 +16,12 @@ body {
   display: block;
   background-color: aliceblue;
 }
+.navbar{
+  background-color: var(--navbar);
 
+}
 .navlinks {
   align-content: center;
-  background-color: var(--navbar);
 }
 .navlink {
   opacity: 1;

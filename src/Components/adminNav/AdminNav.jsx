@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   AppstoreOutlined,
   ContainerOutlined,
@@ -10,10 +10,28 @@ import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
-  CalendarOutlined
-} from '@ant-design/icons';
-import { Button, Menu } from 'antd';
-import MenuItem from 'antd/es/menu/MenuItem';
+  CalendarOutlined,
+  HomeFilled,
+  UploadOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import { Layout, theme, Button, Menu, Drawer, Space, Switch } from "antd";
+import MenuItem from "antd/es/menu/MenuItem";
+import "../adminNav/adminNav.css";
+import { Outlet } from "react-router-dom";
+import {
+  CardImgOverlay,
+  Col,
+  Collapse,
+  Nav,
+  NavItem,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  Row,
+} from "reactstrap";
+import { CgProfile } from "react-icons/cg";
+import SideNav from "../layout/SideNav";
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -23,68 +41,136 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
-// const items = [
-//   getItem('Option 1', '1', <PieChartOutlined  />),
-//   getItem('Option 2', '2', <DesktopOutlined />),
-//   getItem('Option 3', '3', <ContainerOutlined />),
-//   getItem('Navigation One', 'sub1', <MailOutlined />, [
-//     getItem('Option 5', '5'),
-//     getItem('Option 6', '6'),
-//     getItem('Option 7', '7'),
-//     getItem('Option 8', '8'),
-//   ]),
-//   getItem('Navigation Two', 'sub2', <AppstoreOutlined />, [
-//     getItem('Option 9', '9'),
-//     getItem('Option 10', '10'),
-//     getItem('Submenu', 'sub3', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
-//   ]),
-// ];
+
 const AdminNav = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+  const { Header, Sider, Content } = Layout;
+
+  const [theme, setTheme] = useState("dark");
+  const changeTheme = (value) => {
+    setTheme(value ? "dark" : "light");
   };
+  //drawer
+
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState("left");
+  const [size, setSize] = useState();
+  const showDrawer = () => {
+    setOpen(true);
+    // setSize('large');
+  };
+  const onChange = (e) => {
+    setPlacement(e.target.value);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+  //
+  if (window.innerWidth >= 1024) {
+  }
+
   return (
-<div className="">
+    <>
+      <Layout className=" " style={{}}>
+        
+        <Drawer
+          theme={theme}
+          // size={size}
+          placement={placement}
+          width={250}
+          onClose={onClose}
+          open={open}
+          extra={
+            <Space>
+              <Button onClick={onClose}>Kapat</Button>
+              {/* <Button type="primary" onClick={onClose}>
+            OK
+          </Button> */}
+            </Space>
+          }
+        >
+          <Switch
+            checked={theme === "dark"}
+            onChange={changeTheme}
+            checkedChildren="Dark"
+            unCheckedChildren="Light"
+            className="mb-5 mx-5"
+          />
 
-    <div
-      style={{ marginLeft:0,
-        width: 256,
-      }}
-    >
-      <Button
-        type="primary"
-        onClick={toggleCollapsed}
-        style={{
-          marginBottom: 1,
-          marginTop:1,
-          width:50,
-          height:50,
-          textAlign:'center',
-          backgroundColor:"black",
-          opacity:0.75
+          <Sider className="sider " style={{}}>
+            <div className="demo-logo-vertical " />
+            <Menu theme={theme}>
+              <MenuItem>
+                <HomeOutlined className="mx-2 " />
+                Ana Sayfa
+              </MenuItem>
+              <MenuItem>
+                <HomeOutlined className="mx-2 " />
+                Ana Sayfa
+              </MenuItem>
+              <MenuItem>
+                <HomeOutlined className="mx-2 " />
+                Ana Sayfa
+              </MenuItem>
+              <MenuItem>
+                <HomeOutlined className="mx-2 " />
+                Ana Sayfa
+              </MenuItem>
+            </Menu>
+          </Sider>
+        </Drawer>
+
+        <Layout className="">
+        <Header
+        className="TopHeader mb-2"
+          style={{
+            
+            backgroundColor: "white",
+            
+          }}
+        >
+          <Button
+          type="primary"
+          icon={<MenuUnfoldOutlined />}
+          onClick={showDrawer}
+          // onClick={() => setCollapsed(!collapsed)}
+          style={{
+            fontSize: "16px",
+            width: 54,
+            height: 54,
+          }}
+        />
+        </Header>
+        {/* <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 280,
+            background: "",
+            borderRadius:"s"
+          }}
+        >
+          Content
+        </Content> */}
+      </Layout>
+
+        {/* <Sider
+        breakpoint="lg"
+        collapsedWidth="0"
+        onCollapse={(collapsed, type) => {
+          console.log(collapsed, type);
         }}
+        trigger={null}
+        width={250}
+        theme="light"
+        className={`sider-primary ant-layout-sider-primary ${
+          sidenavType === "#fff" ? "active-route" : ""
+        }`}
+        style={{ background: sidenavType }}
       >
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button>
-      <Menu
-        // defaultSelectedKeys={['1']}
-        // defaultOpenKeys={['sub1']}
-        mode="inline"
-        style={{height:"100%"}}
-        theme="dark"
-        inlineCollapsed={collapsed}
-        // items={items}
-      >
-        <MenuItem key="home" icon={<HomeOutlined/>} >Ana Sayfa</MenuItem>
-        <MenuItem key="students" icon={<UserOutlined />} >Öğrenci Listesi</MenuItem>
-        <MenuItem key="roomProps" icon={<MenuFoldOutlined/>} >Ana Sayfa</MenuItem>
-        <MenuItem key="Rezervations" icon={<CalendarOutlined/>} >Rezervasyonlar</MenuItem>
-        <MenuItem key="dormProps" icon={<SettingOutlined />} >Yurt Özellikleri</MenuItem>
-      </Menu>
-    </div>
-</div>
-
+        <SideNav color={sidenavColor} />
+      </Sider> */}
+      </Layout>
+    </>
   );
 };
 export default AdminNav;

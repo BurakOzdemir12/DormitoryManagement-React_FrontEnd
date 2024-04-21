@@ -17,6 +17,7 @@ import "../nav/navbar.css"
 
 // eklentiler
 import { CgProfile } from "react-icons/cg";
+import { Outlet } from "react-router-dom";
 
 function Navi(args) {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,7 +87,9 @@ function Navi(args) {
           </Navbar>
         </Col>
       </Row>
+    <Outlet/>
     </div>
+
   );
 }
 

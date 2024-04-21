@@ -158,4 +158,18 @@ body.active-modal {
     font-size: smaller;
     
   }
+  
 }
+@media screen and (max-width:481px){
+  .carouselimg{
+    
+    min-height: 30ch;
+  }
+}
+@media screen and (max-width:1024px){
+  .carouselimg{
+    
+    min-height: 40ch;
+  }
+}
+
