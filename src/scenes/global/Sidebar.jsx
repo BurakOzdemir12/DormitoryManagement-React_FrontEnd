@@ -177,8 +177,8 @@ const SideBarr = () => {
               Yurt İşlemleri
             </Typography>
             <Item
-              title="Oda ekleme/çıkarma"
-              to="/roomProps"
+              title="Oda İşlemleri"
+              to="/room"
               icon={<AddHomeWorkOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
