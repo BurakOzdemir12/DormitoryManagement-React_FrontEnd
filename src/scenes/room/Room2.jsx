@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   IconButton,
@@ -7,38 +7,39 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  colors,
   Fab,
 } from "@mui/material";
-import { blue, grey, indigo, lightBlue, red } from "@mui/material/colors";
-import { Field, FieldArray, Formik, setFieldValue } from "formik";
-
+import { Field, FieldArray, Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../Components/header/Header";
-import { useState } from "react";
+import { blue, grey, indigo, lightBlue, red } from "@mui/material/colors";
+import Checkbox from "@mui/material/Checkbox";
+////
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-
 const userSchema = yup.object().shape({
   roomNumber: yup.string().required("required"),
   roomCapacity: yup.string().required("required"),
   roomType: yup.string().required("required"),
-
-//   students: yup.string().required("required"),
+  //   studentCapacity:yup.string().required("required"),
+  roomStatu: yup.string().required("required"),
+  // studentAdd: yup.string().required("required"),
 });
 const initialValues = {
   roomNumber: "",
   roomCapacity: "",
   roomType: "",
-
-  students: [ { student: "" } ]
+  // studentCapacity: "",
+  roomStatu: "",
+  students: [{ student: "" }],
 };
-const Te = () => {
+const Room = () => {
+  //text field Adding
   const [textFieldsList, setTextFields] = useState([
     { id: 1, student: initialValues.student },
   ]); // State to hold text fields
-  // const [textFieldsList, setTextFields] = useState([{ id: 1, student: "" }]);
-
   const handleTextFieldChange = (event, index, setFieldValue) => {
     const { name, value } = event.target;
     const list = [...textFieldsList];
@@ -49,29 +50,29 @@ const Te = () => {
     setFieldValue(`students[${index}].student`, value);
   };
 
-  const handleTextFieldRemove = (index, setFieldValue,values) => {
-       // Update local state
-       const list = [...textFieldsList];
-       list.splice(index, 1);
-       setTextFields(list);
-     
-       // Update Formik state
-       const students = [...values.students];
-       students.splice(index, 1);
-       setFieldValue("students", students);
-     };
+  const handleTextFieldRemove = (index, setFieldValue, values) => {
+    // Update local state
+    const list = [...textFieldsList];
+    list.splice(index, 1);
+    setTextFields(list);
+
+    // Update Formik state
+    const students = [...values.students];
+    students.splice(index, 1);
+    setFieldValue("students", students);
+  };
   const handleTextFieldAdd = (setFieldValue) => {
     setTextFields([...textFieldsList, { student: "" }]);
-       // Update everytime
+    // Update everytime
     setFieldValue(`students[${textFieldsList.length}].student`, "");
   };
-
   // Room Statu Colors
   const fullWomenRoomColor = red[900];
   const emptyWomenRoomColor = red[300];
   const fullManRoomColor = lightBlue[900];
   const emptyManRoomColor = blue[300];
   const emptyRoom = grey[400];
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const handleFormSubmit = (values) => {
     console.log(values);
@@ -79,8 +80,8 @@ const Te = () => {
   return (
     <Box m="20px">
       <Header
-        title="ÖĞRENCİ EKLE"
-        subtitle="Öğrenci Ekleme, Güncelleme ve oda atama işlemi aşağıda yapılabilmektedir"
+        title="ODA İŞLEMLERİ"
+        subtitle="Aşağıda Oda Ekleme ve Güncelleme işlemlerini yapabilirsiniz"
       />
       <Formik
         onSubmit={handleFormSubmit}
@@ -94,15 +95,16 @@ const Te = () => {
           handleBlur,
           handleChange,
           handleSubmit,
+          isSubmitting,
           setFieldValue,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
-              display="grid "
+              display="grid"
               gap="40px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+              gridTemplateColumns="repeat(3,minmax(0,1fr))"
               sx={{
-                "& > div ": { gridColumn: isNonMobile ? undefined : "span 4" },
+                "& > div ": { gridColumn: isNonMobile ? undefined : "span 3" },
               }}
             >
               <TextField
@@ -144,7 +146,33 @@ const Te = () => {
                 helperText={touched.roomType && errors.roomType}
                 sx={{ gridColumn: "span 1" }}
               />
-               <RadioGroup
+              {/* <TextField
+              fullWidth
+              variant="filled"
+              type="number"
+              label="Öğrenci Kapasitesi"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.studentCapacity}
+              name="studentCapacity"
+              error={!!touched.studentCapacity && !!errors.studentCapacity}
+              helperText={touched.studentCapacity && errors.studentCapacity}
+              sx={{ gridColumn: "span 1" }}
+              /> */}
+              {/* <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Oda Durumu"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.roomStatu}
+                name="roomStatu"
+                error={!!touched.roomStatu && !!errors.roomStatu}
+                helperText={touched.roomStatu && errors.roomStatu}
+                sx={{ gridColumn: "span 2" }}
+              /> */}
+              <RadioGroup
                 row
                 fullWidth
                 aria-label="roomStatu"
@@ -288,7 +316,9 @@ const Te = () => {
                         // type="button"
                         adia-label="remove"
                         color="error"
-                        onClick={() => handleTextFieldRemove(index, setFieldValue,values)}
+                        onClick={() =>
+                          handleTextFieldRemove(index, setFieldValue, values)
+                        }
                         // className="remove-btn"
                       >
                         <RemoveIcon />
@@ -297,7 +327,7 @@ const Te = () => {
                     {textFieldsList.length - 1 === index &&
                       textFieldsList.length < 6 && (
                         <Fab
-                        onClick={() => handleTextFieldAdd(setFieldValue)}
+                          onClick={() => handleTextFieldAdd(setFieldValue)}
                           color="success"
                           aria-label="add"
                         >
@@ -325,4 +355,4 @@ const Te = () => {
   );
 };
 
-export default Te;
+export default Room;

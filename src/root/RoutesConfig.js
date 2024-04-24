@@ -15,6 +15,7 @@ import Students from "../scenes/students/Students";
 // import Contacts from "../scenes/contacts";
 // import Bar from "../scenes/bar";
 import Form from "../scenes/form/Form";
+import Room2 from "../scenes/room/Room2";
 import Room from "../scenes/room/Room";
 // import Line from "../scenes/line";
 // import Pie from "../scenes/pie";
@@ -44,6 +45,7 @@ const RoutesConfig = () => {
               {/* <Route path="/invoices" element={<Invoices/>}/> */}
               {/* <Route path="/bar" element={<Bar/>}/> */}
               <Route path="/form" element={<Form/>}/>
+              <Route path="/room2" element={<Room2/>}/>
               <Route path="/room" element={<Room/>}/>
               {/* <Route path="/line" element={<Line/>}/> */}
               {/* <Route path="/pie" element={<Pie/>}/> */}
