@@ -412,14 +412,14 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
 
-        <Col xl={10} className="mt-5 ">
+        <Col xl={10} className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider className="mb-5 " {...settings}>
+          <Slider className=" mb-5 " {...settings}>
             {rooms.map((room) => (
-              <Col>
+              <Col className="  ">
                 <Card
-                  className="mb-5 mt-1 "
+                  className=" mb-5 mt-1 "
                   color="light"
                   style={{
                     maxWidth: "18rem",
@@ -455,13 +455,13 @@ function DormReview(args, Rargs, direction, ...argss) {
         <hr className="hr mt-3" />
 
         <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-          <div className="d-flex">
-            <h3 className="">Oda Müsaitlik Durumu </h3>
+          <div className="d-flex divvv ">
+            <h3 className="divvv">Oda Müsaitlik Durumu </h3>
             <Dropdown
               isOpen={dropdownOpen}
               toggle={toggleDropdown}
               direction={"down"}
-              className="roomsDropdown"
+              className="roomsDropdown divvv"
             >
               <DropdownToggle color="success" style={{ fontWeight: 700 }} caret>
                 Blok ve Kat Seçimi
@@ -479,10 +479,10 @@ function DormReview(args, Rargs, direction, ...argss) {
             </Dropdown>
           </div>
         </Col>
-        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
-          <Row noGutters className="d-flex ">
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2 ">
+        <Col className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
+          <Row noGutters className="d-flex  ">
+            <Col  xs={2} sm={2} md={2} lg={2} xl={2}>
+              <div className=" text-center mt-2  ">
                 <h5>Erkek Boş</h5>
                 <svg width="20" height="20" className="">
                   <rect
@@ -545,10 +545,10 @@ function DormReview(args, Rargs, direction, ...argss) {
         </Col>
         <hr className="hr mt-3" />
 
-        <Row noGutters>
+        <Row noGutters >
           {occupancy.map((ocp) => (
-            <Col xs={12} sm={6} md={6} lg={4} xl={3} xxl={2}>
-              <div className=" roomCard ">
+            <Col className="divvv" xs={12} sm={6} md={6} lg={4} xl={3} xxl={2}>
+              <div className=" roomCard  ">
                 <Card inverse className="mb-5 my-2   " color={ocp.color}>
                   <Row>
                     <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>

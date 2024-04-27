@@ -13,11 +13,13 @@ import { Box, IconButton, Typography, colors, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import BarOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
@@ -26,11 +28,8 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import RoomPreferencesOutlinedIcon from "@mui/icons-material/RoomPreferencesOutlined";
 import AddHomeWorkOutlinedIcon from "@mui/icons-material/AddHomeWorkOutlined";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import longson from "../../Components/images/longson.jpg";
-
-
-
 
 const SideBarr = () => {
   const theme = useTheme();
@@ -47,7 +46,6 @@ const SideBarr = () => {
         onClick={() => setSelected(title)}
         icon={icon}
         style={{ color: colors.grey[100] }}
-        
       >
         <Typography>{title}</Typography>
         <Link to={to} />
@@ -59,7 +57,7 @@ const SideBarr = () => {
     <Box
       sx={{
         marginTop: 0,
-
+        height: "100%",
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
           height: 910,
@@ -138,8 +136,6 @@ const SideBarr = () => {
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            
-
             />
             <Typography
               variant="h6"
@@ -158,7 +154,7 @@ const SideBarr = () => {
             <Item
               title="Öğrenci Ekle"
               to="/form"
-              icon={<GroupAddIcon  />}
+              icon={<GroupAddIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -188,6 +184,20 @@ const SideBarr = () => {
               title="Yurt Özellikleri"
               to="/dormProps"
               icon={<RoomPreferencesOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Yorumlar"
+              to="/comments"
+              icon={<ChatOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="İstatistikler"
+              to="/statistics"
+              icon={<AssessmentOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

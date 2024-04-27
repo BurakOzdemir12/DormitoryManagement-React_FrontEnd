@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DormReview from "../Pages/dormReview/DormReview";
 import Navi from "../Components/nav/Navi";
-import AdminMain from "../Pages/adminMain/AdminMain";
 import Test from "../Pages/phptest/Test";
 // Admin Page
 import { ColorModeContext, useMode } from "../theme";
@@ -11,15 +10,14 @@ import Topbar from "../scenes/global/Topbar";
 import Sidebar from "../scenes/global/Sidebar";
 import Dashboard from "../scenes/dashboard/Index";
 import Students from "../scenes/students/Students";
-// import Invoices from "../scenes/invoices";
-// import Contacts from "../scenes/contacts";
-// import Bar from "../scenes/bar";
+import Comments from "../scenes/comments/Comments";
+import Reservations from "../scenes/reservations/Reservations";
 import Form from "../scenes/form/Form";
-import Room2 from "../scenes/room/Room2";
+// import Room2 from "../scenes/room/Room2";
 import Room from "../scenes/room/Room";
+import Bar from "../scenes/bar/Bar";
 // import Line from "../scenes/line";
-// import Pie from "../scenes/pie";
-// import FAQ from "../scenes/line/faq";
+import Pie from "../scenes/pie/Pie";
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 
@@ -41,14 +39,15 @@ const RoutesConfig = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/students" element={<Students/>}/>
-              {/* <Route path="/contacts" element={<Contacts/>}/> */}
-              {/* <Route path="/invoices" element={<Invoices/>}/> */}
-              {/* <Route path="/bar" element={<Bar/>}/> */}
               <Route path="/form" element={<Form/>}/>
-              <Route path="/room2" element={<Room2/>}/>
               <Route path="/room" element={<Room/>}/>
-              {/* <Route path="/line" element={<Line/>}/> */}
-              {/* <Route path="/pie" element={<Pie/>}/> */}
+              <Route path="/comments" element={<Comments/>}/>
+              <Route path="/statistics" element={<Bar/>}/>
+              <Route path="/pie" element={<Pie/>}/>
+              <Route path="/reservations" element={<Reservations/>}/>
+              {/* <Route path="/invoices" element={<Invoices/>}/> */}
+              {/* <Route path="/room2" element={<Room2/>}/> */}
+              
               {/* <Route path="/faq" element={<FAQ/>}/> */}
               {/* <Route path="/geography" element={<Geography/>}/> */}
               {/* <Route path="/calendar" element={<Calendar/>}/> */}

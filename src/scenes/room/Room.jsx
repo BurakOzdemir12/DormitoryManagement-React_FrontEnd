@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom'
 import {
   Box,
   IconButton,
@@ -8,6 +9,8 @@ import {
   FormControlLabel,
   Radio,
   Fab,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import { blue, grey, indigo, lightBlue, red } from "@mui/material/colors";
 import { Field, FieldArray, Formik, setFieldValue } from "formik";
@@ -49,38 +52,79 @@ const Te = () => {
     setFieldValue(`students[${index}].student`, value);
   };
 
-  const handleTextFieldRemove = (index, setFieldValue,values) => {
-       // Update local state
-       const list = [...textFieldsList];
-       list.splice(index, 1);
-       setTextFields(list);
+  // const handleTextFieldRemove = (index, setFieldValue,values) => {
+  //      // Update local state
+  //      const list = [...textFieldsList];
+  //      list.splice(index, 1);
+  //      setTextFields(list);
      
-       // Update Formik state
-       const students = [...values.students];
-       students.splice(index, 1);
-       setFieldValue("students", students);
-     };
-  const handleTextFieldAdd = (setFieldValue) => {
-    setTextFields([...textFieldsList, { student: "" }]);
-       // Update everytime
-    setFieldValue(`students[${textFieldsList.length}].student`, "");
+  //      // Update Formik state
+  //      const students = [...values.students];
+  //      students.splice(index, 1);
+  //      setFieldValue("students", students);
+  //    };
+  //    const handleTextFieldAdd = (setFieldValue) => {
+  //     const lastStudent = textFieldsList[textFieldsList.length - 1];
+  //     if (!lastStudent || !lastStudent.student || lastStudent.student.trim() !== "") {
+  //       // Add a new student only if the last student input is not empty or if there are no students yet
+  //       setTextFields([...textFieldsList, { student: "" }]);
+  //       setFieldValue(`students[${textFieldsList.length}].student`, "");
+  //     }
+  //   };
+  const handleTextFieldRemove = (index, setFieldValue, values) => {
+    // Update local state
+    const list = [...textFieldsList];
+    list.splice(index, 1);
+    setTextFields(list);
+  
+    // Update Formik state
+    const updatedStudents = [...values.students];
+    updatedStudents.splice(index, 1);
+    setFieldValue("students", updatedStudents);
   };
-
+  
+  const handleTextFieldAdd = (setFieldValue) => {
+    const lastStudent = textFieldsList[textFieldsList.length - 1];
+    if (!lastStudent || !lastStudent.student || lastStudent.student.trim() !== "") {
+      // Add a new student only if the last student input is not empty or if there are no students yet
+      const newList = [...textFieldsList, { student: "" }];
+      setTextFields(newList);
+      // Update Formik state
+      setFieldValue(`students[${newList.length - 1}].student`, "");
+    }
+  };
+  
   // Room Statu Colors
   const fullWomenRoomColor = red[900];
   const emptyWomenRoomColor = red[300];
   const fullManRoomColor = lightBlue[900];
   const emptyManRoomColor = blue[300];
   const emptyRoom = grey[400];
+  
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  
   const handleFormSubmit = (values) => {
+    // Filter out empty student entries
+    const filteredStudents = values.students.filter(student => student.student.trim() !== "");
+    values.students = filteredStudents;
+  
+    // Log the form values
     console.log(values);
+
+    setLoading(true); // Set loading state to true
+    setTimeout(() => {
+      // Simulate a 1-second delay
+      setLoading(false); // Set loading state to false after 1 second
+      navigate("/"); // Navigate to the Dashboard page
+    }, 2000);
   };
   return (
     <Box m="20px">
       <Header
-        title="ÖĞRENCİ EKLE"
-        subtitle="Öğrenci Ekleme, Güncelleme ve oda atama işlemi aşağıda yapılabilmektedir"
+        title="ODA EKLE"
+        subtitle="Oda Ekleme, Güncelleme ve Öğrenciyi Odaya atama gibi işlemler aşağıda yapılabilmektedir"
       />
       <Formik
         onSubmit={handleFormSubmit}
@@ -267,7 +311,7 @@ const Te = () => {
                   gridColumn: "span 4",
                 }}
               >
-                {textFieldsList.map((textField, index) => (
+                {/* {textFieldsList.map((textField, index) => (
                   <React.Fragment key={index}>
                     <TextField
                       key={index}
@@ -305,7 +349,44 @@ const Te = () => {
                         </Fab>
                       )}
                   </React.Fragment>
-                ))}
+                ))} */}
+
+{textFieldsList.map((textField, index) => (
+  <React.Fragment key={index}>
+    <TextField
+      key={index}
+      fullWidth
+      variant="filled"
+      type="text"
+      label="Öğrenci Adı"
+      onBlur={handleBlur}
+      value={values.students[index]?.student || ""} // Add a safe navigation operator '?'
+      name={`students[${index}].student`}
+      onChange={handleChange}
+      error={!!touched.students && !!errors.students}
+      helperText={touched.students && errors.students}
+    />
+
+    {textFieldsList.length !== 1 && (
+      <Fab
+        adia-label="remove"
+        color="error"
+        onClick={() => handleTextFieldRemove(index, setFieldValue, values)}
+      >
+        <RemoveIcon />
+      </Fab>
+    )}
+    {textFieldsList.length - 1 === index && textFieldsList.length < 6 && (
+      <Fab
+        onClick={() => handleTextFieldAdd(setFieldValue)}
+        color="success"
+        aria-label="add"
+      >
+        <AddIcon />
+      </Fab>
+    )}
+  </React.Fragment>
+))}
               </Box>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
@@ -315,13 +396,18 @@ const Te = () => {
                 variant="contained"
                 sx={{ height: 50, fontSize: 20, fontWeight: 600, width: "100" }}
               >
-                Kaydet
+                
+                {loading ? <CircularProgress  size={40} /> : "Kaydet"}
               </Button>
             </Box>
           </form>
         )}
       </Formik>
+
+      <Alert   variant="filled"  sx={{mt:"200px" ,mr:"0px",fontSize:25, gridColumn: "span 4",width:"30%"}} severity="success">Oda Başarıyla Kaydedildi</Alert>
+
     </Box>
+    
   );
 };
 
