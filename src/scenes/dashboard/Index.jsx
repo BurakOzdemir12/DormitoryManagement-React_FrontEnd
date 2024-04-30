@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Components/header/Header";
 import {
   Box,
@@ -22,7 +22,22 @@ import ProgressCircle from "../../Components/ProgressCircle";
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import NightShelterOutlinedIcon from "@mui/icons-material/NightShelterOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import { CButton, CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle } from "@coreui/react";
+import { Card, CardText, CardTitle, Col, Row } from "reactstrap";
+import { IoPeopleSharp } from "react-icons/io5";
+const occupancy = [
+  {
+    person: 1,
+    color: "danger",
+  },
+  { person: 2, color: "primary" },
+  { person: 1, color: "danger" },
+  { person: 3, color: "secondary" },
+  { person: 1, color: "primary" },
+];
 const Index = () => {
+  const [visible, setVisible] = useState(false);
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -233,8 +248,8 @@ const Index = () => {
           ))}
         </Box>
         </Box>
-
-
+        
+       
     </Box>
   );
 };

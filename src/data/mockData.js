@@ -4,6 +4,8 @@ export const mockDataTeam = [
   {
     id: 1,
     name: "Jon Snow",
+    lastName: "Jo",
+    studentNo:20000258,
     email: "jonsnow@gmail.com",
     age: 35,
     phone: "(665)121-5454",
@@ -12,6 +14,8 @@ export const mockDataTeam = [
   {
     id: 2,
     name: "Cersei Lannister",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "cerseilannister@gmail.com",
     age: 42,
     phone: "(421)314-2288",
@@ -20,6 +24,8 @@ export const mockDataTeam = [
   {
     id: 3,
     name: "Jaime Lannister",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "jaimelannister@gmail.com",
     age: 45,
     phone: "(422)982-6739",
@@ -28,6 +34,8 @@ export const mockDataTeam = [
   {
     id: 4,
     name: "Anya Stark",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "anyastark@gmail.com",
     age: 16,
     phone: "(921)425-6742",
@@ -36,6 +44,8 @@ export const mockDataTeam = [
   {
     id: 5,
     name: "Daenerys Targaryen",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "daenerystargaryen@gmail.com",
     age: 31,
     phone: "(421)445-1189",
@@ -44,6 +54,8 @@ export const mockDataTeam = [
   {
     id: 6,
     name: "Ever Melisandre",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "evermelisandre@gmail.com",
     age: 150,
     phone: "(232)545-6483",
@@ -52,6 +64,8 @@ export const mockDataTeam = [
   {
     id: 7,
     name: "Ferrara Clifford",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "ferraraclifford@gmail.com",
     age: 44,
     phone: "(543)124-0123",
@@ -60,6 +74,8 @@ export const mockDataTeam = [
   {
     id: 8,
     name: "Rossini Frances",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "rossinifrances@gmail.com",
     age: 36,
     phone: "(222)444-5555",
@@ -68,6 +84,8 @@ export const mockDataTeam = [
   {
     id: 9,
     name: "Harvey Roxie",
+    lastName: "Jo",
+    studentNo:20000193,
     email: "harveyroxie@gmail.com",
     age: 65,
     phone: "(444)555-6239",
@@ -398,16 +416,17 @@ export const mockBarData = [
 
 export const mockPieData = [
   {
-    id: "hack",
-    label: "hack",
+    id: "Erkek Dolu",
+    label: "Erkek Dolu",
     value: 239,
-    color: "hsl(104, 70%, 50%)",
+    color: "hsl(184, 70%, 50%)",
+    
   },
   {
     id: "make",
     label: "make",
     value: 170,
-    color: "hsl(184, 70%, 50%)",
+    color: "hsl(104, 70%, 50%)",
   },
   {
     id: "go",

@@ -17,7 +17,19 @@ const Students = () => {
     { field: "id", headerName: "ID" },
     {
       field: "name",
-      headerName: "Name",
+      headerName: "İsim",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "lastName",
+      headerName: "Soyisim",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "studentNo",
+      headerName: "Student No",
       flex: 1,
       cellClassName: "name-column--cell",
     },
@@ -39,8 +51,8 @@ const Students = () => {
       flex: 1,
     },
     {
-      field: "access",
-      headerName: "Access Level",
+      field: "statu",
+      headerName: "Kayıt Durumu ",
       flex: 1,
       renderCell: ({ row: { access } }) => {
         return (
