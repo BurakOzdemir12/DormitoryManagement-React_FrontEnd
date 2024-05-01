@@ -36,7 +36,6 @@ import {
 } from "reactstrap";
 import { DataGrid } from "@mui/x-data-grid";
 
-
 import ReactCardSlider from "react-card-slider-component";
 
 import dormphoto from "../../Components/images/dorms/grandaras.png";
@@ -56,7 +55,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
-import { Box, useTheme } from "@mui/material";
+import { Box, TablePagination, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 
 const items = [
@@ -88,6 +87,12 @@ const occupancy = [
   { person: 2, color: "primary" },
   { person: 1, color: "danger" },
   { person: 3, color: "secondary" },
+  { person: 1, color: "primary" },
+  { person: 3, color: "primary" },
+  { person: 1, color: "primary" },
+  { person: 1, color: "primary" },
+  { person: 2, color: "secondary" },
+  { person: 1, color: "primary" },
   { person: 1, color: "primary" },
 ];
 //rooms
@@ -279,7 +284,6 @@ function DormReview(args, Rargs, direction, ...argss) {
       >
         <img
           className="carouselimg"
-
           src={item.src}
           alt={item.altText}
           style={{
@@ -351,6 +355,18 @@ function DormReview(args, Rargs, direction, ...argss) {
   const [visible, setVisible] = useState(false);
   //comment canvas visible
   const [commentvisible, setRezVisible] = useState(false);
+
+  //handle Pagination for Room List
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <div>
       <Row noGutters>
@@ -380,7 +396,13 @@ function DormReview(args, Rargs, direction, ...argss) {
           </Carousel>
         </Col>
         <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-          <section>
+          <section
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+            }}
+          >
             <div className="">
               <h2> Yurt Özellikleri</h2>
               <ul className="check-list  mt-4">
@@ -396,7 +418,13 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
         <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-          <section>
+          <section
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+            }}
+          >
             <div className="">
               <h2 className=""> Oda Özellikleri</h2>
               <ul className="check-list mt-4">
@@ -412,20 +440,25 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
 
-        <Col xl={10} className="mt-5 divvv ">
+        <Col
+          
+          xl={10}
+          className="mt-5 divvv "
+        >
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider className=" mb-5 " {...settings}>
+          <Slider  className=" mb-5   " {...settings}>
             {rooms.map((room) => (
               <Col className="  ">
                 <Card
-                  className=" mb-5 mt-1 "
+                  className=" mb-5 mt-1 divvv "
                   color="light"
                   style={{
                     maxWidth: "18rem",
                   }}
                 >
                   <img
+                    className="divvv"
                     key={room.id}
                     alt="Sample"
                     src={room.img}
@@ -480,8 +513,12 @@ function DormReview(args, Rargs, direction, ...argss) {
           </div>
         </Col>
         <Col className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
-          <Row noGutters className="d-flex  ">
-            <Col  xs={2} sm={2} md={2} lg={2} xl={2}>
+          <Row
+            style={{ justifyContent: "center" }}
+            noGutters
+            className="d-flex  "
+          >
+            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
               <div className=" text-center mt-2  ">
                 <h5>Erkek Boş</h5>
                 <svg width="20" height="20" className="">
@@ -545,99 +582,107 @@ function DormReview(args, Rargs, direction, ...argss) {
         </Col>
         <hr className="hr mt-3" />
 
-        <Row noGutters >
-          {occupancy.map((ocp) => (
-            <Col className="divvv" xs={12} sm={6} md={6} lg={4} xl={3} xxl={2}>
-              <div className=" roomCard  ">
-                <Card inverse className="mb-5 my-2   " color={ocp.color}>
-                  <Row>
-                    <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
-                      <IoPeopleSharp
-                        className="mx-2"
-                        style={{ width: 50, height: 75 }}
-                      />
-                    </Col>
-                    <Col noGutters xs={9} sm={9} md={9} lg={9} xl={9} xxl={9}>
-                      <CardTitle
-                        className="mx-4"
-                        style={{ textAlign: "end" }}
-                        tag="h5"
-                      >
-                        Oda No : {ocp.person}
-                      </CardTitle>
-                      <CardTitle
-                        className="mx-4 "
-                        tag="h5"
-                        style={{ textAlign: "end" }}
-                      >
-                        {ocp.person} Kişilik Oda
-                      </CardTitle>
-                    </Col>
-                  </Row>
-                  <CardText className="svgb d-flex ">
-                    <h5 className="svgbH mt-2 mx-2 ">
-                      Güncel Kapasite: 2/{ocp.person}
-                    </h5>
-                    <CButton
-                      className=""
-                      color="success"
-                      onClick={() => setVisible(true)}
-                    >
-                      Rezervasyon Yap
-                    </CButton>
-                    {/* Warning Canvas */}
-                    <COffcanvas
-                      placement="bottom"
-                      visible={visible}
-                      onHide={() => setVisible(false)}
-                    >
-                      <COffcanvasHeader>
-                        <COffcanvasTitle>Dikkat!</COffcanvasTitle>
-                        <CCloseButton
-                          className="text-reset"
-                          onClick={() => setVisible(false)}
+        <Row noGutters>
+          <TablePagination
+            component="div"
+            count={occupancy.length} // Update this to reflect the total number of rooms
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          {occupancy
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
+            .map((ocp) => (
+              <Col
+              
+                className="divvv"
+                xs={12}
+                sm={6}
+                md={6}
+                lg={4}
+                xl={3}
+                xxl={3}
+              >
+                <div  className=" roomCard mx-3  ">
+                  <Card inverse className="mb-5 my-2   " color={ocp.color}>
+                    <Row>
+                      <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
+                        <IoPeopleSharp
+                          className="mx-2"
+                          style={{ width: 50, height: 75 }}
                         />
-                      </COffcanvasHeader>
-                      <COffcanvasBody className="text-center">
-                        Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır.{" "}
-                        <br /> Rezervasyonu Onaylıyor musunuz? <br />
-                        <Button color="success" className="mt-2">
-                          Gönder
-                        </Button>
-                      </COffcanvasBody>
-                    </COffcanvas>
-                  </CardText>
-                </Card>
-               
-              </div>
-            </Col>
-          ))}
+                      </Col>
+                      <Col noGutters xs={9} sm={9} md={9} lg={9} xl={9} xxl={9}>
+                        <CardTitle
+                          className="mx-4"
+                          style={{ textAlign: "end" }}
+                          tag="h5"
+                        >
+                          Oda No : {ocp.person}
+                        </CardTitle>
+                        <CardTitle
+                          className="mx-4 "
+                          tag="h5"
+                          style={{ textAlign: "end" }}
+                        >
+                          {ocp.person} Kişilik Oda
+                        </CardTitle>
+                      </Col>
+                    </Row>
+                    <CardText className="svgb d-flex ">
+                      <h5 className="svgbH mt-2 mx-2 ">
+                        Güncel Kapasite: 2/{ocp.person}
+                      </h5>
+                      <CButton
+                        className=""
+                        color="success"
+                        onClick={() => setVisible(true)}
+                      >
+                        Rezervasyon Yap
+                      </CButton>
+
+                      {/* Warning Canvas */}
+                      <COffcanvas
+                        placement="bottom"
+                        visible={visible}
+                        onHide={() => setVisible(false)}
+                      >
+                        <COffcanvasHeader>
+                          <COffcanvasTitle>Dikkat!</COffcanvasTitle>
+                          <CCloseButton
+                            className="text-reset"
+                            onClick={() => setVisible(false)}
+                          />
+                        </COffcanvasHeader>
+                        <COffcanvasBody className="text-center">
+                          Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır.{" "}
+                          <br /> Rezervasyonu Onaylıyor musunuz? <br />
+                          <Button color="success" className="mt-2">
+                            Gönder
+                          </Button>
+                        </COffcanvasBody>
+                      </COffcanvas>
+                    </CardText>
+                  </Card>
+                </div>
+              </Col>
+            ))}
         </Row>
-        
       </Row>
 
-
-      
-      <Container >
-        <Row  >
-          <Col
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-            className="pb-4"
-          >
-            
+      <Container>
+        <Row>
+          <Col xs={12} sm={12} md={12} lg={12} xl={12} className="pb-4">
             <h2 className="text-center">Yorum Ve Değerlendirmeler</h2>
             <CButton
-            className="w-25 CommentButton  "
-            style={{}}
-            color="success"
-            onClick={() => setRezVisible(true)}
-          >
-            Yorum Yap
-          </CButton>
+              className="w-25 CommentButton  "
+              style={{}}
+              color="success"
+              onClick={() => setRezVisible(true)}
+            >
+              Yorum Yap
+            </CButton>
             <div className="comment mt-4 text-justify float-left">
               <img
                 src="https://i.imgur.com/yTFUilP.jpg"
@@ -656,14 +701,24 @@ function DormReview(args, Rargs, direction, ...argss) {
               </p>
             </div>
             <div class="text-justify darker mt-4 float-right">
-                    <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40" height="40"/>
-                    <h4 className="text-white mx-2">Rob Simpson</h4>
-                    <span>- 20 October, 2018</span>
-                    <br/>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus numquam assumenda hic aliquam vero sequi velit molestias doloremque molestiae dicta?</p>
-                </div>
+              <img
+                src="https://i.imgur.com/CFpa3nK.jpg"
+                alt=""
+                class="rounded-circle"
+                width="40"
+                height="40"
+              />
+              <h4 className="text-white mx-2">Rob Simpson</h4>
+              <span>- 20 October, 2018</span>
+              <br />
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Accusamus numquam assumenda hic aliquam vero sequi velit
+                molestias doloremque molestiae dicta?
+              </p>
+            </div>
           </Col>
-          
+
           {/* Warning Canvas */}
           <COffcanvas
             placement="end"
@@ -703,7 +758,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                       id="post"
                       class="btn"
                     >
-                     Paylaş 
+                      Paylaş
                     </Button>
                   </div>
                 </form>
@@ -734,7 +789,6 @@ function DormReview(args, Rargs, direction, ...argss) {
         </div>
       )}
     </div>
-    
   );
 }
 

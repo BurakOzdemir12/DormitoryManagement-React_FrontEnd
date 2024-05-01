@@ -76,7 +76,7 @@ const SideBarr = () => {
         },
       }}
     >
-      <ProSidebar collapsed={isCollapsed}>
+      <ProSidebar  collapsed={isCollapsed}>
         <Menu iconShape="square">
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}

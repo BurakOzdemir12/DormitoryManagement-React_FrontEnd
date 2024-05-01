@@ -15,7 +15,8 @@ const Students = () => {
   const colors = tokens(theme.palette.mode);
 
   const columns = [
-    { field: "id", headerName: "ID" },
+    { field: "id", headerName: "ID", 
+    flex: 0 },
     {
       field: "name",
       headerName: "İsim",
@@ -31,15 +32,15 @@ const Students = () => {
     {
       field: "studentNo",
       headerName: "Student No",
-      flex: 1,
+      flex: 0.5,
       cellClassName: "name-column--cell",
     },
     {
       field: "age",
       headerName: "Age",
       type: "number",
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "passportNo",
@@ -50,7 +51,7 @@ const Students = () => {
     {
       field: "phone",
       headerName: "Phone Number",
-      flex: 1,
+      flex: 0.7,
     },
     {
       field: "email",
@@ -58,13 +59,11 @@ const Students = () => {
       flex: 1,
     },
     {
-      field:"actions",
-      headerName:"İşlemler",
-      type:"actions",
-      width:150,
-      renderCell:(params)=>
-        <StudentsActions {...{params}}/>
-      
+      field: "actions",
+      headerName: "İşlemler",
+      type: "actions",
+      width: 150,
+      renderCell: (params) => <StudentsActions {...{ params }} />,
     },
     // {
     //   field: "statu",
@@ -98,22 +97,21 @@ const Students = () => {
     // },
   ];
   console.log(columns);
-console.log(mockDataTeam);
+  console.log(mockDataTeam);
   return (
-    <Box m="20px" sx={{width:'100%' ,m:"0"}} >
+    <Box m="20px" sx={{ width: "100%", m: "0" }}>
       <Header
         title="Öğrenci Listesi"
         subtitle=" Yurtta Barınan Öğrencilerin Bilgileri Aşağıda Görüntülenmektedir."
       />
       <Box
-      margin="0"
+        margin="0"
         m="40px 0 0 0"
         height="75vh"
-
         sx={{
-          "& .MuiDataGrid-main":{
-            margin:0,
-            m:"0"
+          "& .MuiDataGrid-main": {
+            margin: 0,
+            m: "0",
           },
           "& .MuiDataGrid-root": {
             border: "none",
@@ -142,15 +140,12 @@ console.log(mockDataTeam);
         }}
       >
         <DataGrid
-        
           rows={mockDataTeam}
           columns={columns}
           slots={{ toolbar: GridToolbar }}
           checkboxSelection
           disableSelectionOnClick
-          
         />
-        
       </Box>
     </Box>
   );
