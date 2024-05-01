@@ -25,7 +25,7 @@ const userSchema = yup.object().shape({
     .matches(phoneRegExp, "Telefon no geçerli değil")
     .required("required"),
   passportNo: yup.string().required("required"),
-  adress: yup.string().required("required"),
+  // adress: yup.string().required("required"),
   registerStatu: yup.string().required("required"),
   faculty: yup.string().required("required"),
   gender: yup.string().required("required"),
@@ -37,7 +37,7 @@ const initialValues = {
   studentNo: "",
   phoneNumb: "",
   passportNo: "",
-  adress: "",
+  // adress: "",
   registerStatu: "",
   faculty: "",
   gender: "",
@@ -141,7 +141,7 @@ const Form = () => {
                 helperText={touched.passportNo && errors.passportNo}
                 sx={{ gridColumn: "span 1" }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 variant="filled"
                 type="text"
@@ -153,7 +153,7 @@ const Form = () => {
                 error={!!touched.adress && !!errors.adress}
                 helperText={touched.adress && errors.adress}
                 sx={{ gridColumn: "span 3" }}
-              />
+              /> */}
               <TextField
                 fullWidth
                 variant="filled"

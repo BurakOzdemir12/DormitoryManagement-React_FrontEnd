@@ -18,6 +18,7 @@ import Room from "../scenes/room/Room";
 import Bar from "../scenes/bar/Bar";
 // import Line from "../scenes/line";
 import Pie from "../scenes/pie/Pie";
+import DormProps from "../scenes/dormProps/DormProps";
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 
@@ -39,6 +40,7 @@ const RoutesConfig = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/students" element={<Students/>}/>
+              <Route path="/dormprops" element={<DormProps/>}/>
               <Route path="/form" element={<Form/>}/>
               <Route path="/room" element={<Room/>}/>
               <Route path="/comments" element={<Comments/>}/>

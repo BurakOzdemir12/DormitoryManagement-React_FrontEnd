@@ -9,6 +9,7 @@ import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../Components/header/Header";
+import StudentsActions from "./StudentsActions";
 const Students = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,6 +42,12 @@ const Students = () => {
       align: "left",
     },
     {
+      field: "passportNo",
+      headerName: "Pasaport No",
+      headerAlign: "left",
+      align: "left",
+    },
+    {
       field: "phone",
       headerName: "Phone Number",
       flex: 1,
@@ -51,35 +58,44 @@ const Students = () => {
       flex: 1,
     },
     {
-      field: "statu",
-      headerName: "Kayıt Durumu ",
-      flex: 1,
-      renderCell: ({ row: { access } }) => {
-        return (
-          <Box
-            m="0"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={
-              access === "admin"
-                ? colors.greenAccent[600]
-                : access === "manager"
-                ? colors.greenAccent[700]
-                : colors.greenAccent[700]
-            }
-            borderRadius="4px"
-          >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
-            </Typography>
-          </Box>
-        );
-      },
+      field:"actions",
+      headerName:"İşlemler",
+      type:"actions",
+      width:150,
+      renderCell:(params)=>
+        <StudentsActions {...{params}}/>
+      
     },
+    // {
+    //   field: "statu",
+    //   headerName: "Kayıt Durumu ",
+    //   flex: 1,
+    //   renderCell: ({ row: { access } }) => {
+    //     return (
+    //       <Box
+    //         m="0"
+    //         p="5px"
+    //         display="flex"
+    //         justifyContent="center"
+    //         backgroundColor={
+    //           access === "admin"
+    //             ? colors.greenAccent[600]
+    //             : access === "manager"
+    //             ? colors.greenAccent[700]
+    //             : colors.greenAccent[700]
+    //         }
+    //         borderRadius="4px"
+    //       >
+    //         {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
+    //         {access === "manager" && <SecurityOutlinedIcon />}
+    //         {access === "user" && <LockOpenOutlinedIcon />}
+    //         <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+    //           {access}
+    //         </Typography>
+    //       </Box>
+    //     );
+    //   },
+    // },
   ];
   console.log(columns);
 console.log(mockDataTeam);
@@ -134,6 +150,7 @@ console.log(mockDataTeam);
           disableSelectionOnClick
           
         />
+        
       </Box>
     </Box>
   );
