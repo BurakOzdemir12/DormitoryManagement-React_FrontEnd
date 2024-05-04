@@ -8,6 +8,7 @@ import {
   Button,
   useMediaQuery,
   TablePagination,
+  Badge,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
@@ -228,9 +229,13 @@ const Index = () => {
             progress="0.75"
             increase="+14%"
             icon={
+              <IconButton sx={{m:0}}>
+              <Badge color="secondary"  badgeContent={28}>
               <PendingActionsOutlinedIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
               />
+              </Badge>
+              </IconButton>
             }
           />
         </Box>

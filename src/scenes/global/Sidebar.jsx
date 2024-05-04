@@ -160,7 +160,7 @@ const SideBarr = () => {
             />
             <Item
               title="Rezervasyonlar"
-              to="/rezervations"
+              to="/reservations"
               icon={<CalendarOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

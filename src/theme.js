@@ -144,8 +144,22 @@ export const themeSettings = (mode) => {
             background: {
               default: colors.primary[500],
             },
+            errorc: {
+              main: colors.redAccent[600],
+
+            },
+            sucessc:{
+              main: colors.greenAccent[700],
+            }
           }
         : {
+          errorc: {
+            main: colors.redAccent[500],
+
+          },
+          sucessc:{
+            main: colors.greenAccent[400],
+          },
             primary: {
               main: colors.primary[100],
             },
