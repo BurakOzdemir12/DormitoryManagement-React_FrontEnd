@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
@@ -10,13 +10,13 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../Components/header/Header";
 import StudentsActions from "./StudentsActions";
+import axios from "axios";
 const Students = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const columns = [
-    { field: "id", headerName: "ID", 
-    flex: 0 },
+    { field: "id", headerName: "ID", flex: 0 },
     {
       field: "name",
       headerName: "İsim",
@@ -43,18 +43,22 @@ const Students = () => {
       align: "center",
     },
     {
-      field: "passportNo",
+      field: "passaportNo",
       headerName: "Pasaport No",
       headerAlign: "left",
+      type: "text",
+
       align: "left",
     },
     {
-      field: "phone",
+      field: "phoneNo",
       headerName: "Phone Number",
       flex: 0.7,
+      
+
     },
     {
-      field: "email",
+      field: "mail",
       headerName: "Email",
       flex: 1,
     },
@@ -96,8 +100,19 @@ const Students = () => {
     //   },
     // },
   ];
-  console.log(columns);
-  console.log(mockDataTeam);
+  const [students, setStudents] = useState([]);
+  useEffect(() => {
+    const fetchAllStudents = async () => {
+      try {
+        const res = await axios.get("http://localhost:8800/students");
+        setStudents(res.data);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchAllStudents();
+  }, []);
   return (
     <Box m="20px" sx={{ width: "100%", m: "0" }}>
       <Header
@@ -140,7 +155,7 @@ const Students = () => {
         }}
       >
         <DataGrid
-          rows={mockDataTeam}
+          rows={students}
           columns={columns}
           slots={{ toolbar: GridToolbar }}
           checkboxSelection

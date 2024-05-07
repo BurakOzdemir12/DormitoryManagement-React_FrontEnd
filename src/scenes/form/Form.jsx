@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -12,6 +12,8 @@ import { Field, FieldArray, Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../Components/header/Header";
+import axios from "axios";
+
 
 const phoneRegExp =
   /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -31,23 +33,62 @@ const userSchema = yup.object().shape({
   gender: yup.string().required("required"),
   // email:yup.string().email("Geçersiz mail adresi").required("required"),
 });
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  studentNo: "",
-  phoneNumb: "",
-  passportNo: "",
-  // adress: "",
-  registerStatu: "",
-  faculty: "",
-  gender: "",
-};
+// const initialValues = {
+//   firstName: "",
+//   lastName: "",
+//   studentNo: "",
+//   phoneNumb: "",
+//   passportNo: "",
+//   // adress: "",
+//   registerStatu: "",
+//   faculty: "",
+//   gender: "",
+// };
+
 const Form = () => {
+  const [initialValues, setStudents] = useState({
+    firstName: "",
+    lastName: "",
+    studentNo: "",
+    age:"",
+    mail:"",
+    phoneNumb: "",
+    passportNo: "",
+    registerStatu: "",
+    faculty: "",
+    gender: "",
+  });
+  // useEffect(() => {
+  //   const fetchAllStudents = async () => {
+  //     try {
+  //       const res = await axios.get("http://localhost:8800/students");
+  //       setStudents(res.data);
+  //       console.log(res);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchAllStudents();
+  // }, []);
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const handleFormSubmit = (values) => {
-    
-    console.log(values);
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:8800/students", initialValues);
+      // Optionally, you can reset the form after successful submission
+      // resetForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log(initialValues)
+  
+ const handleChange =(e)=>{
+  // Update the form state
+  setStudents(prev=>({...prev, [e.target.name]:e.target.value}))
+ }
   return (
     <Box m="20px">
       <Header
@@ -55,19 +96,20 @@ const Form = () => {
         subtitle="Öğrenci Ekleme, Güncelleme ve oda atama işlemi aşağıda yapılabilmektedir"
       />
       <Formik
-        onSubmit={handleFormSubmit}
+        // onSubmit={handleSubmit}
         initialValues={initialValues}
         validationSchema={userSchema}
       >
         {({
+          handleChange:formikHandleChange,
           values,
           errors,
           touched,
           handleBlur,
-          handleChange,
-          handleSubmit,
+          // handleSubmit
         }) => (
-          <form onSubmit={handleSubmit}>
+            
+          <form   > 
             <Box
               display="grid "
               gap="40px"
@@ -82,7 +124,11 @@ const Form = () => {
                 type="text"
                 label="İsim"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                // onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.firstName}
                 name="firstName"
                 error={!!touched.firstName && !!errors.firstName}
@@ -95,7 +141,10 @@ const Form = () => {
                 type="text"
                 label="Soyisim"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.lastName}
                 name="lastName"
                 error={!!touched.lastName && !!errors.lastName}
@@ -108,7 +157,10 @@ const Form = () => {
                 type="number"
                 label="Öğrenci No"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.studentNo}
                 name="studentNo"
                 error={!!touched.studentNo && !!errors.studentNo}
@@ -119,27 +171,65 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Telefon No"
+                label="Yaş"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.phoneNumb}
-                name="phoneNumb"
-                error={!!touched.phoneNumb && !!errors.phoneNumb}
-                helperText={touched.phoneNumb && errors.phoneNumb}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
+                value={values.age}
+                name="age"
+                error={!!touched.age && !!errors.age}
+                helperText={touched.age && errors.age}
                 sx={{ gridColumn: "span 1" }}
               />
               <TextField
                 fullWidth
                 variant="filled"
+                type="text"
+                label="Mail"
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
+                value={values.mail}
+                name="mail"
+                error={!!touched.mail && !!errors.mail}
+                helperText={touched.mail && errors.mail}
+                sx={{ gridColumn: "span 2" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
                 type="number"
+                label="Telefon No"
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
+                value={values.phoneNumb}
+                name="phoneNumb"
+                error={!!touched.phoneNumb && !!errors.phoneNumb}
+                helperText={touched.phoneNumb && errors.phoneNumb}
+                sx={{ gridColumn: "span 2" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
                 label="Pasaport No"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.passportNo}
                 name="passportNo"
                 error={!!touched.passportNo && !!errors.passportNo}
                 helperText={touched.passportNo && errors.passportNo}
-                sx={{ gridColumn: "span 1" }}
+                sx={{ gridColumn: "span 2" }}
               />
               {/* <TextField
                 fullWidth
@@ -160,7 +250,10 @@ const Form = () => {
                 type="bool"
                 label="Kayıt Durumu"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.registerStatu}
                 name="registerStatu"
                 error={!!touched.registerStatu && !!errors.registerStatu}
@@ -173,7 +266,10 @@ const Form = () => {
                 type="text"
                 label={"Fakülte"}
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.faculty}
                 name="faculty"
                 error={!!touched.faculty && !!errors.faculty}
@@ -199,7 +295,10 @@ const Form = () => {
                 aria-label="gender"
                 name="gender"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e); // Call your custom handleChange function
+                  formikHandleChange(e); // Call Formik's handleChange
+                }}
                 value={values.gender}
                 type="radio"
                 variant="filled"
@@ -222,7 +321,7 @@ const Form = () => {
               </RadioGroup>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained"
+              <Button onClick={handleSubmit}  color="secondary" variant="contained"
               sx={{height:50,fontSize:20,fontWeight:600,width:"100"}}>
                 Kaydet
               </Button>
