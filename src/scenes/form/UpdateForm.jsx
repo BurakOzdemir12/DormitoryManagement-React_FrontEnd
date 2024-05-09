@@ -14,6 +14,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../Components/header/Header";
 import axios from "axios";
 import Students from "../students/Students";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const phoneRegExp =
   /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -34,37 +35,87 @@ const userSchema = yup.object().shape({
   // email:yup.string().email("Geçersiz mail adresi").required("required"),
 });
 // const initialValues = {
-//   firstName: "",
-//   lastName: "",
-//   studentNo: "",
-//   phoneNumb: "",
-//   passportNo: "",
-//   // adress: "",
-//   registerStatu: "",
-//   faculty: "",
-//   gender: "",
+  // firstName: "",
+  // lastName: "",
+  // studentNo:"",
+  // age: "",
+  // mail: "",
+  // phoneNumb:"",
+  // passportNo:"",
+  // registerStatus:"",
+  // faculty: "",
+  // gender: "",
 // };
 
-const Form = () => {
-  const [initialValues, setStudents] = useState({
-    firstName: "",
-    lastName: "",
-    studentNo: "",
-    age: "",
-    mail: "",
-    phoneNumb: "",
-    passaportNo: "",
-    registerStatu: "",
-    faculty: "",
-    gender: "",
+const UpdateForm = () => {
+  const [students, setStudents] = useState({
+
+    // firstName: "",
+    // lastName: "",
+    // studentNo: "",
+    // age: "",
+    // mail: "",
+    // phoneNumb: "",
+    // passaportNo: "",
+    // registerStatu: "",
+    // faculty: "",
+    // gender: "",
   });
-  
+  // const [initialValues, setInitialValues] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const studentId = location.pathname.split("/")[2];
+
+  useEffect(() => {
+    const fetchStudent = async (id) => {
+      try {
+        const res = await axios.get(`http://localhost:8800/students/${id}`);
+        setStudents(res.data);
+        console.log(res.data, "One Student Values");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchStudent(studentId);
+  }, [studentId]);
+
+  // useEffect(() => {
+  //   // Set initial values when students data changes
+  //   if (students.length > 0) {
+  //     const initialData = students.map((student) => ({
+  //       firstName: student.name ,
+  //       lastName: student.lastName ,
+  //       studentNo: student.studentNo ,
+  //       age: student.age ,
+  //       mail: student.mail ,
+  //       phoneNumb: student.phoneNumb ,
+  //       passportNo: student.passportNo ,
+  //       registerStatus: student.registerStatus ,
+  //       faculty: student.faculty ,
+  //       gender: student.gender ,
+  //     }));
+  //     setInitialValues(initialData);
+  //   }
+  // }, [students]);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  // console.log(location.pathname.split("/")[2]);
+
+  const handleChange = (e) => {
+    // Update the form state
+    setStudents((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (updatedStudent) => {
+    
     try {
-      await axios.post("http://localhost:8800/students", initialValues);
+      await axios.put(
+        `http://localhost:8800/students/${studentId}`,
+        students
+      );
+      navigate("/students");
       // Optionally, you can reset the form after successful submission
       // resetForm();
     } catch (error) {
@@ -72,21 +123,22 @@ const Form = () => {
     }
   };
 
-  console.log(initialValues);
-
-  const handleChange = (e) => {
-    // Update the form state
-    setStudents((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
   return (
     <Box m="20px">
       <Header
         title="ÖĞRENCİ EKLE"
         subtitle="Öğrenci Ekleme, Güncelleme ve oda atama işlemi aşağıda yapılabilmektedir"
       />
+      {/* {students.map((student)=>(
+
+                <h1>
+                  {student.name}
+                </h1>
+            ))} */}
+
       <Formik
         // onSubmit={handleSubmit}
-        initialValues={initialValues}
+        initialValues={students}
         validationSchema={userSchema}
       >
         {({
@@ -106,13 +158,13 @@ const Form = () => {
                 "& > div ": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              
-
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="İsim"
+                placeholder="İsim"
+                // label={values.firstName}
+                label={students.firstName}
                 onBlur={handleBlur}
                 // onChange={handleChange}
                 onChange={(e) => {
@@ -123,14 +175,29 @@ const Form = () => {
                 name="firstName"
                 error={!!touched.firstName && !!errors.firstName}
                 helperText={touched.firstName && errors.firstName}
-                sx={{ gridColumn: "span 2" }}
+                sx={{
+                  gridColumn: "span 2",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
 
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Soyisim"
+                label={students.lastName}
+                placeholder="Soyisim"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -140,13 +207,28 @@ const Form = () => {
                 name="lastName"
                 error={!!touched.lastName && !!errors.lastName}
                 helperText={touched.lastName && errors.lastName}
-                sx={{ gridColumn: "span 2" }}
+                sx={{
+                  gridColumn: "span 2",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 1,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Öğrenci No"
+                placeholder="Öğrenci No"
+                label={students.studentNo}
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -156,13 +238,28 @@ const Form = () => {
                 name="studentNo"
                 error={!!touched.studentNo && !!errors.studentNo}
                 helperText={touched.studentNo && errors.studentNo}
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Yaş"
+                label={students.age}
+                placeholder="Yaş"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -172,13 +269,28 @@ const Form = () => {
                 name="age"
                 error={!!touched.age && !!errors.age}
                 helperText={touched.age && errors.age}
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Mail"
+                label={students.mail}
+                placeholder="Mail"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -188,13 +300,28 @@ const Form = () => {
                 name="mail"
                 error={!!touched.mail && !!errors.mail}
                 helperText={touched.mail && errors.mail}
-                sx={{ gridColumn: "span 2" }}
+                sx={{
+                  gridColumn: "span 2",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Telefon No"
+                label={students.phoneNumb}
+                placeholder="Telefon No"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -204,13 +331,28 @@ const Form = () => {
                 name="phoneNumb"
                 error={!!touched.phoneNumb && !!errors.phoneNumb}
                 helperText={touched.phoneNumb && errors.phoneNumb}
-                sx={{ gridColumn: "span 2" }}
+                sx={{
+                  gridColumn: "span 2",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Pasaport No"
+                label={students.passaportNo}
+                placeholder="Pasaport No"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -220,14 +362,29 @@ const Form = () => {
                 name="passaportNo"
                 error={!!touched.passaportNo && !!errors.passaportNo}
                 helperText={touched.passaportNo && errors.passaportNo}
-                sx={{ gridColumn: "span 2" }}
+                sx={{
+                  gridColumn: "span 2",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
 
               <TextField
                 fullWidth
                 variant="filled"
                 type="bool"
-                label="Kayıt Durumu"
+                label={students.registerStatu}
+                placeholder="Kayıt Durumu"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -237,13 +394,28 @@ const Form = () => {
                 name="registerStatu"
                 error={!!touched.registerStatu && !!errors.registerStatu}
                 helperText={touched.registerStatu && errors.registerStatu}
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label={"Fakülte"}
+                label={students.faculty}
+                placeholder="Fakülte"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -253,7 +425,21 @@ const Form = () => {
                 name="faculty"
                 error={!!touched.faculty && !!errors.faculty}
                 helperText={touched.faculty && errors.faculty}
-                sx={{ gridColumn: "span 1", fontSize: "12rem" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
 
               <RadioGroup
@@ -261,6 +447,7 @@ const Form = () => {
                 fullWidth
                 aria-label="gender"
                 name="gender"
+                // defaultChecked={students.gender}
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e); // Call your custom handleChange function
@@ -271,13 +458,19 @@ const Form = () => {
                 variant="filled"
                 error={!!touched.gender && !!errors.gender}
                 helperText={touched.gender && errors.gender}
-                // sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 2" }}
               >
                 <FormControlLabel
                   value="male"
                   control={<Radio color="secondary" />}
                   label="Erkek"
                   sx={{ gridColumn: "span 2" }}
+                  InputLabelProps={{
+                    style: {
+                      opacity: 1,
+                      fontSize: 20,
+                    },
+                  }}
                 />
                 <FormControlLabel
                   value="female"
@@ -304,4 +497,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default UpdateForm;
