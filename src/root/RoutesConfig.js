@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import DormReview from "../Pages/dormReview/DormReview";
-import Navi from "../Components/nav/Navi";
-import Test from "../Pages/phptest/Test";
 // Admin Page
 import { ColorModeContext, useMode } from "../theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -20,6 +17,8 @@ import Bar from "../scenes/bar/Bar";
 import Pie from "../scenes/pie/Pie";
 import DormProps from "../scenes/dormProps/DormProps";
 import UpdateForm from "../scenes/form/UpdateForm";
+import Login from "../scenes/login/Login";
+import DormReview from "../Pages/dormReview/DormReview";
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 
@@ -39,21 +38,22 @@ const RoutesConfig = () => {
             <Topbar setIsSidebar={setIsSidebar} />
 
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/students" element={<Students/>}/>
-              <Route path="/dormprops" element={<DormProps/>}/>
-              <Route path="/form" element={<Form/>}/>
-              <Route path="/updateStudent/:id" element={<UpdateForm/>}/>
-        
+              {/* <Route path="/login" element={<Login />} /> */}
 
-              <Route path="/room" element={<Room/>}/>
-              <Route path="/comments" element={<Comments/>}/>
-              <Route path="/statistics" element={<Bar/>}/>
-              <Route path="/pie" element={<Pie/>}/>
-              <Route path="/reservations" element={<Reservations/>}/>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/students" element={<Students />} />
+              <Route path="/dormprops" element={<DormProps />} />
+              <Route path="/form" element={<Form />} />
+              <Route path="/updateStudent/:id" element={<UpdateForm />} />
+
+              <Route path="/room" element={<Room />} />
+              <Route path="/comments" element={<Comments />} />
+              <Route path="/statistics" element={<Bar />} />
+              <Route path="/pie" element={<Pie />} />
+              <Route path="/reservations" element={<Reservations />} />
               {/* <Route path="/invoices" element={<Invoices/>}/> */}
               {/* <Route path="/room2" element={<Room2/>}/> */}
-              
+
               {/* <Route path="/faq" element={<FAQ/>}/> */}
               {/* <Route path="/geography" element={<Geography/>}/> */}
               {/* <Route path="/calendar" element={<Calendar/>}/> */}

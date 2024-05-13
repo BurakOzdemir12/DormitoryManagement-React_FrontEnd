@@ -360,6 +360,7 @@ const Index = () => {
           ))}
         </Box>
         {/* Room List */}
+
         <Box
           gridColumn="span 12"
           gridRow="span 5"
@@ -373,6 +374,8 @@ const Index = () => {
           justifyContent="center"
         >
           <Box>
+        <Header  title="Güncel Odalar"  />
+
             <TablePagination
               component="div"
               count={occupancy.length} // Update this to reflect the total number of rooms
