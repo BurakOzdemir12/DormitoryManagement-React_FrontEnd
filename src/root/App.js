@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import DormReview from "../Pages/dormReview/DormReview";
 import Navi from "../Components/nav/Navi";
 // import AdminNav from "../Components/adminNav/AdminNav";
@@ -19,6 +19,7 @@ function App() {
         <Route  path="/DormReview" element={<DormReview />} />
         <Route path="/login" element={<Login/>} />
         <Route index path="/" element={<DormReview/>} />
+        
       </Route>
       
     </Routes>

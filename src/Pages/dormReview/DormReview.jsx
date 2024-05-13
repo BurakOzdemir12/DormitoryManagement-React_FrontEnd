@@ -57,6 +57,7 @@ import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
 import { Box, TablePagination, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import { jwtDecode } from "jwt-decode";
 
 const items = [
   {
@@ -196,6 +197,9 @@ function SamplePrevArrow(props) {
   );
 }
 function DormReview(args, Rargs, direction, ...argss) {
+  const userToken = localStorage.getItem("token");
+  const user = userToken ? jwtDecode(userToken) : null;
+  const id = user ? user.id : null;
   var settings = {
     dots: true,
     infinite: true,
@@ -440,14 +444,10 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
 
-        <Col
-          
-          xl={10}
-          className="mt-5 divvv "
-        >
+        <Col xl={10} className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider  className=" mb-5   " {...settings}>
+          <Slider className=" mb-5   " {...settings}>
             {rooms.map((room) => (
               <Col className="  ">
                 <Card
@@ -595,7 +595,6 @@ function DormReview(args, Rargs, direction, ...argss) {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
             .map((ocp) => (
               <Col
-              
                 className="divvv"
                 xs={12}
                 sm={6}
@@ -604,7 +603,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                 xl={3}
                 xxl={3}
               >
-                <div  className=" roomCard mx-3  ">
+                <div className=" roomCard mx-3  ">
                   <Card inverse className="mb-5 my-2   " color={ocp.color}>
                     <Row>
                       <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
@@ -634,14 +633,24 @@ function DormReview(args, Rargs, direction, ...argss) {
                       <h5 className="svgbH mt-2 mx-2 ">
                         Güncel Kapasite: 2/{ocp.person}
                       </h5>
-                      <CButton
-                        className=""
-                        color="success"
-                        onClick={() => setVisible(true)}
-                      >
-                        Rezervasyon Yap
-                      </CButton>
-
+                      {user ? (
+                        <CButton
+                          className=""
+                          color="success"
+                          onClick={() => setVisible(true)}
+                        >
+                          Rezervasyon Yap
+                        </CButton>
+                      ) : (
+                        <CButton
+                          className=""
+                          color="success"
+                          onClick={() => setVisible(true)}
+                          disabled
+                        >
+                          Rezervasyon Yapmak İçin Giriş Yap
+                        </CButton>
+                      )}
                       {/* Warning Canvas */}
                       <COffcanvas
                         placement="bottom"
@@ -675,14 +684,27 @@ function DormReview(args, Rargs, direction, ...argss) {
         <Row>
           <Col xs={12} sm={12} md={12} lg={12} xl={12} className="pb-4">
             <h2 className="text-center">Yorum Ve Değerlendirmeler</h2>
-            <CButton
-              className="w-25 CommentButton  "
-              style={{}}
-              color="success"
-              onClick={() => setRezVisible(true)}
-            >
-              Yorum Yap
-            </CButton>
+            {user ? (
+              <CButton
+                className="w-25 CommentButton  "
+                style={{}}
+                color="success"
+                onClick={() => setRezVisible(true)}
+              >
+                Yorum Yap
+              </CButton>
+            ) : (
+              <CButton
+                disabled
+                className="w-25 CommentButton  "
+                style={{}}
+                color="success"
+                onClick={() => setRezVisible(true)}
+              >
+                Yorum Yapmak için Giriş Yapmalısınız
+              </CButton>
+            )}
+
             <div className="comment mt-4 text-justify float-left">
               <img
                 src="https://i.imgur.com/yTFUilP.jpg"

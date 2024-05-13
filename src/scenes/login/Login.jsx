@@ -99,7 +99,10 @@ function SignInSide() {
 
 //  localStorage.setItem('user', JSON.stringify(res.data));
       if (res.data.isAdmin) {
+
         navigate("/dashboard");
+        window.location.reload();
+
       } else {
         navigate("/DormReview");
         window.location.reload();

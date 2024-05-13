@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 // Admin Page
 import { ColorModeContext, useMode } from "../theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -21,8 +21,15 @@ import Login from "../scenes/login/Login";
 import DormReview from "../Pages/dormReview/DormReview";
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
+const isNavigatingToLoginPage = window.location.pathname === "/login";
 
 const RoutesConfig = () => {
+  const navigate = useNavigate();
+  if (isNavigatingToLoginPage) {
+    localStorage.removeItem("token");
+    window.location.reload();
+    navigate("/")
+  }
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 

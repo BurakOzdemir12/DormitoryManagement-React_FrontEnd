@@ -90,7 +90,7 @@ function Navi(args) {
                   </a>
                 </NavItem>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="/akademik">
+                  <a className="navlink" href="https://www.emu.edu.tr/akademiktakvim">
                     Akademik Takvim
                   </a>
                 </NavItem>
