@@ -94,7 +94,9 @@ function SignInSide() {
 
       setUser(res.data);
      localStorage.setItem('token',res.data.accessToken);
-    console.log("access Token ",res.data.accessToken);
+     localStorage.setItem('user', JSON.stringify(res.data));
+    console.log("access Token ",res.data.accessToken);  
+    console.log("user bilgileri ",res.data);
 
 
 //  localStorage.setItem('user', JSON.stringify(res.data));

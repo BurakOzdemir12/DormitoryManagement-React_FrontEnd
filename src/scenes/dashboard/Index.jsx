@@ -229,12 +229,12 @@ const Index = () => {
             progress="0.75"
             increase="+14%"
             icon={
-              <IconButton sx={{m:0}}>
-              <Badge color="secondary"  badgeContent={28}>
-              <PendingActionsOutlinedIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
-              />
-              </Badge>
+              <IconButton sx={{ m: 0 }}>
+                <Badge color="secondary" badgeContent={28}>
+                  <PendingActionsOutlinedIcon
+                    sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
+                  />
+                </Badge>
               </IconButton>
             }
           />
@@ -374,7 +374,7 @@ const Index = () => {
           justifyContent="center"
         >
           <Box>
-        <Header  title="Güncel Odalar"  />
+            <Header title="Güncel Odalar" />
 
             <TablePagination
               component="div"

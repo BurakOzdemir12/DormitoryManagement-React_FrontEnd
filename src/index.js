@@ -18,7 +18,7 @@ const data = userToken ? jwtDecode(userToken) : null;
 const isAdmin = data ? data.isAdmin : false;
 const isAuthenticated = data ? true : false;
 const isnotGuest = isAuthenticated;
-const isnon = window.location.pathname === "*";
+const isnon = window.location.pathname === "/";
 root.render(
   // <BrowserRouter>
   // {isTopbarVisible && <RoutesConfig />} {/* Render Topbar conditionally */}

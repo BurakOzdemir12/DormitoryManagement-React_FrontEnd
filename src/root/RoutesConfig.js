@@ -26,8 +26,10 @@ const isNavigatingToLoginPage = window.location.pathname === "/login";
 const RoutesConfig = () => {
   const navigate = useNavigate();
   if (isNavigatingToLoginPage) {
-    localStorage.removeItem("token");
     window.location.reload();
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/")
   }
   const [theme, colorMode] = useMode();

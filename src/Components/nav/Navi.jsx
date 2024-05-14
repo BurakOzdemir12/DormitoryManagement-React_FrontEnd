@@ -12,47 +12,100 @@ import {
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+// logo/style
+import { CgProfile } from "react-icons/cg";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { Button, Menu, MenuItem } from "@mui/material";
 import emulogo from "../images/logoo.png";
 import "../nav/navbar.css";
-
-// eklentiler
-import { CgProfile } from "react-icons/cg";
+import { styled, alpha } from "@mui/material/styles";
+//react eklentiler
+import axios from "axios";
 import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
+const StyledMenu = styled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
 function Navi(args) {
+  //Login Logout buttons
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  //
+
   const [isOpen, setIsOpen] = useState(false);
+  const [userData, setUserData] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
-  const userToken = localStorage.getItem("token");
-  const data = userToken ? jwtDecode(userToken) : null;
-  const id = data ? data.id : null;
+  useEffect(() => {
+    // const token = localStorage.getItem("token");
 
-  // let lastScroll = 0;
-  // window.addEventListener("scroll", () => {
-  //   const currentScroll = window.scrollY;
+    const fetchOneStudent = async () => {
+      try {
+        const tokendata = localStorage.getItem("token");
+        const decoded = tokendata ? jwtDecode(tokendata) : null;
+        const userId = decoded ? decoded.id : null;
+        console.log(" user id", userId);
 
-  /*   if (currentScroll <= 0) {
-      body.classList.remove("scroll-up");
-    }
-    if (currentScroll > lastScroll && !body.classList.contains("scroll-down")) {
-      body.classList.remove("scroll-up");
-      body.classList.add("scroll-down");
-    }
-    if (currentScroll < lastScroll && body.classList.contains("scroll-down")) {
-      body.classList.remove("scroll-down");
-      body.classList.add("scroll-up");
-    }
-    if (currentScroll === currentScroll) {
-      body.classList.add("scrolled-up");
-    } if(currentScroll!==0) {
-      body.classList.remove("scrolled-up");
-    }
-    lastScroll = currentScroll;
-  });
+        const res = await axios.get(
+          `http://localhost:8800/emu_students/${userId}`
+        );
+
+        setUserData(res.data);
+      } catch (error) {
+        console.error("There was an error fetching the user data!", error);
+      }
+    };
+    fetchOneStudent();
+  }, []);
   
-  */
 
   return (
     <div className="navlinks fluid ">
@@ -90,27 +143,54 @@ function Navi(args) {
                   </a>
                 </NavItem>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="https://www.emu.edu.tr/akademiktakvim">
+                  <a
+                    className="navlink"
+                    href="https://www.emu.edu.tr/akademiktakvim"
+                  >
                     Akademik Takvim
                   </a>
                 </NavItem>
-                {data ? ( // If user is logged in
+                {userData ? ( // If user is logged in
                   <NavItem className="mx-5 py-2 profile">
-                    <span className="navlink">
-                      <CgProfile className="mx-2" style={{ fontSize: 50 }} />
-                      {id} {/* Display user ID */}
+                    <span
+                      style={{ cursor: "pointer" }}
+                      className="navlink"
+                      id="demo-customized-button"
+                      aria-controls={open ? "demo-customized-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      variant="contained"
+                      disableElevation
+                      onClick={handleClick}
+                      // endIcon={<KeyboardArrowDownIcon />}
+                    >
+                      <CgProfile className="mx-2" style={{ fontSize: 40 }} />
+                      {userData.firstName} {""} {userData.lastName}
                     </span>
+                    <StyledMenu
+                      id="demo-customized-menu"
+                      MenuListProps={{
+                        "aria-labelledby": "demo-customized-button",
+                      }}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={handleClose} disableRipple>
+                        Profil
+                      </MenuItem>
+                      <MenuItem onClick={handleClose} disableRipple>
+                      <LogoutOutlinedIcon/>Çıkış Yap
+                      </MenuItem>
+                    </StyledMenu>
                   </NavItem>
                 ) : (
                   // If user is not logged in
                   <NavItem className="mx-5 py-2 profile">
-                    
-                    <a  className="navlink" href="/login">
-                      
+                    <a className="navlink" href="/login">
                       <CgProfile className="mx-2" style={{ fontSize: 50 }} />
                       Giriş Yap
                     </a>
-                    
                   </NavItem>
                 )}
               </Nav>
