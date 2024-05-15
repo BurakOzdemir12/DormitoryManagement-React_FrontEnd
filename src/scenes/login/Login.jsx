@@ -17,7 +17,7 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
 //
-import bgimg from "../../Components/images/emu.jpg";
+import bgimg from "../../Components/images/emu.png";
 import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
@@ -40,7 +40,7 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+
 
 const defaultTheme = createTheme();
 
@@ -62,63 +62,56 @@ function SignInSide() {
         refreshToken: res.data.refreshToken,
       });
       return res.data;
-
     } catch (error) {
       console.log(error);
     }
   };
 
-  const axiosJWT =axios.create()
+  const axiosJWT = axios.create();
 
-  axiosJWT.interceptors.request.use(async (config) => {
-    let currentDate = new Date();
-    const decodedToken = jwtDecode(user.accessToken);
-    if (decodedToken.exp * 1000 < currentDate.getTime()) {
-      const data= await resfreshToken();
-      config.headers["authorization"]="Bearer " +data.accessToken;
-      
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      let currentDate = new Date();
+      const decodedToken = jwtDecode(user.accessToken);
+      if (decodedToken.exp * 1000 < currentDate.getTime()) {
+        const data = await resfreshToken();
+        config.headers["authorization"] = "Bearer " + data.accessToken;
+      }
+
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    
-    return config;
-  },(error)=>{
-    return Promise.reject(error);
-  });
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Username:", username);
-    console.log("Password:", password);
     try {
       const res = await axios.post("/login", { username, password });
 
       setUser(res.data);
-     localStorage.setItem('token',res.data.accessToken);
-     localStorage.setItem('user', JSON.stringify(res.data));
-    console.log("access Token ",res.data.accessToken);  
-    console.log("user bilgileri ",res.data);
+      localStorage.setItem("token", res.data.accessToken);
+      
 
 
-//  localStorage.setItem('user', JSON.stringify(res.data));
       if (res.data.isAdmin) {
-
         navigate("/dashboard");
         window.location.reload();
-
       } else {
         navigate("/DormReview");
         window.location.reload();
       }
+      
     } catch (error) {
       console.log(error);
     }
-    //     const data = new FormData(e.currentTarget);
-    //     console.log({
-    //       email: data.get('email'),
-    //       password: data.get('password'),
-    //     });
+    
   };
 
+
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       {user && <Navi user={user} />}
@@ -130,7 +123,7 @@ function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: roomimage1,
+            backgroundImage: `url(${bgimg})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -154,7 +147,7 @@ function SignInSide() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Giriş Yap
             </Typography>
             <Box
               component="form"
@@ -194,7 +187,7 @@ function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Giriş Yap
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -217,51 +210,3 @@ function SignInSide() {
   );
 }
 export default SignInSide;
-/*
- <div className="container">
-      {user ? (
-        <div className="home">
-          <span>
-            Welcome to the <b>{user.isAdmin ? "admin" : "user"}</b> dashboard{" "}
-            <b>{user.username}</b>.
-          </span>
-          <span>Delete Users:</span>
-          {/* <button className="deleteButton" onClick={() => handleDelete(1)}>
-            Delete John
-          </button>
-          <button className="deleteButton" onClick={() => handleDelete(2)}>
-            Delete Jane
-          </button> 
-          {error && (
-            <span className="error">
-              You are not allowed to delete this user!
-            </span>
-          )}
-          {success && (
-            <span className="success">
-              User has been deleted successfully...
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="login mt-5">
-          <form onSubmit={handleSubmit}>
-            <span className="formTitle">Lama Login</span>
-            <input
-              type="text"
-              placeholder="username"
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button  type="submit" className="submitButton">
-              Login
-            </button>
-          </form>
-        </div>
-      )}
-    </div> 
-    */

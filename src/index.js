@@ -29,7 +29,7 @@ root.render(
   
   {isAdmin && isnon ? <Navigate to="/dashboard" />:""}
 
-  {isAuthenticated && isAdmin && isnotGuest ? <RoutesConfig /> :<App/> }
+  {isAuthenticated && isAdmin  ? <RoutesConfig /> :<App/> }
   </BrowserRouter>
 );
 

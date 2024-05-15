@@ -29,7 +29,7 @@ const userSchema = yup.object().shape({
   roomStatu: yup.string().required("required"),
 });
 
-const Te = () => {
+const RoomUpdate = () => {
   const [initialValues, setRoom] = useState({
     roomNumber: "",
     roomCapacity: "",
@@ -333,4 +333,4 @@ const Te = () => {
   );
 };
 
-export default Te;
+export default RoomUpdate;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Components/header/Header";
 import {
   Box,
@@ -32,7 +32,16 @@ import {
   COffcanvasHeader,
   COffcanvasTitle,
 } from "@coreui/react";
-import { Card, CardText, CardTitle, Col, Row } from "reactstrap";
+import {
+  ButtonDropdown,
+  ButtonToggle,
+  ButtonToolbar,
+  Card,
+  CardText,
+  CardTitle,
+  Col,
+  Row,
+} from "reactstrap";
 import { IoPeopleSharp } from "react-icons/io5";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -45,6 +54,8 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Delete, Edit, Opacity, Preview } from "@mui/icons-material";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 /// menu button
 const StyledMenu = styled((props) => (
@@ -90,40 +101,44 @@ const StyledMenu = styled((props) => (
   },
 }));
 /////
-const occupancy = [
-  {
-    person: 1,
-    color: "danger",
-  },
-  { person: 2, color: "primary" },
-  { person: 1, color: "danger" },
-  { person: 3, color: "secondary" },
-  { person: 1, color: "primary" },
-];
+
 const Index = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const occupancy = [
-    {
-      person: 1,
-      color: "danger",
-    },
-    { person: 2, color: "danger " },
-    { person: 1, color: "danger" },
-    { person: 3, color: "secondary" },
-    { person: 1, color: "primary" },
-    { person: 3, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 2, color: "secondary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-    { person: 1, color: "primary" },
-  ];
+
+  //dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+  //Fetch Rooms
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get("http://localhost:8800/rooms");
+
+        setRooms(response.data);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
+  //delete Room
+
+  const handleDelete = async (id) => {
+    console.log("Id ile odanın siliniyor", id);
+    try {
+      await axios.delete(`http://localhost:8800/rooms/${id}`);
+      //delete olunca bildiri göster
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //handle Pagination for Room List
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -378,17 +393,18 @@ const Index = () => {
 
             <TablePagination
               component="div"
-              count={occupancy.length} // Update this to reflect the total number of rooms
+              count={rooms.length} // Update this to reflect the total number of rooms
               page={page}
               onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
             <Row style={{ alignItems: "center", marginLeft: "4%" }} noGutters>
-              {occupancy
+              {rooms
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
-                .map((ocp) => (
+                .map((room) => (
                   <Col
+                    key={room.id}
                     className="divvv"
                     xs={12}
                     sm={12}
@@ -397,11 +413,39 @@ const Index = () => {
                     xl={2}
                     xxl={3}
                   >
-                    <div className=" roomCard  ">
-                      <Card inverse className="mb-5 my-2   " color={ocp.color}>
+                    <div className=" roomCard mx-3 ">
+                      <Card
+                        inverse
+                        className="mb-5 my-2   "
+                        // style={{
+                        //   backgroundColor: room.roomStatu === "Erkek Dolu" ? "#5c2928" : "#cc8084",
+                        //   "Kadın Dolu" ? "#47cbff" : "#bacfe1"
+                        // }}
+                        style={{
+                          backgroundColor:
+                            room.roomStatu === "Erkek Dolu"
+                              ? "#47cbff"
+                              : room.roomStatu === "Kadın Dolu"
+                              ? "#5c2928"
+                              : room.roomStatu === "Erkek Boş"
+                              ? "#bacfe1"
+                              : room.roomStatu === "Kadın Boş"
+                              ? "#cc8084"
+                              : "#a1a1a1", // Diğer boş durumlar için
+                        }}
+                      >
                         <Row>
                           <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
-                            <Button
+                            <Link to={`/roomUpdate/${room.id}`}>
+                              <IconButton>Güncelle</IconButton>
+                              <IconButton
+                                onClick={() => handleDelete(room.id)}
+                              >
+                                <DeleteIcon />
+                                Sil
+                              </IconButton>
+                            </Link>
+                            {/* <Button
                               id="demo-customized-button"
                               aria-controls={
                                 open ? "demo-customized-menu" : undefined
@@ -425,27 +469,24 @@ const Index = () => {
                               onClose={handleClose}
                             >
                               <MenuItem onClick={handleClose} disableRipple>
-                                <EditIcon />
-                                Güncelle
+                                <Link
+                                  style={{
+                                    textDecoration: "none",
+                                    color: "unset",
+                                  }}
+                                >
+                                  <EditIcon />
+                                  Güncelle
+                                </Link>
                               </MenuItem>
-                              <MenuItem onClick={handleClose} disableRipple>
+                              <MenuItem
+                                onClick={() => handleDelete(room.id)}
+                                disableRipple
+                              >
                                 <DeleteIcon />
                                 Sil
                               </MenuItem>
-                              {/* <MenuItem onClick={handleClose} disableRipple>
-                                <FileCopyIcon />
-                                Duplicate
-                              </MenuItem>
-                              <Divider sx={{ my: 0.5 }} />
-                              <MenuItem onClick={handleClose} disableRipple>
-                                <ArchiveIcon />
-                                Archive
-                              </MenuItem>
-                              <MenuItem onClick={handleClose} disableRipple>
-                                <MoreHorizIcon />
-                                More
-                              </MenuItem> */}
-                            </StyledMenu>
+                            </StyledMenu> */}
                             <IoPeopleSharp
                               className="mx-2"
                               style={{ width: 50, height: 75 }}
@@ -465,20 +506,28 @@ const Index = () => {
                               style={{ textAlign: "end" }}
                               tag="h5"
                             >
-                              Oda No : {ocp.person}
+                              id: {room.id}
+                              Oda No : {room.roomNumber}
                             </CardTitle>
                             <CardTitle
                               className="mx-4 "
                               tag="h5"
                               style={{ textAlign: "end" }}
                             >
-                              {ocp.person} Kişilik Oda
+                              {room.roomCapacity} Kişilik Oda
+                            </CardTitle>
+                            <CardTitle
+                              className="mx-4 "
+                              tag="h5"
+                              style={{ textAlign: "end" }}
+                            >
+                              {room.student}
                             </CardTitle>
                           </Col>
                         </Row>
                         <CardText className="svgb d-flex ">
                           <h5 className="svgbH mt-2 mx-2 ">
-                            Güncel Kapasite: 2/{ocp.person}
+                            Güncel Kapasite: {room.roomCapacity}-{room.student}
                           </h5>
                           {/* <CButton
                             className=""

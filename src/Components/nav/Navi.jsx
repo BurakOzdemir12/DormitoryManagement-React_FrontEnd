@@ -21,7 +21,7 @@ import "../nav/navbar.css";
 import { styled, alpha } from "@mui/material/styles";
 //react eklentiler
 import axios from "axios";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -79,6 +79,7 @@ function Navi(args) {
     setAnchorEl(null);
   };
   //
+  const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState(false);
@@ -105,7 +106,18 @@ function Navi(args) {
     };
     fetchOneStudent();
   }, []);
-  
+  //Logout
+  const handleLogout = async () => {
+    try {
+      
+      localStorage.removeItem("token");
+      setUserData(null);
+      navigate("/login");
+    } catch (error) {
+      console.error("There was an error logging out!", error);
+    }
+    handleClose();
+  };
 
   return (
     <div className="navlinks fluid ">
@@ -133,12 +145,12 @@ function Navi(args) {
             <Collapse isOpen={isOpen} navbar>
               <Nav className="nav mt-4 mx-auto" navbar>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="/anasayfa">
+                  <a className="navlink" href="/home">
                     Ana Sayfa
                   </a>
                 </NavItem>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="/yurtlar">
+                  <a className="navlink" href="/dorms">
                     Yurtlar
                   </a>
                 </NavItem>
@@ -179,7 +191,7 @@ function Navi(args) {
                       <MenuItem onClick={handleClose} disableRipple>
                         Profil
                       </MenuItem>
-                      <MenuItem onClick={handleClose} disableRipple>
+                      <MenuItem  onClick={handleLogout} disableRipple>
                       <LogoutOutlinedIcon/>Çıkış Yap
                       </MenuItem>
                     </StyledMenu>

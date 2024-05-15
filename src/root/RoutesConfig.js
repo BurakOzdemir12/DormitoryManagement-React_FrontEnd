@@ -19,6 +19,7 @@ import DormProps from "../scenes/dormProps/DormProps";
 import UpdateForm from "../scenes/form/UpdateForm";
 import Login from "../scenes/login/Login";
 import DormReview from "../Pages/dormReview/DormReview";
+import RoomUpdate from "../scenes/room/RoomUpdate";
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 const isNavigatingToLoginPage = window.location.pathname === "/login";
@@ -29,7 +30,6 @@ const RoutesConfig = () => {
     window.location.reload();
 
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
     navigate("/")
   }
   const [theme, colorMode] = useMode();
@@ -56,6 +56,7 @@ const RoutesConfig = () => {
               <Route path="/updateStudent/:id" element={<UpdateForm />} />
 
               <Route path="/room" element={<Room />} />
+              <Route path="/roomUpdate/:id" element={<RoomUpdate />} />
               <Route path="/comments" element={<Comments />} />
               <Route path="/statistics" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
