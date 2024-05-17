@@ -22,6 +22,7 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
+import { Label } from "@mui/icons-material";
 
 const userSchema = yup.object().shape({
   roomNumber: yup.string().required("required"),
@@ -32,10 +33,10 @@ const userSchema = yup.object().shape({
 
 const RoomUpdate = () => {
   const [room, setRoom] = useState({
-    roomNumber: "",
-    roomCapacity: "",
-    roomType: "",
-    roomStatu: "",
+    // roomNumber: "",
+    // roomCapacity: "",
+    // roomType: "",
+    // roomStatu: "",
     students: [{ student: "" }],
   });
 
@@ -59,46 +60,59 @@ const RoomUpdate = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setshowErrorAlert] = useState(false);
-  // const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-  //   try {
-  //     // Filter out empty student entries
-  //     const filteredStudents = values.students.filter(
-  //       (student) => student.student.trim() !== ""
-  //     );
-  //     const studentNames = filteredStudents.map((student) => student.student);
-  //     const payload = {
-  //       ...values,
-  //       students: JSON.stringify(studentNames),
-  //     };
 
-  //     await axios.post("http://localhost:8800/rooms", payload);
-  //     resetForm();
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      // Filter out empty student entries
+      const filteredStudents = values.students.filter(
+        (student) => student.student.trim() !== ""
+      );
+      const studentNames = filteredStudents.map((student) => student.student);
+      const payload = {
+        ...values,
+        students: JSON.stringify(studentNames),
+      };
+
+      await axios.put(`http://localhost:8800/rooms/${roomId}`, payload);
+      resetForm();
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 2000);
+      setSubmitting(false);
+    } catch (error) {
+      setshowErrorAlert(true);
+      setTimeout(() => {
+        setshowErrorAlert(false);
+      }, 2000);
+      console.log(error);
+      setSubmitting(false);
+    }
+  };
+  // const handleChange = (e) => {
+  //   // Update the form state
+  //   setRoom((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  // };
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     await axios.put(`http://localhost:8800/rooms/${roomId}`, room);
   //     setShowAlert(true);
-  //     setTimeout(() => {
+  //     setTimeout(()=>{
   //       setShowAlert(false);
-  //     }, 2000);
-  //     setSubmitting(false);
+  //     },2000)
+
+  //     navigate("/dashboard");
+  //     // resetForm();
   //   } catch (error) {
   //     setshowErrorAlert(true);
   //     setTimeout(() => {
   //       setshowErrorAlert(false);
   //     }, 2000);
   //     console.log(error);
-  //     setSubmitting(false);
   //   }
   // };
 
-  const handleSubmit = async (updatedStudent) => {
-    try {
-      await axios.put(`http://localhost:8800/rooms/${roomId}`, room);
-      navigate("/dashboard");
-      // resetForm();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  if (room.roomStatu === "Erkek Dolu") {
-  }
   const handleTextFieldRemove = (index, setFieldValue, values) => {
     const list = [...values.students];
     list.splice(index, 1);
@@ -125,14 +139,15 @@ const RoomUpdate = () => {
         validationSchema={userSchema}
       >
         {({
-          handleChange,
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleSubmit,
-          setFieldValue,
-          isSubmitting,
+         handleChange,
+         values,
+         errors,
+         touched,
+         handleBlur,
+         handleSubmit,
+         setFieldValue,
+         isSubmitting,
+
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -203,7 +218,7 @@ const RoomUpdate = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label={capitalize(room.roomType)}
+                label={room.roomType}
                 placeholder="Oda Tipi"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -227,88 +242,106 @@ const RoomUpdate = () => {
                   },
                 }}
               />
-              {room.roomStatu === "Erkek Dolu" && (
-  <RadioGroup
-    row
-    fullWidth
-    aria-label="roomStatu"
-    name="roomStatu"
-    onBlur={handleBlur}
-    onChange={handleChange}
-    value={"Erkek Dolu"}
-    sx={{
-      gridColumn: "span 4",
-      ".MuiFormControlLabel-root": {
-        "& .MuiFormControlLabel-label": { fontSize: 20 },
-      },
-      ".MuiSvgIcon-root": {
-        fontSize: 40,
-      },
-    }}
-  >
-    <FormControlLabel
-      value="Kadın Boş"
-      control={
-        <Radio
-          sx={{
-            color: red[300],
-            "&.Mui-checked": { color: red[300] },
-          }}
-        />
-      }
-      label="Kadın Boş"
-    />
-    <FormControlLabel
-      value="Kadın Dolu"
-      control={
-        <Radio
-          sx={{
-            color: red[900],
-            "&.Mui-checked": { color: red[900] },
-          }}
-        />
-      }
-      label="Kadın Dolu"
-    />
-    <FormControlLabel
-      value="Erkek Boş"
-      control={
-        <Radio
-          sx={{
-            color: blue[300],
-            "&.Mui-checked": { color: blue[300] },
-          }}
-        />
-      }
-      label="Erkek Boş"
-    />
-    <FormControlLabel
-      value="Erkek Dolu"
-      control={
-        <Radio
-          sx={{
-            color: lightBlue[900],
-            "&.Mui-checked": { color: lightBlue[900] },
-          }}
-        />
-      }
-      label="Erkek Dolu"
-    />
-    <FormControlLabel
-      value="Boş"
-      control={
-        <Radio
-          sx={{
-            color: grey[400],
-            "&.Mui-checked": { color: grey[400] },
-          }}
-        />
-      }
-      label="Boş"
-    />
-  </RadioGroup>
-)}
 
+              <RadioGroup
+                row
+                fullWidth
+                aria-label="roomStatu"
+                name="roomStatu"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                // value={values.roomStatu}
+                value={room.roomStatu}
+                sx={{
+                  gridColumn: "span 4",
+                  ".MuiFormControlLabel-root": {
+                    "& .MuiFormControlLabel-label": { fontSize: 20 },
+                  },
+                  ".MuiSvgIcon-root": {
+                    fontSize: 40,
+                  },
+                }}
+              >
+                <FormControlLabel
+                  value="Kadın Boş"
+                  control={
+                    <Radio
+                      sx={{
+                        color: red[300],
+                        "&.Mui-checked": { color: red[300] },
+                      }}
+                      defaultChecked={room.roomStatu === "Kadın Boş"}
+                    />
+                  }
+                  label="Kadın Boş"
+                />
+                <FormControlLabel
+                  value="Kadın Dolu"
+                  control={
+                    <Radio
+                      sx={{
+                        color: red[900],
+                        "&.Mui-checked": { color: red[900] },
+                      }}
+                      defaultChecked={room.roomStatu === "Kadın Dolu"}
+                    />
+                  }
+                  label="Kadın Dolu"
+                />
+                <FormControlLabel
+                  value="Erkek Boş"
+                  control={
+                    <Radio
+                      sx={{
+                        color: blue[300],
+                        "&.Mui-checked": { color: blue[300] },
+                      }}
+                      defaultChecked={room.roomStatu === "Erkek Boş"}
+                    />
+                  }
+                  label="Erkek Boş"
+                />
+                <FormControlLabel
+                  value="Erkek Dolu"
+                  control={
+                    <Radio
+                      sx={{
+                        color: lightBlue[900],
+                        "&.Mui-checked": { color: lightBlue[900] },
+                      }}
+                      defaultChecked={room.roomStatu === "Erkek Dolu"}
+                    />
+                  }
+                  label="Erkek Dolu"
+                />
+                <FormControlLabel
+                  value="Boş"
+                  control={
+                    <Radio
+                      sx={{
+                        color: grey[400],
+                        "&.Mui-checked": { color: grey[400] },
+                      }}
+                      defaultChecked={room.roomStatu === "Boş"}
+                    />
+                  }
+                  label="Boş"
+                />
+                
+              </RadioGroup>
+              <TextField
+                fullWidth
+                disabled
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 16,
+                    
+                  },
+                }}
+                  sx={{gridColumn: "span 1",textAlign:"center",justifyContent:"center",opacity:1}}
+                  label={"Güncel Durum: "+room.roomStatu}
+                />
               <Box
                 fullWidth
                 m="10px"
@@ -331,21 +364,26 @@ const RoomUpdate = () => {
                       onBlur={handleBlur}
                       value={student.student}
                       name={`students[${index}].student`}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e); // Call your custom handleChange function
+                        // Call Formik's handleChange
+                      }}
                       error={!!touched.students && !!errors.students}
                       helperText={touched.students && errors.students}
-                      sx={{"& input::placeholder": {
-                        textAlign: "right",
-                        opacity: 1,
-                        fontSize: 18,
-                        m: 0.4,
-                      },
-                    }}
-                    InputLabelProps={{
-                      style: {
-                        opacity: 1,
-                        fontSize: 20,
-                      },}}
+                      sx={{
+                        "& input::placeholder": {
+                          textAlign: "right",
+                          opacity: 1,
+                          fontSize: 18,
+                          m: 0.4,
+                        },
+                      }}
+                      InputLabelProps={{
+                        style: {
+                          opacity: 1,
+                          fontSize: 20,
+                        },
+                      }}
                     />
                     {values.students.length !== 1 && (
                       <Fab
@@ -376,6 +414,7 @@ const RoomUpdate = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button
+                
                 type="submit"
                 color="secondary"
                 variant="contained"
