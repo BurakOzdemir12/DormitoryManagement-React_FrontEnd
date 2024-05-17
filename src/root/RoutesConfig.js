@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 // Admin Page
 import { ColorModeContext, useMode } from "../theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -20,18 +26,53 @@ import UpdateForm from "../scenes/form/UpdateForm";
 import Login from "../scenes/login/Login";
 import DormReview from "../Pages/dormReview/DormReview";
 import RoomUpdate from "../scenes/room/RoomUpdate";
+import { jwtDecode } from "jwt-decode";
+import App from "./App";
+import Cookies from "universal-cookie";
+
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 const isNavigatingToLoginPage = window.location.pathname === "/login";
 
 const RoutesConfig = () => {
+  const cookies = new Cookies();
+
   const navigate = useNavigate();
   if (isNavigatingToLoginPage) {
     window.location.reload();
 
-    localStorage.removeItem("token");
-    navigate("/")
+    // localStorage.removeItem("token");
+    cookies.remove("jwt_auth");
+
+    navigate("/");
   }
+
+  const [user, setUser] = useState(null);
+  //Token Expires
+
+  useEffect(() => {
+    // const token = localStorage.getItem("token");
+    const token = cookies.get("jwt_auth");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const currentDate = new Date().getTime();
+      if (decodedToken.exp * 1000 < currentDate) {
+        // localStorage.removeItem("token");
+        cookies.remove("jwt_auth");
+        setUser(null);
+        window.location.reload();
+
+        navigate("/login");
+        window.location.reload();
+
+        // Clear user state if token is expired
+      } else {
+        setUser(decodedToken);
+      }
+    }
+  }, [navigate]);
+
+  
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
@@ -47,8 +88,6 @@ const RoutesConfig = () => {
             <Topbar setIsSidebar={setIsSidebar} />
 
             <Routes>
-              {/* <Route path="/login" element={<Login />} /> */}
-
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/students" element={<Students />} />
               <Route path="/dormprops" element={<DormProps />} />

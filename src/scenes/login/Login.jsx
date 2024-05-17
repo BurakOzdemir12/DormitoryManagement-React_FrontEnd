@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import Cookies from "universal-cookie";
 //
 import bgimg from "../../Components/images/emu.png";
 import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
@@ -40,11 +40,10 @@ function Copyright(props) {
   );
 }
 
-
-
 const defaultTheme = createTheme();
 
 function SignInSide() {
+  const cookies = new Cookies();
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
@@ -61,6 +60,7 @@ function SignInSide() {
         accessToken: res.data.accessToken,
         refreshToken: res.data.refreshToken,
       });
+      cookies.set("jwt_auth", res.data.accessToken, { path: "/" });
       return res.data;
     } catch (error) {
       console.log(error);
@@ -84,7 +84,7 @@ function SignInSide() {
       return Promise.reject(error);
     }
   );
-
+  //login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,10 +92,7 @@ function SignInSide() {
       const res = await axios.post("/login", { username, password });
 
       setUser(res.data);
-      localStorage.setItem("token", res.data.accessToken);
-      
-
-
+      cookies.set("jwt_auth", res.data.accessToken, { path: "/" }); // localStorage.setItem("token", res.data.accessToken);
       if (res.data.isAdmin) {
         navigate("/dashboard");
         window.location.reload();
@@ -103,15 +100,11 @@ function SignInSide() {
         navigate("/DormReview");
         window.location.reload();
       }
-      
     } catch (error) {
       console.log(error);
     }
-    
   };
 
-
-  
   return (
     <ThemeProvider theme={defaultTheme}>
       {user && <Navi user={user} />}

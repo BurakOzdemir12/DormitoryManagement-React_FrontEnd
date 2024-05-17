@@ -58,6 +58,7 @@ import { Outlet } from "react-router-dom";
 import { Box, TablePagination, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "universal-cookie";
 
 const items = [
   {
@@ -197,7 +198,9 @@ function SamplePrevArrow(props) {
   );
 }
 function DormReview(args, Rargs, direction, ...argss) {
-  const userToken = localStorage.getItem("token");
+  const cookies = new Cookies();
+
+  const userToken = cookies.get("jwt_auth");
   const user = userToken ? jwtDecode(userToken) : null;
   const id = user ? user.id : null;
   var settings = {

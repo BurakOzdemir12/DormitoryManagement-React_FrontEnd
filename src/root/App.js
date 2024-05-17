@@ -15,25 +15,29 @@ import Home from "../Pages/home/Home";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 function App() {
   const navigate = useNavigate();
-
+  const cookies = new Cookies();
   const [user, setUser] = useState(null);
   //Token Expires
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
+    const token = cookies.get("jwt_auth");
     if (token) {
       const decodedToken = jwtDecode(token);
       const currentDate = new Date().getTime();
 
       if (decodedToken.exp * 1000 < currentDate) {
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
+        cookies.remove("jwt_auth");
         setUser(null); 
 
         window.location.reload();
         navigate("/login");
+        window.location.reload();
 
 
         // Clear user state if token is expired

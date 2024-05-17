@@ -39,6 +39,7 @@
     "reactstrap": "^9.2.2",
     "rsuite": "^5.56.0",
     "slick-carousel": "^1.8.1",
+    "universal-cookie": "^7.1.4",
     "use-history": "^1.4.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"

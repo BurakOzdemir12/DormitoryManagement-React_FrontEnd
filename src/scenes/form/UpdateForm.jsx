@@ -80,24 +80,7 @@ const UpdateForm = () => {
     fetchStudent(studentId);
   }, [studentId]);
 
-  // useEffect(() => {
-  //   // Set initial values when students data changes
-  //   if (students.length > 0) {
-  //     const initialData = students.map((student) => ({
-  //       firstName: student.name ,
-  //       lastName: student.lastName ,
-  //       studentNo: student.studentNo ,
-  //       age: student.age ,
-  //       mail: student.mail ,
-  //       phoneNumb: student.phoneNumb ,
-  //       passportNo: student.passportNo ,
-  //       registerStatus: student.registerStatus ,
-  //       faculty: student.faculty ,
-  //       gender: student.gender ,
-  //     }));
-  //     setInitialValues(initialData);
-  //   }
-  // }, [students]);
+  
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 

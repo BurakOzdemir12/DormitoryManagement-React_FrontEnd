@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   IconButton,
@@ -11,6 +11,7 @@ import {
   Fab,
   CircularProgress,
   Alert,
+  capitalize,
 } from "@mui/material";
 import { blue, grey, indigo, lightBlue, red } from "@mui/material/colors";
 import { Field, FieldArray, Formik } from "formik";
@@ -30,44 +31,74 @@ const userSchema = yup.object().shape({
 });
 
 const RoomUpdate = () => {
-  const [initialValues, setRoom] = useState({
+  const [room, setRoom] = useState({
     roomNumber: "",
     roomCapacity: "",
     roomType: "",
     roomStatu: "",
     students: [{ student: "" }],
   });
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const roomId = location.pathname.split("/")[2];
+
+  useEffect(() => {
+    const fetchRoom = async (id) => {
+      try {
+        const res = await axios.get(`http://localhost:8800/rooms/${id}`);
+        setRoom(res.data);
+        console.log(res.data, "One Room Values");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchRoom(roomId);
+  }, [roomId]);
+
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setshowErrorAlert] = useState(false);
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      // Filter out empty student entries
-      const filteredStudents = values.students.filter(
-        (student) => student.student.trim() !== ""
-      );
-      const studentNames = filteredStudents.map((student) => student.student);
-      const payload = {
-        ...values,
-        students: JSON.stringify(studentNames),
-      };
+  // const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  //   try {
+  //     // Filter out empty student entries
+  //     const filteredStudents = values.students.filter(
+  //       (student) => student.student.trim() !== ""
+  //     );
+  //     const studentNames = filteredStudents.map((student) => student.student);
+  //     const payload = {
+  //       ...values,
+  //       students: JSON.stringify(studentNames),
+  //     };
 
-      await axios.post("http://localhost:8800/rooms", payload);
-      resetForm();
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 2000);
-      setSubmitting(false);
+  //     await axios.post("http://localhost:8800/rooms", payload);
+  //     resetForm();
+  //     setShowAlert(true);
+  //     setTimeout(() => {
+  //       setShowAlert(false);
+  //     }, 2000);
+  //     setSubmitting(false);
+  //   } catch (error) {
+  //     setshowErrorAlert(true);
+  //     setTimeout(() => {
+  //       setshowErrorAlert(false);
+  //     }, 2000);
+  //     console.log(error);
+  //     setSubmitting(false);
+  //   }
+  // };
+
+  const handleSubmit = async (updatedStudent) => {
+    try {
+      await axios.put(`http://localhost:8800/rooms/${roomId}`, room);
+      navigate("/dashboard");
+      // resetForm();
     } catch (error) {
-      setshowErrorAlert(true);
-      setTimeout(() => {
-        setshowErrorAlert(false);
-      }, 2000);
       console.log(error);
-      setSubmitting(false);
     }
   };
-
+  if (room.roomStatu === "Erkek Dolu") {
+  }
   const handleTextFieldRemove = (index, setFieldValue, values) => {
     const list = [...values.students];
     list.splice(index, 1);
@@ -81,7 +112,6 @@ const RoomUpdate = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   return (
     <Box m="20px">
@@ -91,7 +121,7 @@ const RoomUpdate = () => {
       />
       <Formik
         onSubmit={handleSubmit}
-        initialValues={initialValues}
+        initialValues={room}
         validationSchema={userSchema}
       >
         {({
@@ -117,120 +147,168 @@ const RoomUpdate = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Oda Numarası"
+                label={room.roomNumber}
+                placeholder="Oda Numarası"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.roomNumber}
                 name="roomNumber"
                 error={!!touched.roomNumber && !!errors.roomNumber}
                 helperText={touched.roomNumber && errors.roomNumber}
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="number"
-                label="Kapasite"
+                label={room.roomCapacity}
+                placeholder="Kapasite"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.roomCapacity}
                 name="roomCapacity"
                 error={!!touched.roomCapacity && !!errors.roomCapacity}
                 helperText={touched.roomCapacity && errors.roomCapacity}
-                sx={{ gridColumn: "span 1" }}
+                sx={{
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
+                  },
+                }}
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Oda Tipi"
+                label={capitalize(room.roomType)}
+                placeholder="Oda Tipi"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.roomType}
                 name="roomType"
                 error={!!touched.roomType && !!errors.roomType}
                 helperText={touched.roomType && errors.roomType}
-                sx={{ gridColumn: "span 1" }}
-              />
-              <RadioGroup
-                row
-                fullWidth
-                aria-label="roomStatu"
-                name="roomStatu"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.roomStatu}
                 sx={{
-                  gridColumn: "span 4",
-                  ".MuiFormControlLabel-root": {
-                    "& .MuiFormControlLabel-label": { fontSize: 20 },
-                  },
-                  ".MuiSvgIcon-root": {
-                    fontSize: 40,
+                  gridColumn: "span 1",
+                  "& input::placeholder": {
+                    textAlign: "right",
+                    opacity: 1,
+                    fontSize: 18,
+                    m: 0.4,
                   },
                 }}
-              >
-                <FormControlLabel
-                  value="Kadın Boş"
-                  control={
-                    <Radio
-                      sx={{
-                        color: red[300],
-                        "&.Mui-checked": { color: red[300] },
-                      }}
-                    />
-                  }
-                  label="Kadın Boş"
-                />
-                <FormControlLabel
-                  value="Kadın Dolu"
-                  control={
-                    <Radio
-                      sx={{
-                        color: red[900],
-                        "&.Mui-checked": { color: red[900] },
-                      }}
-                    />
-                  }
-                  label="Kadın Dolu"
-                />
-                <FormControlLabel
-                  value="Erkek Boş"
-                  control={
-                    <Radio
-                      sx={{
-                        color: blue[300],
-                        "&.Mui-checked": { color: blue[300] },
-                      }}
-                    />
-                  }
-                  label="Erkek Boş"
-                />
-                <FormControlLabel
-                  value="Erkek Dolu"
-                  control={
-                    <Radio
-                      sx={{
-                        color: lightBlue[900],
-                        "&.Mui-checked": { color: lightBlue[900] },
-                      }}
-                    />
-                  }
-                  label="Erkek Dolu"
-                />
-                <FormControlLabel
-                  value="Boş"
-                  control={
-                    <Radio
-                      sx={{
-                        color: grey[400],
-                        "&.Mui-checked": { color: grey[400] },
-                      }}
-                    />
-                  }
-                  label="Boş"
-                />
-              </RadioGroup>
+                InputLabelProps={{
+                  style: {
+                    opacity: 1,
+                    fontSize: 20,
+                  },
+                }}
+              />
+              {room.roomStatu === "Erkek Dolu" && (
+  <RadioGroup
+    row
+    fullWidth
+    aria-label="roomStatu"
+    name="roomStatu"
+    onBlur={handleBlur}
+    onChange={handleChange}
+    value={"Erkek Dolu"}
+    sx={{
+      gridColumn: "span 4",
+      ".MuiFormControlLabel-root": {
+        "& .MuiFormControlLabel-label": { fontSize: 20 },
+      },
+      ".MuiSvgIcon-root": {
+        fontSize: 40,
+      },
+    }}
+  >
+    <FormControlLabel
+      value="Kadın Boş"
+      control={
+        <Radio
+          sx={{
+            color: red[300],
+            "&.Mui-checked": { color: red[300] },
+          }}
+        />
+      }
+      label="Kadın Boş"
+    />
+    <FormControlLabel
+      value="Kadın Dolu"
+      control={
+        <Radio
+          sx={{
+            color: red[900],
+            "&.Mui-checked": { color: red[900] },
+          }}
+        />
+      }
+      label="Kadın Dolu"
+    />
+    <FormControlLabel
+      value="Erkek Boş"
+      control={
+        <Radio
+          sx={{
+            color: blue[300],
+            "&.Mui-checked": { color: blue[300] },
+          }}
+        />
+      }
+      label="Erkek Boş"
+    />
+    <FormControlLabel
+      value="Erkek Dolu"
+      control={
+        <Radio
+          sx={{
+            color: lightBlue[900],
+            "&.Mui-checked": { color: lightBlue[900] },
+          }}
+        />
+      }
+      label="Erkek Dolu"
+    />
+    <FormControlLabel
+      value="Boş"
+      control={
+        <Radio
+          sx={{
+            color: grey[400],
+            "&.Mui-checked": { color: grey[400] },
+          }}
+        />
+      }
+      label="Boş"
+    />
+  </RadioGroup>
+)}
+
               <Box
                 fullWidth
                 m="10px"
@@ -248,13 +326,26 @@ const RoomUpdate = () => {
                       fullWidth
                       variant="filled"
                       type="text"
-                      label="Öğrenci Adı"
+                      // label={room.studentss}
+                      placeholder="Öğrenci Adı"
                       onBlur={handleBlur}
                       value={student.student}
                       name={`students[${index}].student`}
                       onChange={handleChange}
                       error={!!touched.students && !!errors.students}
                       helperText={touched.students && errors.students}
+                      sx={{"& input::placeholder": {
+                        textAlign: "right",
+                        opacity: 1,
+                        fontSize: 18,
+                        m: 0.4,
+                      },
+                    }}
+                    InputLabelProps={{
+                      style: {
+                        opacity: 1,
+                        fontSize: 20,
+                      },}}
                     />
                     {values.students.length !== 1 && (
                       <Fab

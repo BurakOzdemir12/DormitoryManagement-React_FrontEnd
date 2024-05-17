@@ -24,6 +24,7 @@ import axios from "axios";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "universal-cookie";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -69,7 +70,10 @@ const StyledMenu = styled((props) => (
 }));
 
 function Navi(args) {
+  const cookies = new Cookies();
+
   //Login Logout buttons
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -87,10 +91,11 @@ function Navi(args) {
 
   useEffect(() => {
     // const token = localStorage.getItem("token");
+    const token = cookies.get("jwt_auth");
 
     const fetchOneStudent = async () => {
       try {
-        const tokendata = localStorage.getItem("token");
+        const tokendata = token;
         const decoded = tokendata ? jwtDecode(tokendata) : null;
         const userId = decoded ? decoded.id : null;
         console.log(" user id", userId);
@@ -110,7 +115,10 @@ function Navi(args) {
   const handleLogout = async () => {
     try {
       
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
+      
+      cookies.remove("jwt_auth");
+
       setUserData(null);
       navigate("/login");
     } catch (error) {

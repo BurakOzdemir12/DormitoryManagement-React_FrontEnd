@@ -135,6 +135,7 @@ const Index = () => {
     try {
       await axios.delete(`http://localhost:8800/rooms/${id}`);
       //delete olunca bildiri göster
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -384,7 +385,7 @@ const Index = () => {
           height="100%"
           mt={5}
           mb={5}
-          display="flex"
+          display=""
           alignItems="start"
           justifyContent="center"
         >
@@ -438,13 +439,14 @@ const Index = () => {
                           <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
                             <Link to={`/roomUpdate/${room.id}`}>
                               <IconButton>Güncelle</IconButton>
-                              <IconButton
+                              
+                            </Link>
+                            <IconButton
                                 onClick={() => handleDelete(room.id)}
                               >
                                 <DeleteIcon />
                                 Sil
                               </IconButton>
-                            </Link>
                             {/* <Button
                               id="demo-customized-button"
                               aria-controls={
@@ -506,7 +508,7 @@ const Index = () => {
                               style={{ textAlign: "end" }}
                               tag="h5"
                             >
-                              id: {room.id}
+                              
                               Oda No : {room.roomNumber}
                             </CardTitle>
                             <CardTitle
