@@ -30,6 +30,7 @@ root.render(
   <BrowserRouter>
   
   {isAdmin && isnon ? <Navigate to="/dashboard" />:""}
+  
 
   {isAuthenticated && isAdmin  ? <RoutesConfig /> :<App/> }
   </BrowserRouter>

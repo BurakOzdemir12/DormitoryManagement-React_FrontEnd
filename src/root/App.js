@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+const undefinedLocation = window.location.pathname === "*";
 
 function App() {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ function App() {
         <Route  path="/DormReview" element={<DormReview />} />
         <Route path="/login" element={<Login/>} />
         <Route index path="/" element={<Home/>} />
+         <Route path="*" element={<Home/>}/>
         
       </Route>
       

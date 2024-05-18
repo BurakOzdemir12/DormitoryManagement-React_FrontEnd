@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import { Label } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 const userSchema = yup.object().shape({
   roomNumber: yup.string().required("required"),
   roomCapacity: yup.string().required("required"),
@@ -37,7 +37,7 @@ const RoomUpdate = () => {
     // roomCapacity: "",
     // roomType: "",
     // roomStatu: "",
-    students: [{ student: "" }],
+    // students: [{ student: "" }],
   });
 
   const navigate = useNavigate();
@@ -61,67 +61,63 @@ const RoomUpdate = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setshowErrorAlert] = useState(false);
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      // Filter out empty student entries
-      const filteredStudents = values.students.filter(
-        (student) => student.student.trim() !== ""
-      );
-      const studentNames = filteredStudents.map((student) => student.student);
-      const payload = {
-        ...values,
-        students: JSON.stringify(studentNames),
-      };
+  const handleChange = (e, id, event) => {
+    // Update the form state
+    setRoom((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-      await axios.put(`http://localhost:8800/rooms/${roomId}`, payload);
-      resetForm();
+  const handleSubmit = async () => {
+    try {
+      const nonEmptyStudents = inputFields.filter(
+        (field) => field.student.trim() !== ""
+      );
+
+      const roomData = {
+        ...room,
+        students: nonEmptyStudents.map((field) => field.student),
+      };
+      setRoom(roomData);
+      await axios.put(`http://localhost:8800/rooms/${roomId}`, roomData);
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
-      }, 2000);
-      setSubmitting(false);
+        navigate("/dashboard");
+      }, 1000);
+
+      // resetForm();
     } catch (error) {
       setshowErrorAlert(true);
       setTimeout(() => {
         setshowErrorAlert(false);
       }, 2000);
       console.log(error);
-      setSubmitting(false);
     }
   };
-  // const handleChange = (e) => {
-  //   // Update the form state
-  //   setRoom((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  // };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     await axios.put(`http://localhost:8800/rooms/${roomId}`, room);
-  //     setShowAlert(true);
-  //     setTimeout(()=>{
-  //       setShowAlert(false);
-  //     },2000)
+  const handleChangeInput = (id, event) => {
+    const newInputFields = inputFields.map((i) => {
+      if (id === i.id) {
+        i[event.target.name] = event.target.value;
+      }
+      return i;
+    });
 
-  //     navigate("/dashboard");
-  //     // resetForm();
-  //   } catch (error) {
-  //     setshowErrorAlert(true);
-  //     setTimeout(() => {
-  //       setshowErrorAlert(false);
-  //     }, 2000);
-  //     console.log(error);
-  //   }
-  // };
-
-  const handleTextFieldRemove = (index, setFieldValue, values) => {
-    const list = [...values.students];
-    list.splice(index, 1);
-    setFieldValue("students", list);
+    setInputFields(newInputFields);
+  };
+  const [inputFields, setInputFields] = useState([
+    { id: uuidv4(), student: "" },
+  ]);
+  const handleAddFields = () => {
+    setInputFields([...inputFields, { id: uuidv4(), student: "" }]);
   };
 
-  const handleTextFieldAdd = (setFieldValue, values) => {
-    const newList = [...values.students, { student: "" }];
-    setFieldValue("students", newList);
+  const handleRemoveFields = (id) => {
+    const values = [...inputFields];
+    values.splice(
+      values.findIndex((value) => value.id === id),
+      1
+    );
+    setInputFields(values);
   };
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -130,24 +126,24 @@ const RoomUpdate = () => {
   return (
     <Box m="20px">
       <Header
-        title="ODA EKLE"
-        subtitle="Oda Ekleme, Güncelleme ve Öğrenciyi Odaya atama gibi işlemler aşağıda yapılabilmektedir"
+        title="ODA GÜNCELLE"
+        subtitle="Oda Güncelleme ve Öğrenciyi Odaya atama gibi işlemler aşağıda yapılabilmektedir"
       />
       <Formik
+        enableReinitialize
         onSubmit={handleSubmit}
         initialValues={room}
         validationSchema={userSchema}
       >
         {({
-         handleChange,
-         values,
-         errors,
-         touched,
-         handleBlur,
-         handleSubmit,
-         setFieldValue,
-         isSubmitting,
-
+          handleChange: formikHandleChange,
+          values,
+          errors,
+          touched,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          isSubmitting,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -162,11 +158,14 @@ const RoomUpdate = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label={room.roomNumber}
+                label={"Oda Numarası"}
                 placeholder="Oda Numarası"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.roomNumber}
+                onChange={(e) => {
+                  handleChange(e);
+                  formikHandleChange(e);
+                }}
+                value={values.roomNumber || ""}
                 name="roomNumber"
                 error={!!touched.roomNumber && !!errors.roomNumber}
                 helperText={touched.roomNumber && errors.roomNumber}
@@ -190,11 +189,14 @@ const RoomUpdate = () => {
                 fullWidth
                 variant="filled"
                 type="number"
-                label={room.roomCapacity}
+                label={"Oda Kapasitesi"}
                 placeholder="Kapasite"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.roomCapacity}
+                onChange={(e) => {
+                  handleChange(e);
+                  formikHandleChange(e);
+                }}
+                value={values.roomCapacity || ""}
                 name="roomCapacity"
                 error={!!touched.roomCapacity && !!errors.roomCapacity}
                 helperText={touched.roomCapacity && errors.roomCapacity}
@@ -218,11 +220,14 @@ const RoomUpdate = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label={room.roomType}
+                label={"Oda Tipi"}
                 placeholder="Oda Tipi"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.roomType}
+                onChange={(e) => {
+                  handleChange(e);
+                  formikHandleChange(e);
+                }}
+                value={values.roomType || ""}
                 name="roomType"
                 error={!!touched.roomType && !!errors.roomType}
                 helperText={touched.roomType && errors.roomType}
@@ -249,9 +254,12 @@ const RoomUpdate = () => {
                 aria-label="roomStatu"
                 name="roomStatu"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  formikHandleChange(e);
+                }}
                 // value={values.roomStatu}
-                value={room.roomStatu}
+                value={room.roomStatu || ""}
                 sx={{
                   gridColumn: "span 4",
                   ".MuiFormControlLabel-root": {
@@ -327,7 +335,6 @@ const RoomUpdate = () => {
                   }
                   label="Boş"
                 />
-                
               </RadioGroup>
               <TextField
                 fullWidth
@@ -336,12 +343,16 @@ const RoomUpdate = () => {
                   style: {
                     opacity: 1,
                     fontSize: 16,
-                    
                   },
                 }}
-                  sx={{gridColumn: "span 1",textAlign:"center",justifyContent:"center",opacity:1}}
-                  label={"Güncel Durum: "+room.roomStatu}
-                />
+                sx={{
+                  gridColumn: "span 2",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  opacity: 1,
+                }}
+                label={"Güncel Durum: " + room.roomStatu}
+              />
               <Box
                 fullWidth
                 m="10px"
@@ -353,68 +364,42 @@ const RoomUpdate = () => {
                   gridColumn: "span 4",
                 }}
               >
-                {values.students.map((student, index) => (
-                  <React.Fragment key={index}>
+                {inputFields.map((inputField) => (
+                  <Box key={inputField.id}>
                     <TextField
                       fullWidth
+                      name="student"
+                      label="Öğrenci Numarası"
                       variant="filled"
-                      type="text"
-                      // label={room.studentss}
-                      placeholder="Öğrenci Adı"
-                      onBlur={handleBlur}
-                      value={student.student}
-                      name={`students[${index}].student`}
+                      // value={values.roomNumber || ""}
+                      value={inputFields.student}
                       onChange={(e) => {
-                        handleChange(e); // Call your custom handleChange function
-                        // Call Formik's handleChange
-                      }}
-                      error={!!touched.students && !!errors.students}
-                      helperText={touched.students && errors.students}
-                      sx={{
-                        "& input::placeholder": {
-                          textAlign: "right",
-                          opacity: 1,
-                          fontSize: 18,
-                          m: 0.4,
-                        },
-                      }}
-                      InputLabelProps={{
-                        style: {
-                          opacity: 1,
-                          fontSize: 20,
-                        },
+                        handleChange(e);
+                        formikHandleChange(e);
+                        handleChangeInput(inputField.id, e);
                       }}
                     />
-                    {values.students.length !== 1 && (
-                      <Fab
-                        aria-label="remove"
-                        color="error"
-                        onClick={() =>
-                          handleTextFieldRemove(index, setFieldValue, values)
-                        }
-                      >
-                        <RemoveIcon />
-                      </Fab>
-                    )}
-                    {values.students.length - 1 === index &&
-                      values.students.length < 6 && (
-                        <Fab
-                          onClick={() =>
-                            handleTextFieldAdd(setFieldValue, values)
-                          }
-                          color="success"
-                          aria-label="add"
-                        >
-                          <AddIcon />
-                        </Fab>
-                      )}
-                  </React.Fragment>
+
+                    <IconButton
+                      disabled={inputFields.length === 1}
+                      onClick={() => handleRemoveFields(inputField.id)}
+                    >
+                      <RemoveIcon />
+                    </IconButton>
+                    <IconButton onClick={handleAddFields}>
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
                 ))}
+
               </Box>
+              <TextField
+              label="Kaç Oda Kaydedilsin ?">
+                
+              </TextField>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button
-                
                 type="submit"
                 color="secondary"
                 variant="contained"

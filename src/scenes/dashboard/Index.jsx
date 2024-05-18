@@ -403,168 +403,109 @@ const Index = () => {
             <Row style={{ alignItems: "center", marginLeft: "4%" }} noGutters>
               {rooms
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
-                .map((room) => (
-                  <Col
-                    key={room.id}
-                    className="divvv"
-                    xs={12}
-                    sm={12}
-                    md={6}
-                    lg={4}
-                    xl={2}
-                    xxl={3}
-                  >
-                    <div className=" roomCard mx-3 ">
-                      <Card
-                        inverse
-                        className="mb-5 my-2   "
-                        // style={{
-                        //   backgroundColor: room.roomStatu === "Erkek Dolu" ? "#5c2928" : "#cc8084",
-                        //   "Kadın Dolu" ? "#47cbff" : "#bacfe1"
-                        // }}
-                        style={{
-                          backgroundColor:
-                            room.roomStatu === "Erkek Dolu"
-                              ? "#47cbff"
-                              : room.roomStatu === "Kadın Dolu"
-                              ? "#5c2928"
-                              : room.roomStatu === "Erkek Boş"
-                              ? "#bacfe1"
-                              : room.roomStatu === "Kadın Boş"
-                              ? "#cc8084"
-                              : "#a1a1a1", // Diğer boş durumlar için
-                        }}
-                      >
-                        <Row>
-                          <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
-                            <Link to={`/roomUpdate/${room.id}`}>
-                              <IconButton>Güncelle</IconButton>
-                              
-                            </Link>
-                            <IconButton
-                                onClick={() => handleDelete(room.id)}
-                              >
+                .map((room) => {
+                  const students = Array.isArray(room.student)
+                    ? room.student
+                    : JSON.parse(room.student);
+                  // Count the number of students
+                  const studentCount = students.length;
+                  const isRoomFull = studentCount >= room.roomCapacity;
+                  return (
+                    <Col
+                      key={room.id}
+                      className="divvv"
+                      xs={12}
+                      sm={12}
+                      md={6}
+                      lg={4}
+                      xl={2}
+                      xxl={3}
+                    >
+                      <div className=" roomCard mx-3 ">
+                        <Card
+                          inverse
+                          className="mb-5 my-2   "
+                          // style={{
+                          //   backgroundColor: room.roomStatu === "Erkek Dolu" ? "#5c2928" : "#cc8084",
+                          //   "Kadın Dolu" ? "#47cbff" : "#bacfe1"
+                          // }}
+                          style={{
+                            backgroundColor:
+                              room.roomStatu === "Erkek Dolu"
+                                ? "#47cbff"
+                                : room.roomStatu === "Kadın Dolu"
+                                ? "#5c2928"
+                                : room.roomStatu === "Erkek Boş"
+                                ? "#bacfe1"
+                                : room.roomStatu === "Kadın Boş"
+                                ? "#cc8084"
+                                : "#a1a1a1", // Diğer boş durumlar için
+                          }}
+                        >
+                          <Row>
+                            <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
+                              <Link to={`/roomUpdate/${room.id}`}>
+                                <IconButton>Güncelle</IconButton>
+                              </Link>
+                              <IconButton onClick={() => handleDelete(room.id)}>
                                 <DeleteIcon />
                                 Sil
                               </IconButton>
-                            {/* <Button
-                              id="demo-customized-button"
-                              aria-controls={
-                                open ? "demo-customized-menu" : undefined
-                              }
-                              aria-haspopup="true"
-                              aria-expanded={open ? "true" : undefined}
-                              variant="contained"
-                              disableElevation
-                              onClick={handleClick}
-                              endIcon={<KeyboardArrowDownIcon />}
-                            >
-                              Ayarlar
-                            </Button>
-                            <StyledMenu
-                              id="demo-customized-menu"
-                              MenuListProps={{
-                                "aria-labelledby": "demo-customized-button",
-                              }}
-                              anchorEl={anchorEl}
-                              open={open}
-                              onClose={handleClose}
-                            >
-                              <MenuItem onClick={handleClose} disableRipple>
-                                <Link
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "unset",
-                                  }}
-                                >
-                                  <EditIcon />
-                                  Güncelle
-                                </Link>
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => handleDelete(room.id)}
-                                disableRipple
-                              >
-                                <DeleteIcon />
-                                Sil
-                              </MenuItem>
-                            </StyledMenu> */}
-                            <IoPeopleSharp
-                              className="mx-2"
-                              style={{ width: 50, height: 75 }}
-                            />
-                          </Col>
-                          <Col
-                            noGutters
-                            xs={9}
-                            sm={9}
-                            md={9}
-                            lg={9}
-                            xl={9}
-                            xxl={9}
-                          >
-                            <CardTitle
-                              className="mx-4"
-                              style={{ textAlign: "end" }}
-                              tag="h5"
-                            >
-                              
-                              Oda No : {room.roomNumber}
-                            </CardTitle>
-                            <CardTitle
-                              className="mx-4 "
-                              tag="h5"
-                              style={{ textAlign: "end" }}
-                            >
-                              {room.roomCapacity} Kişilik Oda
-                            </CardTitle>
-                            <CardTitle
-                              className="mx-4 "
-                              tag="h5"
-                              style={{ textAlign: "end" }}
-                            >
-                              {room.student}
-                            </CardTitle>
-                          </Col>
-                        </Row>
-                        <CardText className="svgb d-flex ">
-                          <h5 className="svgbH mt-2 mx-2 ">
-                            Güncel Kapasite: {room.roomCapacity}-{room.student}
-                          </h5>
-                          {/* <CButton
-                            className=""
-                            color="success"
-                            onClick={() => setVisible(true)}
-                          >
-                            Rezervasyon Yap
-                          </CButton> */}
 
-                          {/* Warning Canvas */}
-                          {/* <COffcanvas
-                            placement="bottom"
-                            visible={visible}
-                            onHide={() => setVisible(false)}
-                          >
-                            <COffcanvasHeader>
-                              <COffcanvasTitle>Dikkat!</COffcanvasTitle>
-                              <CCloseButton
-                                className="text-reset"
-                                onClick={() => setVisible(false)}
+                              <IoPeopleSharp
+                                className="mx-2"
+                                style={{ width: 50, height: 75 }}
                               />
-                            </COffcanvasHeader>
-                            <COffcanvasBody className="text-center">
-                              Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır.{" "}
-                              <br /> Rezervasyonu Onaylıyor musunuz? <br />
-                              <Button color="success" className="mt-2">
-                                Gönder
-                              </Button>
-                            </COffcanvasBody>
-                          </COffcanvas> */}
-                        </CardText>
-                      </Card>
-                    </div>
-                  </Col>
-                ))}
+                            </Col>
+                            <Col
+                              noGutters
+                              xs={9}
+                              sm={9}
+                              md={9}
+                              lg={9}
+                              xl={9}
+                              xxl={9}
+                            >
+                              <CardTitle
+                                className="mx-4"
+                                style={{ textAlign: "end" }}
+                                tag="h5"
+                              >
+                                Oda No : {room.roomNumber}
+                              </CardTitle>
+                              <CardTitle
+                                className="mx-4 "
+                                tag="h5"
+                                style={{ textAlign: "end" }}
+                              >
+                                {room.roomCapacity} Kişilik Oda
+                              </CardTitle>
+                              <CardTitle
+                                className="mx-4 "
+                                tag="h5"
+                                style={{ textAlign: "end" }}
+                              >
+                                {room.student}
+                              </CardTitle>
+                            </Col>
+                          </Row>
+                          <CardText className="svgb d-flex ">
+                            {isRoomFull ? (
+                              <h5 className="svgbH mt-2 mx-2 ">
+                                Oda Full
+                              </h5>
+                            ) : (
+                              <h5 className="svgbH mt-2 mx-2 ">
+                                Güncel Kapasite: {room.roomCapacity}/
+                                {studentCount}
+                              </h5>
+                            )}
+                          </CardText>
+                        </Card>
+                      </div>
+                    </Col>
+                  );
+                })}
             </Row>
           </Box>
         </Box>

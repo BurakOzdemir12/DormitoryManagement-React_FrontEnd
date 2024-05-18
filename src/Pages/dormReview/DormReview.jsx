@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CButton,
   CCloseButton,
@@ -59,6 +59,7 @@ import { Box, TablePagination, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
+import axios from "axios";
 
 const items = [
   {
@@ -98,7 +99,7 @@ const occupancy = [
   { person: 1, color: "primary" },
 ];
 //rooms
-const rooms = [
+const roomst = [
   {
     id: 1,
     img: roomimage1,
@@ -198,6 +199,23 @@ function SamplePrevArrow(props) {
   );
 }
 function DormReview(args, Rargs, direction, ...argss) {
+  //Fetch Rooms
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get("http://localhost:8800/rooms");
+
+        setRooms(response.data);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
   const cookies = new Cookies();
 
   const userToken = cookies.get("jwt_auth");
@@ -451,7 +469,7 @@ function DormReview(args, Rargs, direction, ...argss) {
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
           <Slider className=" mb-5   " {...settings}>
-            {rooms.map((room) => (
+            {roomst.map((room) => (
               <Col className="  ">
                 <Card
                   className=" mb-5 mt-1 divvv "
@@ -588,15 +606,22 @@ function DormReview(args, Rargs, direction, ...argss) {
         <Row noGutters>
           <TablePagination
             component="div"
-            count={occupancy.length} // Update this to reflect the total number of rooms
+            count={rooms.length} // Update this to reflect the total number of rooms
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          {occupancy
+          {rooms
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
-            .map((ocp) => (
+            .map((room) => {
+              const students = Array.isArray(room.student)
+                    ? room.student
+                    : JSON.parse(room.student);
+                  // Count the number of students
+                  const studentCount = students.length;
+                  const isRoomFull = studentCount >= room.roomCapacity;
+                  return(
               <Col
                 className="divvv"
                 xs={12}
@@ -607,7 +632,20 @@ function DormReview(args, Rargs, direction, ...argss) {
                 xxl={3}
               >
                 <div className=" roomCard mx-3  ">
-                  <Card inverse className="mb-5 my-2   " color={ocp.color}>
+                  <Card inverse className="mb-5 my-2   " 
+                  style={{
+                    backgroundColor:
+                      room.roomStatu === "Erkek Dolu"
+                        ? "#47cbff"
+                        : room.roomStatu === "Kadın Dolu"
+                        ? "#5c2928"
+                        : room.roomStatu === "Erkek Boş"
+                        ? "#bacfe1"
+                        : room.roomStatu === "Kadın Boş"
+                        ? "#cc8084"
+                        : "#a1a1a1", // Diğer boş durumlar için
+                  }}
+                  >
                     <Row>
                       <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
                         <IoPeopleSharp
@@ -621,21 +659,28 @@ function DormReview(args, Rargs, direction, ...argss) {
                           style={{ textAlign: "end" }}
                           tag="h5"
                         >
-                          Oda No : {ocp.person}
+                          Oda No : {room.roomNumber}
                         </CardTitle>
                         <CardTitle
                           className="mx-4 "
                           tag="h5"
                           style={{ textAlign: "end" }}
                         >
-                          {ocp.person} Kişilik Oda
+                          {room.roomCapacity} Kişilik Oda
                         </CardTitle>
                       </Col>
                     </Row>
                     <CardText className="svgb d-flex ">
-                      <h5 className="svgbH mt-2 mx-2 ">
-                        Güncel Kapasite: 2/{ocp.person}
-                      </h5>
+                    {isRoomFull ? (
+                              <h5 className="svgbH mt-2 mx-2 ">
+                                Oda Full
+                              </h5>
+                            ) : (
+                              <h5 className="svgbH mt-2 mx-2 ">
+                                Güncel Kapasite: {room.roomCapacity}/
+                                {studentCount}
+                              </h5>
+                            )}
                       {user ? (
                         <CButton
                           className=""
@@ -679,7 +724,8 @@ function DormReview(args, Rargs, direction, ...argss) {
                   </Card>
                 </div>
               </Col>
-            ))}
+              )
+            })}
         </Row>
       </Row>
 
