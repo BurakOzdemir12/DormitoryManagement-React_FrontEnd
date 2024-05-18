@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../nav/navbar.css";
 import {
   Col,
@@ -15,7 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // logo/style
 import { CgProfile } from "react-icons/cg";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Box, Button, Menu, MenuItem ,useTheme} from "@mui/material";
 import emulogo from "../images/logoo.png";
 import "../nav/navbar.css";
 import { styled, alpha } from "@mui/material/styles";
@@ -25,7 +25,7 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
-
+import { ColorModeContext, tokens } from "../../theme";
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -70,6 +70,9 @@ const StyledMenu = styled((props) => (
 }));
 
 function Navi(args) {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
   const cookies = new Cookies();
 
   //Login Logout buttons
@@ -128,10 +131,11 @@ function Navi(args) {
   };
 
   return (
-    <div className="navlinks fluid ">
+    <Box className="navlinks fluid ">
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <Navbar className="navbar" fixed="fixed" expand="xl" {...args}>
+          <Navbar className="navbar" fixed="fixed" expand="xl" {...args}
+          backgroundColor={colors.primary[400]}>
             <NavbarBrand className="mx-5 brand" href="/home">
               <img
                 className="logo"
@@ -153,17 +157,17 @@ function Navi(args) {
             <Collapse isOpen={isOpen} navbar>
               <Nav className="nav mt-4 mx-auto" navbar>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="/home">
+                  <a style={{color: colors.grey[100],}} className="navlink" href="/home">
                     Ana Sayfa
                   </a>
                 </NavItem>
                 <NavItem className="mx-4 py-2">
-                  <a className="navlink" href="/dorms">
+                  <a style={{color: colors.grey[100],}} className="navlink" href="/dorms">
                     Yurtlar
                   </a>
                 </NavItem>
                 <NavItem className="mx-4 py-2">
-                  <a
+                  <a style={{color: colors.grey[100],}}
                     className="navlink"
                     href="https://www.emu.edu.tr/akademiktakvim"
                   >
@@ -171,8 +175,8 @@ function Navi(args) {
                   </a>
                 </NavItem>
                 {userData ? ( // If user is logged in
-                  <NavItem className="mx-5 py-2 profile">
-                    <span
+                  <NavItem style={{color: colors.grey[100],}} className=" mx-5 py-2 profile">
+                    <span 
                       style={{ cursor: "pointer" }}
                       className="navlink"
                       id="demo-customized-button"
@@ -206,8 +210,8 @@ function Navi(args) {
                   </NavItem>
                 ) : (
                   // If user is not logged in
-                  <NavItem className="mx-5 py-2 profile">
-                    <a className="navlink" href="/login">
+                  <NavItem   className=" mx-5 py-2 profile">
+                    <a style={{color: colors.grey[100]}}  className="navlink" href="/login">
                       <CgProfile className="mx-2" style={{ fontSize: 50 }} />
                       Giriş Yap
                     </a>
@@ -219,7 +223,7 @@ function Navi(args) {
         </Col>
       </Row>
       <Outlet />
-    </div>
+    </Box>
   );
 }
 

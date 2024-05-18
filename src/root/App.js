@@ -34,12 +34,11 @@ function App() {
       if (decodedToken.exp * 1000 < currentDate) {
         // localStorage.removeItem("token");
         cookies.remove("jwt_auth");
-        setUser(null); 
+        setUser(null);
 
         window.location.reload();
         navigate("/login");
         window.location.reload();
-
 
         // Clear user state if token is expired
       } else {
@@ -47,18 +46,27 @@ function App() {
       }
     }
   }, [navigate]);
+  const [theme, colorMode] = useMode();
   return (
-    <Routes>
-      <Route element={<Navi />}>
-        <Route  path="/home" element={<Home/>} />
-        <Route  path="/DormReview" element={<DormReview />} />
-        <Route path="/login" element={<Login/>} />
-        <Route index path="/" element={<Home/>} />
-         <Route path="*" element={<Home/>}/>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         
-      </Route>
+        <Topbar />
+      <Navi />
+    <Routes>
       
+       
+
+     
+        <Route path="/home" element={<Home />} />
+        <Route path="/DormReview" element={<DormReview />} />
+        <Route path="/login" element={<Login />} />
+        <Route index path="/" element={<Home />} />
+        <Route path="*" element={<Home />} />
     </Routes>
+    </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 

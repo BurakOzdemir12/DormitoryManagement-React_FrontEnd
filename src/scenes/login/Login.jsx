@@ -16,12 +16,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-//
+import { useTheme } from "@mui/material";
 import bgimg from "../../Components/images/emu.png";
 import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Navi from "../../Components/nav/Navi";
+import { tokens, useMode } from "../../theme";
 function Copyright(props) {
   return (
     <Typography
@@ -43,6 +44,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 function SignInSide() {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const cookies = new Cookies();
   const navigate = useNavigate();
   const location = useLocation();
@@ -104,9 +107,9 @@ function SignInSide() {
       console.log(error);
     }
   };
-
+  // const [theme, colorMode] = useMode();
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <Box>
       {user && <Navi user={user} />}
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
@@ -199,7 +202,7 @@ function SignInSide() {
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
+    </Box>
   );
 }
 export default SignInSide;

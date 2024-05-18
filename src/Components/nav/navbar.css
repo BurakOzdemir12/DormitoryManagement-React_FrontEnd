@@ -1,5 +1,5 @@
 :root {
-  --navbar: #2f55ac;
+  /* --navbar: #2f55ac; */
 }
 
 body {
@@ -17,7 +17,7 @@ body {
   background-color: aliceblue;
 }
 .navbar{
-  background-color: var(--navbar);
+  /* background-color: var(--navbar); */
 
 }
 .navlinks {
@@ -26,14 +26,19 @@ body {
 .navlink {
   opacity: 1;
   text-decoration: none;
-  color: rgb(238, 237, 237);
+  /* color: rgb(238, 237, 237); */
   font-weight: 350;
   font-size: 3.5ch;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  transition: font-size 0.3s ease-in-out, transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .navlink:hover {
-  color: #2c2c30;
+  font-size: 3.4ch;
+  /* color: #2c2c30; */
+  transform: scale(1.1);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: font-size 0.5s ease-in-out, transform 0.5s ease-in-out, text-shadow 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 @media screen and (max-width: 1200px) {
   .profile {

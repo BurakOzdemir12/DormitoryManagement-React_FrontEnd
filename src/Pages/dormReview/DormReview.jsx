@@ -199,6 +199,8 @@ function SamplePrevArrow(props) {
   );
 }
 function DormReview(args, Rargs, direction, ...argss) {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   //Fetch Rooms
   const [rooms, setRooms] = useState([]);
 
@@ -468,12 +470,13 @@ function DormReview(args, Rargs, direction, ...argss) {
         <Col xl={10} className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider className=" mb-5   " {...settings}>
+          <Slider 
+           className=" mb-5   " {...settings}>
             {roomst.map((room) => (
-              <Col className="  ">
+              <Col className="  "
+              >
                 <Card
                   className=" mb-5 mt-1 divvv "
-                  color="light"
                   style={{
                     maxWidth: "18rem",
                   }}
@@ -482,6 +485,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                     className="divvv"
                     key={room.id}
                     alt="Sample"
+                    
                     src={room.img}
                     style={{
                       backgroundRepeat: "no-repeat",
@@ -489,7 +493,8 @@ function DormReview(args, Rargs, direction, ...argss) {
                       height: "45ch",
                     }}
                   />
-                  <CardBody>
+                  <CardBody
+                  >
                     <CardTitle tag="h5">{room.title}</CardTitle>
                     <CardSubtitle className="mb-2 text-muted" tag="h6">
                       {room.pricingText}
@@ -546,7 +551,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                   <rect
                     width="20"
                     height="20"
-                    style={{ fill: "darkblue", opacity: 0.4 }}
+                    style={{ fill: "#bacfe1", opacity: 0.4 }}
                   />
                 </svg>
               </div>
@@ -558,7 +563,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                   <rect
                     width="20"
                     height="20"
-                    style={{ fill: "red", opacity: 0.4 }}
+                    style={{ fill: "cc8084", opacity: 0.4 }}
                   />
                 </svg>
               </div>
@@ -570,7 +575,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                   <rect
                     width="20"
                     height="20"
-                    style={{ fill: "darkblue", opacity: 1 }}
+                    style={{ fill: "47cbff", opacity: 1 }}
                   />
                 </svg>
               </div>
@@ -582,7 +587,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                   <rect
                     width="20"
                     height="20"
-                    style={{ fill: "red", opacity: 1 }}
+                    style={{ fill: "#5c2928", opacity: 1 }}
                   />
                 </svg>
               </div>
@@ -594,7 +599,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                   <rect
                     width="20"
                     height="20"
-                    style={{ fill: "grey", opacity: 1 }}
+                    style={{ fill: "a1a1a1", opacity: 1 }}
                   />
                 </svg>
               </div>
@@ -840,11 +845,18 @@ function DormReview(args, Rargs, direction, ...argss) {
       </Container>
       {/* Room Properties shows */}
       {modal && (
-        <div className="roomProps">
+        <div className="roomProps"
+        color={colors.grey[500]}
+        
+        >
           <div className="overlay" onClick={toggle}>
-            <div className="roomContent">
+            <div className="roomContent"
+             backgroundColor={colors.grey[200]}
+            >
               <h2>Single Room</h2>
-              <p>
+              <p 
+              color={colors.greenAccent[400]}       
+ > 
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
                 amet ratione natus facere rerum eos magnam, pariatur laudantium
                 porro ipsum labore, dolorum at libero sequi sunt tenetur iusto
