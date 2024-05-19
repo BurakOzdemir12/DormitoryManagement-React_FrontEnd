@@ -13,7 +13,7 @@ body {
   width: auto;
 }
 .navbar-toggler {
-  display: block;
+  /* display: block; */
   background-color: aliceblue;
 }
 .navbar{
@@ -44,22 +44,38 @@ body {
   .profile {
     text-align: center;
   }
+  .Ntoggler {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto; /* Ensures the element is centered */
+  }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
   .navlink {
     font-size: 3ch;
   }
+  .firstGrid{
+    align-items: center;
+    justify-content: center;
+  }
+  
 }
 /* 769 px higher */
 @media screen and (min-width: 768px) {
-  .navbar-toggler {
-       margin-right: 5ch;
-  }
+  
 }
 @media screen and (max-width: 480px) {
   .navlink {
     font-size: 2.5ch;
     text-align: center;
+  }
+  
+  .firstGrid{
+    align-items: center;
+    justify-content: center;
+  }
+  .secondGrid{
+margin-top: 1ch;
   }
   .nav-item {
     text-align: center;

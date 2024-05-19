@@ -55,7 +55,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
-import { Box, TablePagination, useTheme } from "@mui/material";
+import { Box, TablePagination, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
@@ -81,23 +81,7 @@ const items = [
     key: 3,
   },
 ];
-//room occupancy
-const occupancy = [
-  {
-    person: 1,
-    color: "danger",
-  },
-  { person: 2, color: "primary" },
-  { person: 1, color: "danger" },
-  { person: 3, color: "secondary" },
-  { person: 1, color: "primary" },
-  { person: 3, color: "primary" },
-  { person: 1, color: "primary" },
-  { person: 1, color: "primary" },
-  { person: 2, color: "secondary" },
-  { person: 1, color: "primary" },
-  { person: 1, color: "primary" },
-];
+
 //rooms
 const roomst = [
   {
@@ -223,6 +207,7 @@ function DormReview(args, Rargs, direction, ...argss) {
   const userToken = cookies.get("jwt_auth");
   const user = userToken ? jwtDecode(userToken) : null;
   const id = user ? user.id : null;
+  //room setting settings
   var settings = {
     dots: true,
     infinite: true,
@@ -470,11 +455,9 @@ function DormReview(args, Rargs, direction, ...argss) {
         <Col xl={10} className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
-          <Slider 
-           className=" mb-5   " {...settings}>
+          <Slider className=" mb-5   " {...settings}>
             {roomst.map((room) => (
-              <Col className="  "
-              >
+              <Col className="  ">
                 <Card
                   className=" mb-5 mt-1 divvv "
                   style={{
@@ -485,7 +468,6 @@ function DormReview(args, Rargs, direction, ...argss) {
                     className="divvv"
                     key={room.id}
                     alt="Sample"
-                    
                     src={room.img}
                     style={{
                       backgroundRepeat: "no-repeat",
@@ -493,8 +475,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                       height: "45ch",
                     }}
                   />
-                  <CardBody
-                  >
+                  <CardBody>
                     <CardTitle tag="h5">{room.title}</CardTitle>
                     <CardSubtitle className="mb-2 text-muted" tag="h6">
                       {room.pricingText}
@@ -512,100 +493,106 @@ function DormReview(args, Rargs, direction, ...argss) {
       </Row>
       <Row noGutters>
         <hr className="hr mt-3" />
-
-        <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-          <div className="d-flex divvv ">
-            <h3 className="divvv">Oda Müsaitlik Durumu </h3>
-            <Dropdown
-              isOpen={dropdownOpen}
-              toggle={toggleDropdown}
-              direction={"down"}
-              className="roomsDropdown divvv"
+        <Box display={"contents"} >
+          <Col xs={12} sm={12} md={12} lg={5} xl={5}>
+            <Box  className="d-flex divvv ">
+              <h3 className="divvv">Oda Müsaitlik Durumu </h3>
+              <Dropdown
+                isOpen={dropdownOpen}
+                toggle={toggleDropdown}
+                direction={"down"}
+                className="roomsDropdown divvv"
+              >
+                <DropdownToggle
+                  color="success"
+                  style={{ fontWeight: 700 }}
+                  caret
+                >
+                  Blok ve Kat Seçimi
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem header>Yurt ismi</DropdownItem>
+                  <DropdownItem>Some Action</DropdownItem>
+                  {/* <DropdownItem text>Dropdown Item Text</DropdownItem> */}
+                  {/* <DropdownItem disabled>Action (disabled)</DropdownItem> */}
+                  {/* <DropdownItem divider /> */}
+                  <DropdownItem>Foo Action</DropdownItem>
+                  <DropdownItem>Bar Action</DropdownItem>
+                  <DropdownItem>Quo Action</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </Box>
+          </Col>
+          <Col  className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
+            <Row
+              style={{ justifyContent: "center" }}
+              noGutters
+              className="d-flex  "
             >
-              <DropdownToggle color="success" style={{ fontWeight: 700 }} caret>
-                Blok ve Kat Seçimi
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem header>Yurt ismi</DropdownItem>
-                <DropdownItem>Some Action</DropdownItem>
-                {/* <DropdownItem text>Dropdown Item Text</DropdownItem> */}
-                {/* <DropdownItem disabled>Action (disabled)</DropdownItem> */}
-                {/* <DropdownItem divider /> */}
-                <DropdownItem>Foo Action</DropdownItem>
-                <DropdownItem>Bar Action</DropdownItem>
-                <DropdownItem>Quo Action</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        </Col>
-        <Col className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
-          <Row
-            style={{ justifyContent: "center" }}
-            noGutters
-            className="d-flex  "
-          >
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2  ">
-                <h5>Erkek Boş</h5>
-                <svg width="20" height="20" className="">
-                  <rect
-                    width="20"
-                    height="20"
-                    style={{ fill: "#bacfe1", opacity: 0.4 }}
-                  />
-                </svg>
-              </div>
-            </Col>
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2">
-                <h5>Kadın Boş</h5>
-                <svg width="20" height="20" className="">
-                  <rect
-                    width="20"
-                    height="20"
-                    style={{ fill: "cc8084", opacity: 0.4 }}
-                  />
-                </svg>
-              </div>
-            </Col>
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2 ">
-                <h5>Erkek Dolu</h5>
-                <svg width="20" height="20" className="">
-                  <rect
-                    width="20"
-                    height="20"
-                    style={{ fill: "47cbff", opacity: 1 }}
-                  />
-                </svg>
-              </div>
-            </Col>
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2 ">
-                <h5>Kadın Dolu</h5>
-                <svg width="20" height="20" className="">
-                  <rect
-                    width="20"
-                    height="20"
-                    style={{ fill: "#5c2928", opacity: 1 }}
-                  />
-                </svg>
-              </div>
-            </Col>
-            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-              <div className=" text-center mt-2 ">
-                <h5>Boş</h5>
-                <svg width="20" height="20" className="">
-                  <rect
-                    width="20"
-                    height="20"
-                    style={{ fill: "a1a1a1", opacity: 1 }}
-                  />
-                </svg>
-              </div>
-            </Col>
-          </Row>
-        </Col>
+              
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <Box  className=" text-center mt-2  ">
+                  <h5>Erkek Boş</h5>
+                  <svg width="20" height="20" className="">
+                    <rect
+                      width="20"
+                      height="20"
+                      style={{ fill: "#bacfe1", opacity: 0.4 }}
+                    />
+                  </svg>
+                </Box>
+              </Col>
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <div className=" text-center mt-2">
+                  <h5>Kadın Boş</h5>
+                  <svg width="20" height="20" className="">
+                    <rect
+                      width="20"
+                      height="20"
+                      style={{ fill: "cc8084", opacity: 0.4 }}
+                    />
+                  </svg>
+                </div>
+              </Col>
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <div className=" text-center mt-2 ">
+                  <h5>Erkek Dolu</h5>
+                  <svg width="20" height="20" className="">
+                    <rect
+                      width="20"
+                      height="20"
+                      style={{ fill: "47cbff", opacity: 1 }}
+                    />
+                  </svg>
+                </div>
+              </Col>
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <div className=" text-center mt-2 ">
+                  <h5>Kadın Dolu</h5>
+                  <svg width="20" height="20" className="">
+                    <rect
+                      width="20"
+                      height="20"
+                      style={{ fill: "#5c2928", opacity: 1 }}
+                    />
+                  </svg>
+                </div>
+              </Col>
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <div className=" text-center mt-2 ">
+                  <h5>Boş</h5>
+                  <svg width="20" height="20" className="">
+                    <rect
+                      width="20"
+                      height="20"
+                      style={{ fill: "a1a1a1", opacity: 1 }}
+                    />
+                  </svg>
+                </div>
+              </Col>
+            </Row>
+          </Col>
+        </Box>
         <hr className="hr mt-3" />
 
         <Row noGutters>
@@ -621,115 +608,125 @@ function DormReview(args, Rargs, direction, ...argss) {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Slice the array based on pagination
             .map((room) => {
               const students = Array.isArray(room.student)
-                    ? room.student
-                    : JSON.parse(room.student);
-                  // Count the number of students
-                  const studentCount = students.length;
-                  const isRoomFull = studentCount >= room.roomCapacity;
-                  return(
-              <Col
-                className="divvv"
-                xs={12}
-                sm={6}
-                md={6}
-                lg={4}
-                xl={3}
-                xxl={3}
-              >
-                <div className=" roomCard mx-3  ">
-                  <Card inverse className="mb-5 my-2   " 
-                  style={{
-                    backgroundColor:
-                      room.roomStatu === "Erkek Dolu"
-                        ? "#47cbff"
-                        : room.roomStatu === "Kadın Dolu"
-                        ? "#5c2928"
-                        : room.roomStatu === "Erkek Boş"
-                        ? "#bacfe1"
-                        : room.roomStatu === "Kadın Boş"
-                        ? "#cc8084"
-                        : "#a1a1a1", // Diğer boş durumlar için
-                  }}
-                  >
-                    <Row>
-                      <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
-                        <IoPeopleSharp
-                          className="mx-2"
-                          style={{ width: 50, height: 75 }}
-                        />
-                      </Col>
-                      <Col noGutters xs={9} sm={9} md={9} lg={9} xl={9} xxl={9}>
-                        <CardTitle
-                          className="mx-4"
-                          style={{ textAlign: "end" }}
-                          tag="h5"
-                        >
-                          Oda No : {room.roomNumber}
-                        </CardTitle>
-                        <CardTitle
-                          className="mx-4 "
-                          tag="h5"
-                          style={{ textAlign: "end" }}
-                        >
-                          {room.roomCapacity} Kişilik Oda
-                        </CardTitle>
-                      </Col>
-                    </Row>
-                    <CardText className="svgb d-flex ">
-                    {isRoomFull ? (
-                              <h5 className="svgbH mt-2 mx-2 ">
-                                Oda Full
-                              </h5>
-                            ) : (
-                              <h5 className="svgbH mt-2 mx-2 ">
-                                Güncel Kapasite: {room.roomCapacity}/
-                                {studentCount}
-                              </h5>
-                            )}
-                      {user ? (
-                        <CButton
-                          className=""
-                          color="success"
-                          onClick={() => setVisible(true)}
-                        >
-                          Rezervasyon Yap
-                        </CButton>
-                      ) : (
-                        <CButton
-                          className=""
-                          color="success"
-                          onClick={() => setVisible(true)}
-                          disabled
-                        >
-                          Rezervasyon Yapmak İçin Giriş Yap
-                        </CButton>
-                      )}
-                      {/* Warning Canvas */}
-                      <COffcanvas
-                        placement="bottom"
-                        visible={visible}
-                        onHide={() => setVisible(false)}
-                      >
-                        <COffcanvasHeader>
-                          <COffcanvasTitle>Dikkat!</COffcanvasTitle>
-                          <CCloseButton
-                            className="text-reset"
-                            onClick={() => setVisible(false)}
+                ? room.student
+                : JSON.parse(room.student);
+              // Count the number of students
+              const studentCount = students.length;
+              const isRoomFull = studentCount >= room.roomCapacity;
+              return (
+                <Col
+                  className="divvv"
+                  xs={12}
+                  sm={6}
+                  md={6}
+                  lg={4}
+                  xl={3}
+                  xxl={3}
+                >
+                  <div className=" roomCard mx-3  ">
+                    <Card
+                      inverse
+                      className="mb-5 my-2   "
+                      style={{
+                        backgroundColor:
+                          room.roomStatu === "Erkek Dolu"
+                            ? "#47cbff"
+                            : room.roomStatu === "Kadın Dolu"
+                            ? "#5c2928"
+                            : room.roomStatu === "Erkek Boş"
+                            ? "#bacfe1"
+                            : room.roomStatu === "Kadın Boş"
+                            ? "#cc8084"
+                            : "#a1a1a1", // Diğer boş durumlar için
+                      }}
+                    >
+                      <Row>
+                        <Col xs={3} sm={3} md={3} lg={3} xl={3} xxl={3}>
+                          <IoPeopleSharp
+                            className="mx-2"
+                            style={{ width: 50, height: 75 }}
                           />
-                        </COffcanvasHeader>
-                        <COffcanvasBody className="text-center">
-                          Öğrenci blgileriniz Yurt Yönetimine Yollanacaktır.{" "}
-                          <br /> Rezervasyonu Onaylıyor musunuz? <br />
-                          <Button color="success" className="mt-2">
-                            Gönder
-                          </Button>
-                        </COffcanvasBody>
-                      </COffcanvas>
-                    </CardText>
-                  </Card>
-                </div>
-              </Col>
-              )
+                        </Col>
+                        <Col
+                          noGutters
+                          xs={9}
+                          sm={9}
+                          md={9}
+                          lg={9}
+                          xl={9}
+                          xxl={9}
+                        >
+                          <CardTitle
+                            className="mx-4"
+                            style={{ textAlign: "end" }}
+                            tag="h5"
+                          >
+                            Oda No : {room.roomNumber}
+                          </CardTitle>
+                          <CardTitle
+                            className="mx-4 "
+                            tag="h5"
+                            style={{ textAlign: "end" }}
+                          >
+                            {room.roomCapacity} Kişilik Oda
+                          </CardTitle>
+                        </Col>
+                      </Row>
+                      <CardText className="svgb d-flex ">
+                        {isRoomFull ? (
+                          <h5 className="svgbH mt-2 mx-2 ">Oda Full</h5>
+                        ) : (
+                          <h5 className="svgbH mt-2 mx-2 ">
+                            Güncel Kapasite: {room.roomCapacity}/{studentCount}
+                          </h5>
+                        )}
+                        {user ? (
+                          <CButton
+                            
+                            className=""
+                            color="success"
+                            onClick={() => setVisible(true)}
+                          >
+                            Rezervasyon Yap
+                          </CButton>
+                        ) : (
+                          <CButton
+                            className=""
+                            color="success"
+                            onClick={() => setVisible(true)}
+                            disabled
+                          >
+                            Rezervasyon Yapmak İçin Giriş Yap
+                          </CButton>
+                        )}
+                        {/* Warning Canvas */}
+                        <COffcanvas
+                          placement="bottom"
+                          visible={visible}
+                          onHide={() => setVisible(false)}
+                        >
+                          <COffcanvasHeader>
+                            <COffcanvasTitle>Dikkat!</COffcanvasTitle>
+                            <CCloseButton
+                              className="text-reset"
+                              onClick={() => setVisible(false)}
+                            />
+                          </COffcanvasHeader>
+                          <COffcanvasBody  className="text-center">
+                            <Typography sx={{fontSize:30}}>
+                            Öğrenci bilgileriniz Yurt Yönetimine Yollanacaktır.{" "}
+                            <br /> Rezervasyonu Onaylıyor musunuz? <br />
+                            </Typography>
+                            <Button color="success" className="mt-2">
+                              Gönder
+                            </Button>
+                          </COffcanvasBody>
+                        </COffcanvas>
+                      </CardText>
+                    </Card>
+                  </div>
+                </Col>
+              );
             })}
         </Row>
       </Row>
@@ -797,14 +794,18 @@ function DormReview(args, Rargs, direction, ...argss) {
 
           {/* Warning Canvas */}
           <COffcanvas
+          
             placement="end"
             visible={commentvisible}
             onHide={() => setRezVisible(false)}
           >
             <COffcanvasHeader>
               <COffcanvasTitle>
+                <Typography sx={{fontSize:30,fontWeight:600,textAlign:"center"}}>
                 ! Lütfen Uygunsuz Kelimelerle Yorum Yapmayınız{" "}
+                </Typography>
               </COffcanvasTitle>
+              
               <CCloseButton
                 className="text-reset"
                 onClick={() => setRezVisible(false)}
@@ -845,18 +846,11 @@ function DormReview(args, Rargs, direction, ...argss) {
       </Container>
       {/* Room Properties shows */}
       {modal && (
-        <div className="roomProps"
-        color={colors.grey[500]}
-        
-        >
+        <div className="roomProps" color={colors.grey[500]}>
           <div className="overlay" onClick={toggle}>
-            <div className="roomContent"
-             backgroundColor={colors.grey[200]}
-            >
+            <div className="roomContent" backgroundColor={colors.grey[200]}>
               <h2>Single Room</h2>
-              <p 
-              color={colors.greenAccent[400]}       
- > 
+              <p color={colors.greenAccent[400]}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
                 amet ratione natus facere rerum eos magnam, pariatur laudantium
                 porro ipsum labore, dolorum at libero sequi sunt tenetur iusto

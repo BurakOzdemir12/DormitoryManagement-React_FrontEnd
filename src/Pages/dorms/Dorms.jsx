@@ -1,51 +1,18 @@
-import React from 'react'
+import React from "react";
 import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
-const rooms = [
-       {
-         id: 1,
-         img: roomimage1,
-         title: "Single Room",
-         description: "Room description",
-         pricingText: "100 dollar",
-         features: ["Free Wifi", "Free breakfast"],
-         clickEvent: "sliderClick",
-       },
-       {
-         id: 2,
-         img: roomimage1,
-         title: "Double Room",
-         description: "Room description",
-         pricingText: "100 dollar",
-         features: ["Free Wifi", "Free breakfast"],
-         clickEvent: "sliderClick",
-       },
-       {
-         id: 3,
-         img: roomimage1,
-         title: "Suit",
-         description: "Room description",
-         pricingText: "100 dollar",
-         features: ["Free Wifi", "Free breakfast"],
-         clickEvent: "sliderClick",
-       },
-       {
-         id: 4,
-         img: roomimage1,
-         title: "King Suit",
-         description: "Room description",
-         pricingText: "100 dollar",
-         features: ["Free Wifi", "Free breakfast"],
-         clickEvent: "sliderClick",
-       },
-     ];
+import DormsCard from "../../Components/dormsCard/DormsCard";
+import { Box } from "@mui/material";
+import { Col, Row } from "reactstrap";
+
 const Dorms = () => {
   return (
-    <div>
-      <button 
-      key={rooms.id}
-      > Dorms </button>
-    </div>
-  )
-}
+    <Box>
+      <Box m={5}  >
+        
+        <DormsCard />
+      </Box>
+    </Box>
+  );
+};
 
-export default Dorms
+export default Dorms;

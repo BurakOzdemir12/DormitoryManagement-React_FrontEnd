@@ -35,7 +35,7 @@ const Students = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8800/students/${id}`);
-      window.location.reload();
+      setStudents(prevStudents => prevStudents.filter(student => student.id !== id));
     } catch (error) {
       console.log(error);
     }

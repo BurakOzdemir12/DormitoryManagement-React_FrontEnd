@@ -15,13 +15,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // logo/style
 import { CgProfile } from "react-icons/cg";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { Box, Button, Menu, MenuItem ,useTheme} from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Menu,
+  MenuItem,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import emulogo from "../images/logoo.png";
 import "../nav/navbar.css";
 import { styled, alpha } from "@mui/material/styles";
 //react eklentiler
 import axios from "axios";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
@@ -69,7 +78,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-function Navi(args) {
+function Navi(args,{user}) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -93,37 +102,39 @@ function Navi(args) {
   const toggle = () => setIsOpen(!isOpen);
 
   useEffect(() => {
-    // const token = localStorage.getItem("token");
     const token = cookies.get("jwt_auth");
 
-    const fetchOneStudent = async () => {
+    const fetchUserData = async () => {
       try {
-        const tokendata = token;
-        const decoded = tokendata ? jwtDecode(tokendata) : null;
-        const userId = decoded ? decoded.id : null;
-        console.log(" user id", userId);
+        if (token) {
+          const decoded = jwtDecode(token);
+          const userId = decoded ? decoded.id : null;
 
-        const res = await axios.get(
-          `http://localhost:8800/emu_students/${userId}`
-        );
+          const res = await axios.get(
+            `http://localhost:8800/emu_students/${userId}`
+          );
 
-        setUserData(res.data);
+          setUserData(res.data);
+        }
       } catch (error) {
-        console.error("There was an error fetching the user data!", error);
+        console.error("Error fetching user data:", error);
       }
     };
-    fetchOneStudent();
-  }, []);
+
+    fetchUserData();
+  }, [cookies]); // Fetch user data when cookies change
+
   //Logout
   const handleLogout = async () => {
     try {
-      
       // localStorage.removeItem("token");
-      
+
       cookies.remove("jwt_auth");
 
       setUserData(null);
       navigate("/login");
+      
+      window.location.reload();
     } catch (error) {
       console.error("There was an error logging out!", error);
     }
@@ -131,52 +142,134 @@ function Navi(args) {
   };
 
   return (
-    <Box className="navlinks fluid ">
+    <Box className="navlinks fluid mt-0">
+      <hr />
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <Navbar className="navbar" fixed="fixed" expand="xl" {...args}
-          backgroundColor={colors.primary[400]}>
-            <NavbarBrand className="mx-5 brand" href="/home">
-              <img
-                className="logo"
-                height={110}
-                width={220}
-                src={emulogo}
-                alt=""
-              />
-            </NavbarBrand>
+          <Container>
+            <Grid
+              container
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              <Grid
+                className="firstGrid"
+                item
+                xxl={6}
+                xl={5}
+                lg={6}
+                md={6}
+                sm={12}
+                xs={12}
+                display={"flex"}
+              >
+                <NavbarBrand className="mx-0 brand" href="/home">
+                  <img
+                    className="logo"
+                    height={110}
+                    width={220}
+                    src={emulogo}
+                    alt=""
+                  />
+                </NavbarBrand>
+                <Typography
+                  sx={{
+                    
+                    color: colors.blueAccent[1000],
+                    fontSize: { xs: 20, sm: 25, md: 30, lg: 30, xl: 35 },
+                    fontWeight: "bold",
+                  }}
+                >
+                  Doğu Akdeniz <br /> Üniversitesi
+                </Typography>
+              </Grid>
+              <Grid
+                className="secondGrid"
+                item
+                xxl={6}
+                xl={7}
+                lg={6}
+                md={6}
+                sm={12}
+                xs={12}
+              >
+                <Typography
+                  sx={{
+                    fontSize: { xs: 20, sm: 25, md: 30, lg: 30, xl: 35 },
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  Yurtlar ve Kafeteryalar Müdürlüğü
+                </Typography>
+              </Grid>
+            </Grid>
+          </Container>
+          <Navbar
+            className="navbar"
+            fixed="fixed"
+            expand="xl"
+            {...args}
+            backgroundColor={colors.primary[400]}
+          >
             <NavbarToggler
-              className=""
+              className="Ntoggler"
               onClick={toggle}
               style={{
+                
                 color: "black",
                 borderColor: "black",
                 backgroundColor: "aliceblue",
               }}
             />
-            <Collapse isOpen={isOpen} navbar>
-              <Nav className="nav mt-4 mx-auto" navbar>
+
+            <Collapse isOpen={isOpen} navbar >
+              <Nav
+                className="nav mt-1 mx-auto"
+                navbar
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  backgroundColor: colors.blueAccent[800],
+                }}
+              >
                 <NavItem className="mx-4 py-2">
-                  <a style={{color: colors.grey[100],}} className="navlink" href="/home">
-                    Ana Sayfa
-                  </a>
-                </NavItem>
-                <NavItem className="mx-4 py-2">
-                  <a style={{color: colors.grey[100],}} className="navlink" href="/dorms">
-                    Yurtlar
-                  </a>
-                </NavItem>
-                <NavItem className="mx-4 py-2">
-                  <a style={{color: colors.grey[100],}}
+                  <Link
+                  to="/home"
+                    style={{ color: colors.grey[100] }}
                     className="navlink"
-                    href="https://www.emu.edu.tr/akademiktakvim"
+                    
+                  >
+                    Ana Sayfa
+                  </Link>
+                </NavItem>
+                <NavItem className="mx-4 py-2">
+                  <Link
+                  to="/dorms"
+                    style={{ color: colors.grey[100] }}
+                    className="navlink"
+                    
+                  >
+                    Yurtlar
+                  </Link>
+                </NavItem>
+                <NavItem className="mx-4 py-2">
+                  <Link
+                  to="https://www.emu.edu.tr/akademiktakvim"
+                    style={{ color: colors.grey[100] }}
+                    className="navlink"
                   >
                     Akademik Takvim
-                  </a>
+                  </Link>
                 </NavItem>
                 {userData ? ( // If user is logged in
-                  <NavItem style={{color: colors.grey[100],}} className=" mx-5 py-2 profile">
-                    <span 
+                  <NavItem
+                    style={{ color: colors.grey[100] }}
+                    className=" mx-5 py-2 profile"
+                  >
+                    <span
                       style={{ cursor: "pointer" }}
                       className="navlink"
                       id="demo-customized-button"
@@ -203,18 +296,24 @@ function Navi(args) {
                       <MenuItem onClick={handleClose} disableRipple>
                         Profil
                       </MenuItem>
-                      <MenuItem  onClick={handleLogout} disableRipple>
-                      <LogoutOutlinedIcon/>Çıkış Yap
+                      <MenuItem onClick={handleLogout} disableRipple>
+                        <LogoutOutlinedIcon />
+                        Çıkış Yap
                       </MenuItem>
                     </StyledMenu>
                   </NavItem>
+                  
                 ) : (
                   // If user is not logged in
-                  <NavItem   className=" mx-5 py-2 profile">
-                    <a style={{color: colors.grey[100]}}  className="navlink" href="/login">
+                  <NavItem className=" mx-5 py-2 profile">
+                    <Link
+                    to="/login"
+                      style={{ color: colors.grey[100] }}
+                      className="navlink"
+                    >
                       <CgProfile className="mx-2" style={{ fontSize: 50 }} />
                       Giriş Yap
-                    </a>
+                    </Link>
                   </NavItem>
                 )}
               </Nav>

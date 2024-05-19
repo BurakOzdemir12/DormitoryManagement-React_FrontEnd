@@ -41,7 +41,7 @@ function Copyright(props) {
   );
 }
 
-const defaultTheme = createTheme();
+// const defaultTheme = createTheme();
 
 function SignInSide() {
   const theme = useTheme();
@@ -100,8 +100,8 @@ function SignInSide() {
         navigate("/dashboard");
         window.location.reload();
       } else {
-        navigate("/DormReview");
-        window.location.reload();
+        navigate("/home");
+        // window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -121,6 +121,7 @@ function SignInSide() {
           sx={{
             backgroundImage: `url(${bgimg})`,
             backgroundRepeat: "no-repeat",
+
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]
@@ -129,9 +130,12 @@ function SignInSide() {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square
+        sx={{ backgroundColor:colors.primary[400],}}
+        >
           <Box
             sx={{
+             
               my: 8,
               mx: 4,
               display: "flex",
@@ -178,23 +182,35 @@ function SignInSide() {
                 label="Remember me"
               />
               <Button
+                className="btnsbmt"
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  background: colors.greenAccent[400],
+                  color: colors.primary[900],
+                  '&:hover': {
+                    backgroundColor: colors.greenAccent[500],
+                    color: colors.primary[300],
+                  },
+                }}
               >
                 Giriş Yap
               </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    Forgot password?
+                    <Typography color={colors.primary[100]}>
+                      Forgot password?
+                    </Typography>
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     {"Don't have an account? Sign Up"}
-                  </Link>
+                  </Link> */}
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />

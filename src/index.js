@@ -22,16 +22,12 @@ const isAuthenticated = data ? true : false;
 const isnotGuest = isAuthenticated;
 const isnon = window.location.pathname === "/";
 root.render(
-  // <BrowserRouter>
-  // {isTopbarVisible && <RoutesConfig />} {/* Render Topbar conditionally */}
-  // <App/>
-  // </BrowserRouter>
 
   <BrowserRouter>
   
   {isAdmin && isnon ? <Navigate to="/dashboard" />:""}
   
-
+  
   {isAuthenticated && isAdmin  ? <RoutesConfig /> :<App/> }
   </BrowserRouter>
 );

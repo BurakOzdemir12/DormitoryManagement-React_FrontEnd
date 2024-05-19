@@ -135,7 +135,8 @@ const Index = () => {
     try {
       await axios.delete(`http://localhost:8800/rooms/${id}`);
       //delete olunca bildiri göster
-      window.location.reload();
+      // window.location.reload();
+      setRooms(prevRooms => prevRooms.filter(room => room.id !== id));
     } catch (error) {
       console.log(error);
     }

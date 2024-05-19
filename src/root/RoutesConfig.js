@@ -38,14 +38,14 @@ const RoutesConfig = () => {
   const cookies = new Cookies();
 
   const navigate = useNavigate();
-  if (isNavigatingToLoginPage) {
-    window.location.reload();
+  // if (isNavigatingToLoginPage) {
+  //   // window.location.reload();
 
-    // localStorage.removeItem("token");
-    cookies.remove("jwt_auth");
+  //   // localStorage.removeItem("token");
+  //   cookies.remove("jwt_auth");
 
-    navigate("/");
-  }
+  //   navigate("/");
+  // }
 
   const [user, setUser] = useState(null);
   //Token Expires
@@ -60,10 +60,10 @@ const RoutesConfig = () => {
         // localStorage.removeItem("token");
         cookies.remove("jwt_auth");
         setUser(null);
-        window.location.reload();
+        // window.location.reload();
 
         navigate("/login");
-        window.location.reload();
+        // window.location.reload();
 
         // Clear user state if token is expired
       } else {

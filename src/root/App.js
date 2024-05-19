@@ -16,7 +16,9 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-const undefinedLocation = window.location.pathname === "*";
+
+
+
 
 function App() {
   const navigate = useNavigate();
@@ -36,9 +38,9 @@ function App() {
         cookies.remove("jwt_auth");
         setUser(null);
 
-        window.location.reload();
-        navigate("/login");
-        window.location.reload();
+        // window.location.reload();
+        navigate("/home");
+        // window.location.reload();
 
         // Clear user state if token is expired
       } else {
@@ -51,21 +53,17 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        
         <Topbar />
-      <Navi />
-    <Routes>
-      
-       
-
-     
-        <Route path="/home" element={<Home />} />
-        <Route path="/DormReview" element={<DormReview />} />
-        <Route path="/login" element={<Login />} />
-        <Route index path="/" element={<Home />} />
-        <Route path="*" element={<Home />} />
-    </Routes>
-    </ThemeProvider>
+        <Navi />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/Dorms" element={<Dorms />} />
+          <Route path="/Dorms/:id" element={<DormReview />} />
+          <Route index path="/" element={<Home />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }

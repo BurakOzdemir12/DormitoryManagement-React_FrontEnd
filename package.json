@@ -36,6 +36,7 @@
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "react-slick": "^0.30.2",
+    "react-snowfall": "^2.1.0",
     "reactstrap": "^9.2.2",
     "rsuite": "^5.56.0",
     "slick-carousel": "^1.8.1",

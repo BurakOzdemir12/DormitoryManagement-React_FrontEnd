@@ -21,7 +21,7 @@ const StudentsActions = ({params}) => {
   const handleDelete = async (id)=>{
     try {
       await axios.delete(`http://localhost:8800/students/${id}`)
-      window.location.reload();
+      
     } catch (error) {
       console.log(error)
     }

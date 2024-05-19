@@ -163,7 +163,7 @@ body.active-modal {
   
 }
 @media screen and (max-width:481px){
-  .carouselimg{
+  .carouselimg {
     
     min-height: 30ch;
   }

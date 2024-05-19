@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from "react";
+import { createContext, useState, useMemo, useEffect } from "react";
 import { createTheme } from "@mui/material/styles";
 
 //color design tokens
@@ -59,6 +59,7 @@ export const tokens = (mode) => ({
           700: "#3e4396",
           800: "#2a2d64",
           900: "#151632",
+          1000:"#337ab7",
         },
       }
     : {
@@ -116,6 +117,7 @@ export const tokens = (mode) => ({
           700: "#a4a9fc",
           800: "#c3c6fd",
           900: "#e1e2fe",
+          1000:"#004D85",
         },
       }),
 });
@@ -213,14 +215,40 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-  const [mode, setMode] = useState("dark");
+  // const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(() => {
+    const savedMode = localStorage.getItem("mode");
+    return savedMode ? savedMode : "light";
+  });
+  // const colorMode = useMemo(
+  //   () => ({
+  //     toggleColorMode: () =>
+  //       setMode((prev) => (prev === "light" ? "dark" : "light")) ,
+      
+      
+  //   }),
+  //   []
+  // );
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: () =>
-        setMode((prev) => (prev === "light" ? "dark" : "light")),
+      toggleColorMode: () => {
+        setMode((prev) => {
+          const newMode = prev === "light" ? "dark" : "light";
+          localStorage.setItem("mode", newMode);
+          return newMode;
+        });
+      },
     }),
     []
   );
+  useEffect(() => {
+    const savedMode = localStorage.getItem("mode");
+    if (savedMode) {
+      setMode(savedMode);
+    }
+  }, []);
+
+  
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return [theme, colorMode];
 };
