@@ -54,7 +54,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import PropTypes from "prop-types";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Box, TablePagination, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { jwtDecode } from "jwt-decode";
@@ -185,9 +185,45 @@ function SamplePrevArrow(props) {
 function DormReview(args, Rargs, direction, ...argss) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  //Fetch Rooms
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [dorms, setDorms] = useState([]);
   const [rooms, setRooms] = useState([]);
 
+  const dormId = location.pathname.split("/")[2];
+  console.log(dormId);
+
+  // useEffect(() => {
+  //   const fetchdormfeature = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:8800/dormfeature");
+
+  //       setDorms(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching dorms:", error);
+  //     }
+  //   };
+
+  //   fetchdormfeature();
+  // }, []);
+
+  useEffect(() => {
+    const fetchDorm = async (dormId) => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8800/dormfeature/${dormId}`
+        );
+        setDorms(res.data);
+        console.log(res.data, "One Room Values");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchDorm(dormId);
+  }, [dormId]);
+
+  //Fetch Rooms
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -269,7 +305,7 @@ function DormReview(args, Rargs, direction, ...argss) {
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
   //main Dorm image carousels
-  
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
 
@@ -432,17 +468,64 @@ function DormReview(args, Rargs, direction, ...argss) {
             />
           </Carousel> */}
         </Col>
-        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-          <section
-            style={{
+        <Col  xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Box m={2}
+            sx={{
+              justifyContent: "center",
+              alignItems: "baseline",
+              alignContent: "center",
+            }}
+          >
+            <Box  className="">
+              <h2> {dorms.dormName}{" "}Yurdu</h2>
+
+              <Typography
+              
+              sx={{fontSize:22,width:"100%"}}
+              >{dorms.dormText}</Typography>
+              {/* {dorms.map((dorm) => (
+                <div key={dorm.dormId} className="">
+                <h3 >{dorm.dormName}</h3>
+
+                </div>
+              ))} */}
+            </Box>
+          </Box>
+        </Col>
+        <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Box m={2}
+            sx={{
+              justifyContent: "center",
+              alignItems: "baseline",
+              alignContent: "center",
+            }}
+          >
+            <Box className="">
+              <h2>Fiyat Listesi</h2>
+
+              <Typography
+              sx={{fontSize:22}}
+              >{dorms.dormText}</Typography>
+              {/* {dorms.map((dorm) => (
+                <div key={dorm.dormId} className="">
+                <h3 >{dorm.dormName}</h3>
+
+                </div>
+              ))} */}
+            </Box>
+          </Box>
+        </Col>
+        <Col xs={6} sm={6} md={6} lg={2} xl={2}>
+          <Box m={2}
+            sx={{
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
             }}
           >
-            <div className="">
+            <Box sx={{}} className="">
               <h2> Yurt Özellikleri</h2>
-              <ul className="check-list  mt-4">
+              <ul  className="check-list  mt-4">
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
@@ -451,18 +534,18 @@ function DormReview(args, Rargs, direction, ...argss) {
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
               </ul>
-            </div>
-          </section>
+            </Box>
+          </Box>
         </Col>
-        <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-          <section
-            style={{
+        <Col xs={6} sm={6} md={6} lg={2} xl={2}>
+          <Box m={2}
+            sx={{
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
             }}
           >
-            <div className="">
+            <Box  className="">
               <h2 className=""> Oda Özellikleri</h2>
               <ul className="check-list mt-4">
                 <li>lorem ipsum</li>
@@ -473,16 +556,16 @@ function DormReview(args, Rargs, direction, ...argss) {
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
               </ul>
-            </div>
-          </section>
+            </Box>
+          </Box>
         </Col>
 
-        <Col xxl={9} xl={12} lg={12}  className="mt-5 divvv ">
+        <Col xxl={9} xl={12} lg={12} className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
           <Slider className=" mb-5   " {...settings}>
             {roomst.map((room) => (
-              <Col   className="  ">
+              <Col className="  ">
                 <Card
                   className=" card mb-5 mt-1 divvv "
                   style={{
@@ -704,15 +787,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                             Güncel Kapasite: {room.roomCapacity}/{studentCount}
                           </h5>
                         )}
-                        {user ? (
-                          <CButton
-                            className=""
-                            color="success"
-                            onClick={() => setVisible(true)}
-                          >
-                            Rezervasyon Yap
-                          </CButton>
-                        ) : (
+                        {!user ? (
                           <CButton
                             className=""
                             color="success"
@@ -721,7 +796,25 @@ function DormReview(args, Rargs, direction, ...argss) {
                           >
                             Rezervasyon Yapmak İçin Giriş Yap
                           </CButton>
+                        ) : isRoomFull ? (
+                          <CButton
+                            className=""
+                            color="success"
+                            onClick={() => setVisible(true)}
+                            disabled
+                          >
+                            Rezervasyon Yapılamaz
+                          </CButton>
+                        ) : (
+                          <CButton
+                            className=""
+                            color="success"
+                            onClick={() => setVisible(true)}
+                          >
+                            Rezervasyon Yap
+                          </CButton>
                         )}
+
                         {/* Warning Canvas */}
                         <COffcanvas
                           placement="bottom"

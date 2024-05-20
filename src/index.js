@@ -20,15 +20,20 @@ const data = userToken ? jwtDecode(userToken) : null;
 const isAdmin = data ? data.isAdmin : false;
 const isAuthenticated = data ? true : false;
 const isnotGuest = isAuthenticated;
-const isnon = window.location.pathname === "/";
 root.render(
 
   <BrowserRouter>
+  <Routes>
+  {isAdmin ? (
+          <Route path="/*" element={<RoutesConfig />} />
+        ) : (
+          <Route path="/*" element={<App />} />
+        )}
+         <Route path="*" element={<Navigate to="/" />} />
+  </Routes>
   
-  {isAdmin && isnon ? <Navigate to="/dashboard" />:""}
   
-  
-  {isAuthenticated && isAdmin  ? <RoutesConfig /> :<App/> }
+  {/* {isAuthenticated && isAdmin  ? <RoutesConfig /> :<App/> } */}
   </BrowserRouter>
 );
 
