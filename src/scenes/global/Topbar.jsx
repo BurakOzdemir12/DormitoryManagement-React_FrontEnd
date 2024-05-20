@@ -120,9 +120,10 @@ const Topbar = () => {
       if (userData) {
         setUserData(null);
       }
-      window.location.reload();
 
       navigate("/login");
+      window.location.reload();
+
     } catch (error) {
       console.error("There was an error logging out!", error);
     }

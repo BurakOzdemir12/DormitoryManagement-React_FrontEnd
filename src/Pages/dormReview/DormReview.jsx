@@ -213,8 +213,8 @@ function DormReview(args, Rargs, direction, ...argss) {
     infinite: true,
     speed: 500,
 
-    slidesToScroll: 4,
-    slidesToShow: 4,
+    slidesToScroll: 3,
+    slidesToShow: 3,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     initialSlide: 0,
@@ -231,8 +231,8 @@ function DormReview(args, Rargs, direction, ...argss) {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 2,
+          slidesToScroll: 2,
           infinite: true,
           dots: true,
         },
@@ -269,6 +269,7 @@ function DormReview(args, Rargs, direction, ...argss) {
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
   //main Dorm image carousels
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
 
@@ -290,8 +291,8 @@ function DormReview(args, Rargs, direction, ...argss) {
   const slides = items.map((item) => {
     return (
       <CarouselItem
-        onExiting={() => setAnimating(true)}
-        onExited={() => setAnimating(false)}
+        // onExiting={() => setAnimating(true)}
+        // onExited={() => setAnimating(false)}
         key={item.src}
       >
         <img
@@ -383,7 +384,31 @@ function DormReview(args, Rargs, direction, ...argss) {
     <div>
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-5  ">
-          <Carousel
+          <Card inverse>
+            <CardImg
+              alt="Card image cap"
+              src={dormphoto}
+              style={{
+                height: "100%",
+              }}
+              width="100%"
+            />
+            <CardImgOverlay>
+              <CardTitle tag="h5">Card Title</CardTitle>
+              <CardText>
+                This is a wider card with supporting text below as a natural
+                lead-in to additional content. This content is a little bit
+                longer.
+              </CardText>
+              <CardText>
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </CardText>
+            </CardImgOverlay>
+          </Card>
+
+          {/* eğer admin Slide Özelliği isterse Card yerine aşağıdaki Özelliği  kullanabilir */}
+
+          {/* <Carousel
             activeIndex={activeIndex}
             next={next}
             previous={previous}
@@ -405,7 +430,7 @@ function DormReview(args, Rargs, direction, ...argss) {
               directionText="Next"
               onClickHandler={next}
             />
-          </Carousel>
+          </Carousel> */}
         </Col>
         <Col xs={6} sm={6} md={6} lg={6} xl={6}>
           <section
@@ -452,16 +477,16 @@ function DormReview(args, Rargs, direction, ...argss) {
           </section>
         </Col>
 
-        <Col xl={10} className="mt-5 divvv ">
+        <Col xxl={9} xl={12} lg={12}  className="mt-5 divvv ">
           {/* <ReactCardSlider slides={rooms} onCardClick={handleCardClick}  /> */}
 
           <Slider className=" mb-5   " {...settings}>
             {roomst.map((room) => (
-              <Col className="  ">
+              <Col   className="  ">
                 <Card
-                  className=" mb-5 mt-1 divvv "
+                  className=" card mb-5 mt-1 divvv "
                   style={{
-                    maxWidth: "18rem",
+                    maxWidth: "22rem",
                   }}
                 >
                   <img
@@ -472,7 +497,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                     style={{
                       backgroundRepeat: "no-repeat",
 
-                      height: "45ch",
+                      height: "65ch",
                     }}
                   />
                   <CardBody>
@@ -493,9 +518,9 @@ function DormReview(args, Rargs, direction, ...argss) {
       </Row>
       <Row noGutters>
         <hr className="hr mt-3" />
-        <Box display={"contents"} >
+        <Box display={"contents"}>
           <Col xs={12} sm={12} md={12} lg={5} xl={5}>
-            <Box  className="d-flex divvv ">
+            <Box className="d-flex divvv ">
               <h3 className="divvv">Oda Müsaitlik Durumu </h3>
               <Dropdown
                 isOpen={dropdownOpen}
@@ -523,15 +548,14 @@ function DormReview(args, Rargs, direction, ...argss) {
               </Dropdown>
             </Box>
           </Col>
-          <Col  className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
+          <Col className="divvv" xs={12} sm={12} md={12} lg={6} xl={6}>
             <Row
               style={{ justifyContent: "center" }}
               noGutters
               className="d-flex  "
             >
-              
               <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-                <Box  className=" text-center mt-2  ">
+                <Box className=" text-center mt-2  ">
                   <h5>Erkek Boş</h5>
                   <svg width="20" height="20" className="">
                     <rect
@@ -682,7 +706,6 @@ function DormReview(args, Rargs, direction, ...argss) {
                         )}
                         {user ? (
                           <CButton
-                            
                             className=""
                             color="success"
                             onClick={() => setVisible(true)}
@@ -712,10 +735,11 @@ function DormReview(args, Rargs, direction, ...argss) {
                               onClick={() => setVisible(false)}
                             />
                           </COffcanvasHeader>
-                          <COffcanvasBody  className="text-center">
-                            <Typography sx={{fontSize:30}}>
-                            Öğrenci bilgileriniz Yurt Yönetimine Yollanacaktır.{" "}
-                            <br /> Rezervasyonu Onaylıyor musunuz? <br />
+                          <COffcanvasBody className="text-center">
+                            <Typography sx={{ fontSize: 30 }}>
+                              Öğrenci bilgileriniz Yurt Yönetimine
+                              Yollanacaktır. <br /> Rezervasyonu Onaylıyor
+                              musunuz? <br />
                             </Typography>
                             <Button color="success" className="mt-2">
                               Gönder
@@ -794,18 +818,19 @@ function DormReview(args, Rargs, direction, ...argss) {
 
           {/* Warning Canvas */}
           <COffcanvas
-          
             placement="end"
             visible={commentvisible}
             onHide={() => setRezVisible(false)}
           >
             <COffcanvasHeader>
               <COffcanvasTitle>
-                <Typography sx={{fontSize:30,fontWeight:600,textAlign:"center"}}>
-                ! Lütfen Uygunsuz Kelimelerle Yorum Yapmayınız{" "}
+                <Typography
+                  sx={{ fontSize: 30, fontWeight: 600, textAlign: "center" }}
+                >
+                  ! Lütfen Uygunsuz Kelimelerle Yorum Yapmayınız{" "}
                 </Typography>
               </COffcanvasTitle>
-              
+
               <CCloseButton
                 className="text-reset"
                 onClick={() => setRezVisible(false)}
