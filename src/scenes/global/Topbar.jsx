@@ -16,7 +16,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersoneOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/SearchOutlined";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -75,9 +75,6 @@ const Topbar = () => {
   const cookies = new Cookies();
 
   const [userData, setUserData] = useState(null);
- 
-
- 
 
   //Login Logout buttons
 
@@ -109,9 +106,10 @@ const Topbar = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
-    fetchUserData();
-  }, [cookies]); // Fetch user data when cookies change
+    if (token) {
+      fetchUserData();
+    }
+  }, []); // Fetch user data when cookies change
 
   // Logout
   const handleLogout = async () => {
@@ -123,7 +121,6 @@ const Topbar = () => {
 
       navigate("/login");
       window.location.reload();
-
     } catch (error) {
       console.error("There was an error logging out!", error);
     }
@@ -195,9 +192,12 @@ const Topbar = () => {
             </StyledMenu>
           </Box>
         ) : (
-          <IconButton>
-            <PersoneOutlinedIcon />
-          </IconButton>
+          <Link to="/login">
+            <IconButton>
+              <PersoneOutlinedIcon className="mx-0" style={{ fontSize: 50 }} />
+              Giriş Yap
+            </IconButton>
+          </Link>
         )}
       </Box>
     </Box>

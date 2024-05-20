@@ -121,8 +121,10 @@ function Navi(args,{user}) {
       }
     };
 
-    fetchUserData();
-  }, [cookies]); // Fetch user data when cookies change
+    if (token) {
+      fetchUserData();
+    }
+  }, []); // Fetch user data when cookies change
 
   //Logout
   const handleLogout = async () => {
@@ -264,7 +266,8 @@ function Navi(args,{user}) {
                     Akademik Takvim
                   </Link>
                 </NavItem>
-                {userData ? ( // If user is logged in
+                {/*  giriş yap butonunu loginde göstermek isterseniz => */}
+                {/* {userData ? ( // If user is logged in
                   <NavItem
                     style={{ color: colors.grey[100] }}
                     className=" mx-5 py-2 profile"
@@ -311,11 +314,11 @@ function Navi(args,{user}) {
                       style={{ color: colors.grey[100] }}
                       className="navlink"
                     >
-                      <CgProfile className="mx-2" style={{ fontSize: 50 }} />
+                      <CgProfile  />
                       Giriş Yap
                     </Link>
                   </NavItem>
-                )}
+                )} */}
               </Nav>
             </Collapse>
           </Navbar>

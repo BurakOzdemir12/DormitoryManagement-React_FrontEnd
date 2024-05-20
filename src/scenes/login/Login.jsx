@@ -96,13 +96,8 @@ function SignInSide() {
 
       setUser(res.data);
       cookies.set("jwt_auth", res.data.accessToken, { path: "/" }); // localStorage.setItem("token", res.data.accessToken);
-      if (res.data.isAdmin) {
-        navigate("/dashboard");
-        window.location.reload();
-      } else {
-        navigate("/home");
-        // window.location.reload();
-      }
+       navigate(res.data.isAdmin ? "/dashboard" : "/home");
+       window.location.reload()
     } catch (error) {
       console.log(error);
     }

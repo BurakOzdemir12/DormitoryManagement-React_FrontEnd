@@ -51,6 +51,7 @@ const DormsCard = () => {
           return (
             <Grid xs={12} sm={6} md={6} lg={3} xl={4} xxl={4}>
               <Item>
+              <Link style={{textDecoration:"none"}} to={`/Dorms/${1}`}>
                 <Card
                   sx={{ maxWidth: "100%", minHeight: 500 }}
                   key={dorm.dormId}
@@ -117,6 +118,7 @@ const DormsCard = () => {
 
                   </CardActions>
                 </Card>
+                </Link>
               </Item>
             </Grid>
           );
