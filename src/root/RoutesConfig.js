@@ -90,7 +90,7 @@ const RoutesConfig = () => {
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/students" element={<Students />} />
-              <Route path="/dormprops" element={<DormProps />} />
+              <Route path="/dormprops/:id" element={<DormProps />} />
               <Route path="/form" element={<Form />} />
               <Route path="/updateStudent/:id" element={<UpdateForm />} />
 

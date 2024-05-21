@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   Menu,
@@ -10,7 +10,7 @@ import {
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, colors, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
@@ -30,12 +30,18 @@ import RoomPreferencesOutlinedIcon from "@mui/icons-material/RoomPreferencesOutl
 import AddHomeWorkOutlinedIcon from "@mui/icons-material/AddHomeWorkOutlined";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import longson from "../../Components/images/longson.jpg";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "universal-cookie";
 
 const SideBarr = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const cookies = new Cookies();
+  const dormIdFromCookie = cookies.get("jwt_auth");
+  const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
 
   const Item = ({ title, to, icon, selected, setSelected }) => {
     // const theme = useTheme;
@@ -182,7 +188,7 @@ const SideBarr = () => {
 
             <Item
               title="Yurt Özellikleri"
-              to="/dormProps"
+              to={`/dormprops/${dormIdData.dormId}`}
               icon={<RoomPreferencesOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

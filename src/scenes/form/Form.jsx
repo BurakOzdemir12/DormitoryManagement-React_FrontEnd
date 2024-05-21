@@ -13,6 +13,8 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../Components/header/Header";
 import axios from "axios";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const phoneRegExp =
   /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -30,7 +32,12 @@ const userSchema = yup.object().shape({
   faculty: yup.string().required("required"),
   gender: yup.string().required("required"),
 });
+const cookies = new Cookies();
 
+const dormIdFromCookie = cookies.get("jwt_auth");
+const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+const dormId = dormIdData ? dormIdData.dormId : "";
+console.log(dormId);
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -42,9 +49,12 @@ const initialValues = {
   registerStatu: "",
   faculty: "",
   gender: "",
+  dormId: dormId,
 };
 
 const Form = () => {
+  const [students, setStudents] = useState([]);
+
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
@@ -52,7 +62,7 @@ const Form = () => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      await axios.post("http://localhost:8800/students", values);
+      await axios.post("http://localhost:8800/dormstudents", values);
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
@@ -221,6 +231,13 @@ const Form = () => {
                 error={!!touched.faculty && !!errors.faculty}
                 helperText={touched.faculty && errors.faculty}
                 sx={{ gridColumn: "span 1" }}
+              />
+              <TextField
+                type="hidden"
+                value={values.dormId}
+                name="dormId"
+                onChange={handleChange}
+                sx={{display:"none"}}
               />
 
               <RadioGroup

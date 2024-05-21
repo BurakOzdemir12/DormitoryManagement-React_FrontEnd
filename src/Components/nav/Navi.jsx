@@ -111,7 +111,7 @@ function Navi(args,{user}) {
           const userId = decoded ? decoded.id : null;
 
           const res = await axios.get(
-            `http://localhost:8800/emu_students/${userId}`
+            `http://localhost:8800/users/${userId}`
           );
 
           setUserData(res.data);

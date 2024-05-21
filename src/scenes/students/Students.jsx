@@ -14,32 +14,52 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
 const Students = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const cookies = new Cookies();
 
   const [students, setStudents] = useState([]);
+  const dormIdFromCookie = cookies.get("jwt_auth");
+  const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+
+  console.log(dormIdData.dormId);
   useEffect(() => {
     const fetchAllStudents = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/students");
-        setStudents(res.data);
-        console.log(res);
+        const res = await axios.get("http://localhost:8800/dormstudents");
+        const filteredStudents = res.data.filter(student => student.dormId === dormIdData.dormId);
+        setStudents(filteredStudents);
+        console.log(filteredStudents);
       } catch (err) {
         console.log(err);
       }
     };
     fetchAllStudents();
-  }, []);
+  }, [dormIdData.dormId]);
   //Delete
-  const handleDelete = async (id) => {
+  const handleDormDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8800/students/${id}`);
-      setStudents(prevStudents => prevStudents.filter(student => student.id !== id));
+      await axios.put(`http://localhost:8800/dormstudents/${id}/dorm`);
+      const res = await axios.get("http://localhost:8800/dormstudents");
+      const filteredStudents = res.data.filter(student => student.dormId === dormIdData.dormId);
+      setStudents(filteredStudents);
     } catch (error) {
       console.log(error);
     }
   };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     await axios.delete(`http://localhost:8800/dormstudents/${id}`);
+  //     setStudents((prevStudents) =>
+  //       prevStudents.filter((student) => student.id !== id)
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0 },
@@ -102,7 +122,7 @@ const Students = () => {
               </Link>
             </Tooltip>
             <Tooltip title="Sil">
-              <IconButton onClick={() => handleDelete(params.row.id)}>
+              <IconButton onClick={() => handleDormDelete(params.row.id)}>
                 <Delete />
               </IconButton>
             </Tooltip>

@@ -44,7 +44,7 @@ const UpdateForm = () => {
   useEffect(() => {
     const fetchStudent = async (id) => {
       try {
-        const res = await axios.get(`http://localhost:8800/students/${id}`);
+        const res = await axios.get(`http://localhost:8800/dormstudents/${id}`);
         setStudents(res.data);
       } catch (err) {
         console.log(err);
@@ -59,7 +59,7 @@ const UpdateForm = () => {
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      await axios.put(`http://localhost:8800/students/${studentId}`, values);
+      await axios.put(`http://localhost:8800/dormstudents/${studentId}`, values);
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
