@@ -423,7 +423,7 @@ function DormReview(args, Rargs, direction, ...argss) {
           <Card inverse>
             <CardImg
               alt="Card image cap"
-              src={dormphoto}
+              src={dormId.dormImage}
               style={{
                 height: "100%",
               }}

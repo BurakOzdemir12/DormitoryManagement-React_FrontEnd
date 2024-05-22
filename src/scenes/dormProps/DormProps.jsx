@@ -13,7 +13,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import Header from "../../Components/header/Header";
 import DormPropsAction from "./DormPropsAction";
-import { saveDormFeature } from '../../data/api';
+import { saveDormFeature } from "../../data/api";
 
 // Validation schema
 const userSchema = yup.object().shape({
@@ -28,9 +28,8 @@ const userSchema = yup.object().shape({
     .number()
     .required("Öğrenci kapasitesi zorunludur")
     .positive("Öğrenci kapasitesi pozitif bir sayı olmalıdır"),
-    dormText: yup.string().required("Yurt Açıklaması Yazınız"),
+  dormText: yup.string().required("Yurt Açıklaması Yazınız"),
   dormImage: yup.mixed().required("Yurt fotoğrafı zorunludur"),
-
 });
 
 const DormImageInput = ({ setFieldValue, errors, touched, handleBlur }) => {
@@ -68,7 +67,7 @@ const DormProps = () => {
       await saveDormFeature(values, isEditMode, values.dormId);
       resetForm();
     } catch (error) {
-      console.error('Form gönderilirken bir hata oluştu:', error);
+      console.error("Form gönderilirken bir hata oluştu:", error);
     } finally {
       setSubmitting(false);
     }
@@ -165,12 +164,8 @@ const DormProps = () => {
                 onChange={handleChange}
                 value={values.dormRoomCapacity}
                 name="dormRoomCapacity"
-                error={
-                  !!touched.dormRoomCapacity && !!errors.dormRoomCapacity
-                }
-                helperText={
-                  touched.dormRoomCapacity && errors.dormRoomCapacity
-                }
+                error={!!touched.dormRoomCapacity && !!errors.dormRoomCapacity}
+                helperText={touched.dormRoomCapacity && errors.dormRoomCapacity}
                 sx={{ gridColumn: "span 1" }}
               />
               {/* Öğrenci Kapasitesi */}
@@ -184,8 +179,7 @@ const DormProps = () => {
                 value={values.dormStudentCapacity}
                 name="dormStudentCapacity"
                 error={
-                  !!touched.dormStudentCapacity &&
-                  !!errors.dormStudentCapacity
+                  !!touched.dormStudentCapacity && !!errors.dormStudentCapacity
                 }
                 helperText={
                   touched.dormStudentCapacity && errors.dormStudentCapacity
@@ -193,7 +187,6 @@ const DormProps = () => {
                 sx={{ gridColumn: "span 1" }}
               />
               <TextField
-              
                 fullWidth
                 variant="filled"
                 type="text"
@@ -202,14 +195,48 @@ const DormProps = () => {
                 onChange={handleChange}
                 value={values.dormText}
                 name="dormText"
-                error={
-                  !!touched.dormText &&
-                  !!errors.dormText
-                }
-                helperText={
-                  touched.dormText && errors.dormText
-                }
-                sx={{ gridColumn: "span 4",gridRow:"span 2" }}
+                error={!!touched.dormText && !!errors.dormText}
+                helperText={touched.dormText && errors.dormText}
+                sx={{ gridColumn: "span 4", gridRow: "span 2" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                helperText="Lütfen Oda Türü Giriniz. Örnek; Tek Kişilik"
+                id="demo-helper-text-aligned"
+                label="Oda Türü Gir "
+                sx={{ gridColumn: "span 2", gridRow: "span 2" }}
+              />
+
+              <TextField
+                fullWidth
+                variant="filled"
+                helperText=" "
+                id="demo-helper-text-aligned-no-helper"
+                label="Oda Fiyat Gir"
+                sx={{ gridColumn: "span 2", gridRow: "span 2" }}
+              />
+              {/* {dorm.map((dormm)=>{
+
+              })} */}
+              <TextField
+              disabled
+                fullWidth
+                variant="filled"
+                helperText="Lütfen Oda Türü Giriniz. Örnek; Tek Kişilik"
+                id="demo-helper-text-aligned"
+                label="Oda Türü Gir "
+                sx={{ gridColumn: "span 2", gridRow: "span 2" }}
+              />
+
+              <TextField
+              disabled
+                fullWidth
+                variant="filled"
+                helperText=" "
+                id="demo-helper-text-aligned-no-helper"
+                label="Oda Fiyat Gir"
+                sx={{ gridColumn: "span 2", gridRow: "span 2" }}
               />
               {/* Yurt Fotoğrafı */}
               <DormImageInput
@@ -217,6 +244,7 @@ const DormProps = () => {
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}
+                sx={{ gridColumn: "span 3" }}
               />
             </Box>
             {/* Form Submit Button */}
@@ -233,7 +261,6 @@ const DormProps = () => {
 };
 
 export default DormProps;
-
 
 // import React from "react";
 // import {
@@ -418,7 +445,7 @@ export default DormProps;
 //               </FormGroup>
 //               <Box
 //                 sx={{
-//                   gridColumn: "span 3", 
+//                   gridColumn: "span 3",
 //                   display: "flex",
 //                   alignItems: "center",
 //                   "& > :not(style)": { m: 1 },

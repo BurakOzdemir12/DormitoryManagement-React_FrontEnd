@@ -62,6 +62,7 @@ const DormsCard = () => {
                     <CardMedia
                       component="img"
                       height="280"
+                      
                       src={longson}
                       alt="green iguana"
                     />
