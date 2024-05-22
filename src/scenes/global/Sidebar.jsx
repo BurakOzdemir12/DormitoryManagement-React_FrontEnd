@@ -188,7 +188,7 @@ const SideBarr = () => {
 
             <Item
               title="Yurt Özellikleri"
-              to={`/dormprops/${dormIdData.dormId}`}
+              to={`/dormprops`}
               icon={<RoomPreferencesOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

@@ -27,6 +27,7 @@
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "formik": "^2.4.5",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "react": "^18.0.0",
     "react-card-slider-component": "^1.0.9",
