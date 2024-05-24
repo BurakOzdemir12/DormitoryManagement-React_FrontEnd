@@ -20,7 +20,6 @@ import {
   CardTitle,
   CardSubtitle,
   CardText,
-  Button,
   Dropdown,
   DropdownItem,
   DropdownToggle,
@@ -41,11 +40,14 @@ import ReactCardSlider from "react-card-slider-component";
 import dormphoto from "../../Components/images/dorms/grandaras.png";
 import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
 import roomimage2 from "../../Components/images/dorms/grandaras.png";
+import longson1 from "../../Components/images/dorms/longson/longson1.jpg";
+import longson2 from "../../Components/images/dorms/longson/longson2.jpg";
 
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { BsCardImage, BsFillPeopleFill } from "react-icons/bs";
 import { IoPeopleSharp } from "react-icons/io5";
-
+import ClearIcon from "@mui/icons-material/Clear";
+import PaidIcon from "@mui/icons-material/Paid";
 import "../dormReview/dormReview.css";
 import "../dormReview/dormReviewComment.css";
 
@@ -55,7 +57,17 @@ import "slick-carousel/slick/slick-theme.css";
 
 import PropTypes from "prop-types";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Box, TablePagination, Typography, useTheme } from "@mui/material";
+import {
+  Button,
+  Box,
+  Modal,
+  TablePagination,
+  Typography,
+  useTheme,
+  Grid,
+  SliderMark,
+} from "@mui/material";
+
 import { tokens } from "../../theme";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
@@ -81,7 +93,23 @@ const items = [
     key: 3,
   },
 ];
-
+const dormphotos = [
+  {
+    img: dormphoto,
+  },
+  {
+    img: longson1,
+  },
+  {
+    img: longson2,
+  },
+  {
+    img: roomimage1,
+  },
+  {
+    img: roomimage1,
+  },
+];
 //rooms
 const roomst = [
   {
@@ -189,9 +217,9 @@ function DormReview(args, Rargs, direction, ...argss) {
   const location = useLocation();
   const [dorms, setDorms] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [roomProps, setRoomProps] = useState([]);
 
   const dormId = location.pathname.split("/")[2];
-  console.log(dormId);
 
   // useEffect(() => {
   //   const fetchdormfeature = async () => {
@@ -214,7 +242,6 @@ function DormReview(args, Rargs, direction, ...argss) {
           `http://localhost:8800/dormfeature/${dormId}`
         );
         setDorms(res.data);
-        console.log(res.data, "One Room Values");
       } catch (err) {
         console.log(err);
       }
@@ -236,6 +263,21 @@ function DormReview(args, Rargs, direction, ...argss) {
     };
 
     fetchRooms();
+  }, []);
+
+  useEffect(() => {
+    const fetchRoomProps = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8800/roomprops`);
+
+        setRoomProps(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching room properties:", error);
+      }
+    };
+
+    fetchRoomProps();
   }, []);
 
   const cookies = new Cookies();
@@ -299,7 +341,30 @@ function DormReview(args, Rargs, direction, ...argss) {
       },
     ],
   };
-
+  const roomsettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    centerMode: true,
+    focusOnSelect: true,
+    centerPadding: "0px",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
@@ -400,6 +465,10 @@ function DormReview(args, Rargs, direction, ...argss) {
   } else {
     document.body.classList.remove("active-modal");
   }
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   //Rezervation canvas visible
   const [visible, setVisible] = useState(false);
   //comment canvas visible
@@ -416,18 +485,22 @@ function DormReview(args, Rargs, direction, ...argss) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const [selectedPhoto, setSelectedPhoto] = useState(dormphotos[0].img);
+
   return (
     <div>
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-5  ">
-          <Card inverse>
+          <Card inverse >
             <CardImg
+            className="mainDormImage"
               alt="Card image cap"
-              src={dormId.dormImage}
+              src={`http://localhost:8800/images/${dorms.dormImage}`}
               style={{
-                height: "100%",
+                backgroundSize: "cover",
+                height: "38rem",
+                width: "100%",
               }}
-              width="100%"
             />
             <CardImgOverlay>
               <CardTitle tag="h5">Card Title</CardTitle>
@@ -468,21 +541,21 @@ function DormReview(args, Rargs, direction, ...argss) {
             />
           </Carousel> */}
         </Col>
-        <Col  xs={12} sm={12} md={6} lg={4} xl={4}>
-          <Box m={2}
+        <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Box
+            m={2}
             sx={{
               justifyContent: "center",
               alignItems: "baseline",
               alignContent: "center",
             }}
           >
-            <Box  className="">
-              <h2> {dorms.dormName}{" "}Yurdu</h2>
+            <Box className="">
+              <h2> {dorms.dormName} Yurdu</h2>
 
-              <Typography
-              
-              sx={{fontSize:22,width:"100%"}}
-              >{dorms.dormText}</Typography>
+              <Typography sx={{ fontSize: 22, width: "100%" }}>
+                {dorms.dormText}
+              </Typography>
               {/* {dorms.map((dorm) => (
                 <div key={dorm.dormId} className="">
                 <h3 >{dorm.dormName}</h3>
@@ -493,39 +566,53 @@ function DormReview(args, Rargs, direction, ...argss) {
           </Box>
         </Col>
         <Col xs={12} sm={12} md={6} lg={4} xl={4}>
-          <Box m={2}
+          <Box
+            m={2}
             sx={{
               justifyContent: "center",
               alignItems: "baseline",
               alignContent: "center",
             }}
           >
-            <Box className="">
-              <h2>Fiyat Listesi</h2>
-
-              <Typography
-              sx={{fontSize:22}}
-              >{dorms.dormText}</Typography>
-              {/* {dorms.map((dorm) => (
-                <div key={dorm.dormId} className="">
-                <h3 >{dorm.dormName}</h3>
-
-                </div>
-              ))} */}
-            </Box>
+            <Typography
+              variant="h2"
+              color="text.primary"
+              textAlign={"center"}
+              mx={5}
+            >
+              {" "}
+              Fiyat Listesi
+            </Typography>
+            {roomProps.map((rp) => {
+              return (
+                <Box>
+                  <Typography
+                    variant="h4"
+                    color="text.primary"
+                    textAlign={"center"}
+                    mx={5}
+                    mt={1}
+                  >
+                    {rp.roomType}: {rp.roomPrice}
+                  </Typography>
+                </Box>
+              );
+            })}
           </Box>
         </Col>
         <Col xs={6} sm={6} md={6} lg={2} xl={2}>
-          <Box m={2}
+          <Box
+            m={2}
             sx={{
+              fontSize: 20,
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
             }}
           >
-            <Box sx={{}} className="">
+            <Box className="">
               <h2> Yurt Özellikleri</h2>
-              <ul  className="check-list  mt-4">
+              <ul className="check-list  mt-4">
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
                 <li>lorem ipsum</li>
@@ -538,14 +625,16 @@ function DormReview(args, Rargs, direction, ...argss) {
           </Box>
         </Col>
         <Col xs={6} sm={6} md={6} lg={2} xl={2}>
-          <Box m={2}
+          <Box
+            m={2}
             sx={{
+              fontSize: 20,
               justifyContent: "center",
               alignItems: "center",
               alignContent: "center",
             }}
           >
-            <Box  className="">
+            <Box className="">
               <h2 className=""> Oda Özellikleri</h2>
               <ul className="check-list mt-4">
                 <li>lorem ipsum</li>
@@ -569,7 +658,8 @@ function DormReview(args, Rargs, direction, ...argss) {
                 <Card
                   className=" card mb-5 mt-1 divvv "
                   style={{
-                    maxWidth: "22rem",
+                    maxWidth: "95%",
+                    minWidth: "15rem",
                   }}
                 >
                   <img
@@ -579,7 +669,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                     src={room.img}
                     style={{
                       backgroundRepeat: "no-repeat",
-
+                      width: "98%",
                       height: "65ch",
                     }}
                   />
@@ -589,8 +679,15 @@ function DormReview(args, Rargs, direction, ...argss) {
                       {room.pricingText}
                     </CardSubtitle>
                     <CardText>{room.features}</CardText>
-                    <Button key={room.name} onClick={toggle}>
-                      Read More
+                    <Button
+                      sx={{
+                        color: colors.grey[200],
+                        backgroundColor: colors.grey[700],
+                      }}
+                      key={room.name}
+                      onClick={handleOpen}
+                    >
+                      Odayı Görüntüle
                     </Button>
                   </CardBody>
                 </Card>
@@ -599,6 +696,67 @@ function DormReview(args, Rargs, direction, ...argss) {
           </Slider>
         </Col>
       </Row>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        onClose={handleClose}
+      >
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            padding: 2,
+            backgroundColor: "white",
+            outline: "none",
+            maxHeight: "100%", // Set maximum height for the modal
+            overflowY: "auto",
+          }}
+        >
+          <Grid item xs={12} sx={{ display: "flex", justifyContent: "end" }}>
+            <Button
+              sx={{
+                backgroundColor: "white",
+                alignSelf: "end",
+              }}
+              onClick={handleClose}
+            >
+              <ClearIcon sx={{ fontSize: 25 }} />
+            </Button>
+          </Grid>
+          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+            <img
+              src={selectedPhoto}
+              alt="selected dorm"
+              style={{
+                width: "100%",
+                maxHeight: "400px",
+                objectFit: "contain",
+              }}
+            />
+          </Grid>
+          {dormphotos.map((photo, index) => (
+            <Grid
+              item
+              xs={4}
+              key={index}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <img
+                src={photo.img}
+                alt={`dorm ${index}`}
+                style={{
+                  width: "250px",
+                  height: "250px",
+                  cursor: "pointer",
+                  objectFit: "cover",
+                }}
+                onClick={() => setSelectedPhoto(photo.img)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Modal>
       <Row noGutters>
         <hr className="hr mt-3" />
         <Box display={"contents"}>
@@ -963,10 +1121,10 @@ function DormReview(args, Rargs, direction, ...argss) {
         </Row>
       </Container>
       {/* Room Properties shows */}
-      {modal && (
-        <div className="roomProps" color={colors.grey[500]}>
-          <div className="overlay" onClick={toggle}>
-            <div className="roomContent" backgroundColor={colors.grey[200]}>
+      {/* {modal && (
+        <Box className="roomProps" color={colors.primary[300]}>
+          <Box className="overlay" onClick={toggle}>
+            <Box className="roomContent" backgroundColor={colors.grey[700]}>
               <h2>Single Room</h2>
               <p color={colors.greenAccent[400]}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
@@ -979,10 +1137,10 @@ function DormReview(args, Rargs, direction, ...argss) {
               <button className="close-content" onClick={toggle}>
                 Kapat
               </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </Box>
+          </Box>
+        </Box>
+      )} */}
     </div>
   );
 }

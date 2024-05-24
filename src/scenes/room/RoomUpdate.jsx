@@ -393,10 +393,7 @@ const RoomUpdate = () => {
                 ))}
 
               </Box>
-              <TextField
-              label="Kaç Oda Kaydedilsin ?">
-                
-              </TextField>
+             
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button

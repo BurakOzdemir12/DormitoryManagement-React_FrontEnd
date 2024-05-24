@@ -80,8 +80,8 @@ const UpdateForm = () => {
   return (
     <Box m="20px">
       <Header
-        title="ÖĞRENCİ EKLE"
-        subtitle="Öğrenci Ekleme, Güncelleme ve oda atama işlemi aşağıda yapılabilmektedir"
+        title="ÖĞRENCİ GÜNCELLE"
+        subtitle="Öğrenci Bilgilerini Güncelleme İşlemlerini Buradan Yapabilirsiniz"
       />
       <Formik
         enableReinitialize

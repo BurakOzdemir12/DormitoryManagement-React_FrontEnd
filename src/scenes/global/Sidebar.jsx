@@ -28,6 +28,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import RoomPreferencesOutlinedIcon from "@mui/icons-material/RoomPreferencesOutlined";
 import AddHomeWorkOutlinedIcon from "@mui/icons-material/AddHomeWorkOutlined";
+import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined';
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import longson from "../../Components/images/longson.jpg";
 import axios from "axios";
@@ -201,11 +202,26 @@ const SideBarr = () => {
               setSelected={setSelected}
             />
             <Item
+              title="Oda Özellikleri"
+              to="/roomprops"
+              icon={<KingBedOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
               title="İstatistikler"
               to="/statistics"
               icon={<AssessmentOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+            />
+            <Item
+              title="Daü Yurtlar Sitesine Git"
+              to="/login"
+              
+              selected={selected}
+              setSelected={setSelected}
+            
             />
           </Box>
         </Menu>

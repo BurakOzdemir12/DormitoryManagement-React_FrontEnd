@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  FormControl,
   IconButton,
   Menu,
   MenuItem,
@@ -23,6 +24,7 @@ import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { styled, alpha } from "@mui/material/styles";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import {  Form, InputGroup } from "reactstrap";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -67,14 +69,17 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-const Topbar = () => {
+const Topbar = ({search,setSearch}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
   const cookies = new Cookies();
-
   const [userData, setUserData] = useState(null);
+  const [isAdmin, setAdmin] = useState(null);
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
 
   //Login Logout buttons
 
@@ -94,11 +99,12 @@ const Topbar = () => {
       try {
         if (token) {
           const decoded = jwtDecode(token);
+           const isAdmin=decoded ? decoded.isAdmin:null;
+           setAdmin(isAdmin);
           const userId = decoded ? decoded.id : null;
-
-          const res = await axios.get(
-            `http://localhost:8800/users/${userId}`
-          );
+          const dormId = decoded ? decoded.dormId : null;
+          console.log(dormId);
+          const res = await axios.get(`http://localhost:8800/users/${userId}`);
 
           setUserData(res.data);
         }
@@ -130,16 +136,36 @@ const Topbar = () => {
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* Search Bar */}
+      {!isAdmin ? ( 
+
       <Box
         display="flex"
         backgroundColor={colors.primary[400]}
-        borderRadius="3px"
+        borderRadius="10px"
+        width="20%"
       >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Searc" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
+               <Form >
+          <InputBase
+            sx={{ fontSize: 20, ml: 5, flex: 1, }}
+            placeholder="Ara"
+            value={search}
+            onChange={handleSearchChange}
+          />
+
+          <IconButton type="button" sx={{ p: 1 }}>
+            <SearchIcon />
+          </IconButton>
+        </Form>
+       
+
       </Box>
+       )
+       :(
+         <Box>
+           
+           </Box>
+       )}
+
       {/* ICONS */}
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>

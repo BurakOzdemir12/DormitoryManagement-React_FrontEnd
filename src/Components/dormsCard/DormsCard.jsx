@@ -1,3 +1,5 @@
+
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,36 +11,59 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-
-import longson from "../../Components/images/dorms/longson.jpg";
-import { tokens } from "../../theme";
 import axios from "axios";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
-const DormsCard = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  //Fetch Rooms
-  const [dorms, setDorms] = useState([]);
 
- 
+const DormsCard = ({search,selectedCategory,priceRange }) => {
+  const theme = useTheme();
+  const [dorms, setDorms] = useState([]);
+  const [roomProps, setRoomProps] = useState([]);
+  const [combinedData, setCombinedData] = useState([]);
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    const fetchDorms = async () => {
       try {
-        const response = await axios.get("http://localhost:8800/dormfeature");
-
+        const response = await axios.get(`http://localhost:8800/dormfeature`);
         setDorms(response.data);
       } catch (error) {
-        console.error("Error fetching rooms:", error);
+        console.error("Error fetching dorms:", error);
       }
     };
 
-    fetchRooms();
+    const fetchRoomProps = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8800/roomprops`);
+        setRoomProps(response.data);
+      } catch (error) {
+        console.error("Error fetching room properties:", error);
+      }
+    };
+
+    fetchDorms();
+    fetchRoomProps();
   }, []);
+
+  useEffect(() => {
+    if (dorms.length && roomProps.length) {
+      const combined = dorms.map((dorm) => {
+        const rooms = roomProps.filter((room) => room.dormId === dorm.dormId);
+        return { ...dorm, rooms };
+      });
+      setCombinedData(combined);
+    }
+  }, [dorms, roomProps]);
+
+  const filterDorms = (dorm) => {
+    if (!selectedCategory) {
+      return true;
+    }
+    
+ return dorm.dormCategory === selectedCategory;  };
+
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -46,25 +71,29 @@ const DormsCard = () => {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
+
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        {dorms.map((dorm) => {
-          return (
-            <Grid xs={12} sm={6} md={6} lg={3} xl={4} xxl={4}>
-              <Item>
-              <Link style={{textDecoration:"none"}} to={`/Dorms/${dorm.dormId}`}>
-                <Card
-                  sx={{ maxWidth: "100%", minHeight: 500 }}
-                  key={dorm.dormId}
-                >
+        {combinedData.filter((item)=> {
+          return  search===''
+          ? item 
+          :item.dormName.toLowerCase().includes(search.toLowerCase());
+        }).filter(filterDorms)
+        .map((dorm) => (
+          <Grid key={dorm.dormId} xs={12} sm={6} md={6} lg={3} xl={4} xxl={4}>
+            <Item>
+              <Link
+                style={{ textDecoration: "none" }}
+                to={`/Dorms/${dorm.dormId}`}
+              >
+                <Card sx={{ maxWidth: "100%", minHeight: 500 }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
                       height="280"
-                      
-                      src={longson}
-                      alt="green iguana"
+                      src={`http://localhost:8800/images/${dorm.dormImage}`}
+                      alt={dorm.dormName}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h3" component="div">
@@ -75,88 +104,62 @@ const DormsCard = () => {
                         variant="h4"
                         color="text.secondary"
                       >
-                        Adres:{""} {dorm.dormAdress}
+                        Adres: {dorm.dormAdress}
                         <br />
-                        İletişim:{""} {dorm.dormContact}
+                        İletişim: {dorm.dormContact}
                         <br />
-                        <Typography
-                          variant="h4"
-                          color="text.secondary"
-                          textAlign={"end"}
-                        >
-                          <Typography
-                            variant="h3"
-                            color="text.primary"
-                            textAlign={"end"}
-                            mx={5}
+                        <Typography variant="h4" color="text.secondary">
+                          <Box
+                            
+                            sx={{ textAlign: "end", my: 1 }}
                           >
-                            {" "}
-                            Fiyatlar
-                          </Typography>
-                          <br /> Tek kişilik Oda: 458$
-                          <br />
-                          Çift Kişilik Oda: 241$
+                            <Typography
+                              variant="h3"
+                              color="text.primary"
+                              textAlign={"end"}
+                              mx={5}
+                            >
+                              Fiyatlar
+                            </Typography>
+                            {dorm.rooms.map((room) => (
+                              <Typography
+                              key={dorm.dormId}
+                                variant="h4"
+                                color="text.secondary"
+                                textAlign={"end"}
+                              >
+                                {room.roomType}: {room.roomPrice}
+                              </Typography>
+                            ))}
+                          </Box>
                         </Typography>
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                   <CardActions>
-                    <Link to={`/Dorms/${1}`}>
-
-                    <Button
-                      size="large"
-                      sx={{
-                        fontWeight: "bold",
-                        backgroundColor: colors.greenAccent[600],
-                        color: colors.grey[100],
-                        "&:hover": {
-                          backgroundColor: colors.greenAccent[400],
-                          color: colors.primary[900],
-                        },
-                      }}
-                    >
-                      YURT SAYFASINA GİT
-                    </Button>
+                    <Link to={`/Dorms/${dorm.dormId}`}>
+                      <Button
+                        size="large"
+                        sx={{
+                          fontWeight: "bold",
+                          backgroundColor: theme.palette.success.main,
+                          color: theme.palette.common.white,
+                          "&:hover": {
+                            backgroundColor: theme.palette.success.dark,
+                            color: theme.palette.common.white,
+                          },
+                        }}
+                      >
+                        YURT SAYFASINA GİT
+                      </Button>
                     </Link>
-
                   </CardActions>
                 </Card>
-                </Link>
-              </Item>
-            </Grid>
-          );
-        })}
+              </Link>
+            </Item>
+          </Grid>
+        ))}
       </Grid>
-
-      {/* {dorms.map((dorm) => {
-              return(
-          <Card sx={{ maxWidth: 345, minHeight: 500 }}
-          key={dorm.dormId}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="280"
-                src={longson}
-                alt="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {dorm.dormName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary">
-                Share
-              </Button>
-            </CardActions>
-          </Card>
-          )
-        })} */}
     </Box>
   );
 };
