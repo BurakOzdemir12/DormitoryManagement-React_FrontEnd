@@ -5,6 +5,7 @@ import dormphoto from "../../Components/images/dorms/grandaras.png";
 import akdeniz from "../../Components/images/dorms/akdeniz.jpg";
 import longson from "../../Components/images/dorms/longson.jpg";
 import { Box } from '@mui/material';
+import Counter from '../../Components/counter/Counter';
 
 const items = [
   {
@@ -75,7 +76,7 @@ const Home = (args) => {
   });
   return (
     <Box>
-       <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-5  ">
+       <Col xs={12} sm={12} md={12} lg={12} xl={12} className="mb-1  ">
           <Carousel
             activeIndex={activeIndex}
             next={next}
@@ -100,6 +101,7 @@ const Home = (args) => {
             />
           </Carousel>
         </Col>
+        <Counter/>
  
     </Box>
   )

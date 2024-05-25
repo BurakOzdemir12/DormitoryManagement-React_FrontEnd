@@ -17,7 +17,8 @@ body {
   background-color: aliceblue;
 }
 .navbar{
-  /* background-color: var(--navbar); */
+ margin: 0;
+ padding: 0;
 
 }
 .navlinks {
@@ -75,7 +76,7 @@ body {
     justify-content: center;
   }
   .secondGrid{
-margin-top: 1ch;
+margin-top: 0ch;
   }
   .nav-item {
     text-align: center;

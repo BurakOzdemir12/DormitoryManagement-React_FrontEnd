@@ -27,18 +27,23 @@ const Students = () => {
 
   console.log(dormIdData.dormId);
   useEffect(() => {
-    const fetchAllStudents = async () => {
+    const fetchMatchedStudents = async () => {
+      if (!dormIdData || !dormIdData.dormId) {
+        console.error("Error: Dorm ID is not available");
+        return;
+      }
+
       try {
         const res = await axios.get("http://localhost:8800/dormstudents");
         const filteredStudents = res.data.filter(student => student.dormId === dormIdData.dormId);
         setStudents(filteredStudents);
-        console.log(filteredStudents);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchAllStudents();
-  }, [dormIdData.dormId]);
+
+    fetchMatchedStudents();
+  }, []);
   //Delete
   const handleDormDelete = async (id) => {
     try {

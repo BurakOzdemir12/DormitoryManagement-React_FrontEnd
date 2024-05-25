@@ -144,11 +144,11 @@ function Navi(args,{user}) {
   };
 
   return (
-    <Box className="navlinks fluid mt-0">
-      <hr />
+    <Box  className="navlinks fluid mt-0">
+      <hr noGutters style={{margin:0.5}}/>
       <Row noGutters>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <Container>
+          <Container >
             <Grid
               container
               sx={{
@@ -209,6 +209,8 @@ function Navi(args,{user}) {
             </Grid>
           </Container>
           <Navbar
+          
+
             className="navbar"
             fixed="fixed"
             expand="xl"
@@ -228,7 +230,8 @@ function Navi(args,{user}) {
 
             <Collapse isOpen={isOpen} navbar >
               <Nav
-                className="nav mt-1 mx-auto"
+              
+                className="nav mt-0 mx-auto"
                 navbar
                 style={{
                   justifyContent: "center",

@@ -21,6 +21,8 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const userSchema = yup.object().shape({
   roomNumber: yup.string().required("required"),
@@ -28,6 +30,11 @@ const userSchema = yup.object().shape({
   roomType: yup.string().required("required"),
   roomStatu: yup.string().required("required"),
 });
+const cookies = new Cookies();
+
+const dormIdFromCookie = cookies.get("jwt_auth");
+const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+const dormId = dormIdData ? dormIdData.dormId : "";
 
 const Te = () => {
   const [initialValues, setRoom] = useState({
@@ -36,6 +43,8 @@ const Te = () => {
     roomType: "",
     roomStatu: "",
     students: [{ student: "" }],
+    dormId: dormId,
+
   });
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setshowErrorAlert] = useState(false);

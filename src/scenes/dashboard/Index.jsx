@@ -56,6 +56,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Delete, Edit, Opacity, Preview } from "@mui/icons-material";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
 
 /// menu button
 const StyledMenu = styled((props) => (
@@ -105,21 +107,27 @@ const StyledMenu = styled((props) => (
 const Index = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const cookies = new Cookies();
 
   //dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
+
   //Fetch Rooms
   const [rooms, setRooms] = useState([]);
+const dormIdFromCookie = cookies.get("jwt_auth");
+  const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+
+  console.log(dormIdData.dormId);
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:8800/rooms");
-
-        setRooms(response.data);
+        const response = await axios.get("http://localhost:8800/rooms")
+        const filteredRooms= response.data.filter(rooms => rooms.dormId === dormIdData.dormId);
+        setRooms(filteredRooms);
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }

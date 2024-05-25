@@ -11,6 +11,8 @@ import Dorms from "../Pages/dorms/Dorms";
 import DormReview from "../Pages/dormReview/DormReview";
 import { jwtDecode } from "jwt-decode";
 import ChatPage from "../Pages/chat/ChatPage";
+import Footer from "../Components/footer/Footer";
+import ScrollToTop from "../Components/ScrollToTop";
 function App() {
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -48,7 +50,11 @@ function App() {
           <Route index path="/" element={<Home />} />
           <Route path="*" element={<Home />} />
           <Route path="/chatpage" element={<ChatPage />} />
+          
+
         </Routes>
+        <ScrollToTop/>
+        <Footer/>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

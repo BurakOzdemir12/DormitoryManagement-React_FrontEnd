@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import List from "./list/List";
 import "./chat.css";
@@ -21,25 +21,24 @@ const Chat = () => {
   };
 
   return (
-    <div className="container">
-      <div className="sidebar">
+    <div className="chat-wrapper container">
+      <div className="chat-sidebar sidebar">
         <List />
       </div>
-      <div className="chat">
-        <div className="top">
-          <div className="user">
+      <div className="chat-content">
+        <div className="chat-top">
+          <div className="chat-user">
             <img src="./avatar.png" alt="" />
-            <div className="texts">
+            <div className="chat-texts">
               <span>Jane Doe</span>
               <p>Lorem ipsum dolor, sit amet.</p>
             </div>
           </div>
-          {/* <div className="icons"> </div> */}
         </div>
-        <div className="center">
-          <div className="message">
+        <div className="chat-center">
+          <div className="chat-message">
             <img src="./avatar.png" alt="" />
-            <div className="texts">
+            <div className="chat-texts">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
                 officia nam dolorum laudantium deserunt cupiditate. Autem modi,
@@ -49,8 +48,8 @@ const Chat = () => {
               <span>1 min ago ...</span>
             </div>
           </div>
-          <div className="message own">
-            <div className="texts">
+          <div className="chat-message own">
+            <div className="chat-texts">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
                 officia nam dolorum laudantium deserunt cupiditate. Autem modi,
@@ -62,31 +61,30 @@ const Chat = () => {
           </div>
           <div ref={endRef}></div>
         </div>
-        <div className="bottom">
-          <div className="icons">
-            {/* Burada bir belge ekleme yeri yapabilirim tek bakılacak */}
-          </div>
+        <div className="chat-bottom">
+          <div className="chat-icons"></div>
           <input
             type="text"
             value={text}
             placeholder="Type a message..."
             onChange={(e) => setText(e.target.value)}
+            className="chat-input"
           />
-          <div className="emoji">
+          <div className="chat-emoji">
             <img
               src="./emoji.png"
               alt=""
               onClick={() => setOpen((prev) => !prev)}
             />
-            <div className="picker">
-              <EmojiPicker open={open} onEmojiClick={handleEmoji}  />
+            <div className="chat-picker">
+              <EmojiPicker open={open} onEmojiClick={handleEmoji} />
             </div>
           </div>
-          <button className="sendButton">Send</button>
+          <button className="chat-sendButton">Send</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Chat;
+export default Chat;

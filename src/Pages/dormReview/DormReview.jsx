@@ -255,30 +255,34 @@ function DormReview(args, Rargs, direction, ...argss) {
     const fetchRooms = async () => {
       try {
         const response = await axios.get("http://localhost:8800/rooms");
-
-        setRooms(response.data);
+        console.log('Backend response:', response.data);
+        const filteredRooms = response.data.filter(room => room.dormId === Number(dormId));
+        console.log('Filtered rooms:', filteredRooms);
+        setRooms(filteredRooms);
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }
     };
-
-    fetchRooms();
-  }, []);
+  
+    if (dormId) {
+      fetchRooms();
+    }
+  }, [dormId]);
+  
 
   useEffect(() => {
-    const fetchRoomProps = async () => {
+    const fetchRoomProps = async (dormId) => {
       try {
-        const response = await axios.get(`http://localhost:8800/roomprops`);
+        const response = await axios.get(`http://localhost:8800/roomprops/${dormId}`);
 
         setRoomProps(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching room properties:", error);
       }
     };
 
-    fetchRoomProps();
-  }, []);
+    fetchRoomProps(dormId);
+  }, [dormId]);
 
   const cookies = new Cookies();
 
@@ -503,14 +507,12 @@ function DormReview(args, Rargs, direction, ...argss) {
               }}
             />
             <CardImgOverlay>
-              <CardTitle tag="h5">Card Title</CardTitle>
+              <CardTitle tag="h5">{dorms.dormName}</CardTitle>
               <CardText>
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
+                
               </CardText>
               <CardText>
-                <small className="text-muted">Last updated 3 mins ago</small>
+                <small className="text-muted"></small>
               </CardText>
             </CardImgOverlay>
           </Card>
@@ -585,7 +587,7 @@ function DormReview(args, Rargs, direction, ...argss) {
             </Typography>
             {roomProps.map((rp) => {
               return (
-                <Box>
+                <Box key={rp.dormId}>
                   <Typography
                     variant="h4"
                     color="text.primary"
@@ -1006,7 +1008,7 @@ function DormReview(args, Rargs, direction, ...argss) {
         </Row>
       </Row>
 
-      <Container>
+      <Container >
         <Row>
           <Col xs={12} sm={12} md={12} lg={12} xl={12} className="pb-4">
             <h2 className="text-center">Yorum Ve Değerlendirmeler</h2>

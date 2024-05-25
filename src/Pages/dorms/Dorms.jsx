@@ -1,110 +1,67 @@
 import React, { useState } from "react";
-import roomimage1 from "../../Components/images/dorms/roomphoto1.jpg";
 import DormsCard from "../../Components/dormsCard/DormsCard";
-import { Box, Button,  Tooltip, Typography, styled, useTheme } from "@mui/material";
-import { Col, Row } from "reactstrap";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import PropTypes from 'prop-types';
-import Slider, { SliderThumb } from '@mui/material/Slider';
+import PropTypes from "prop-types";
+import Slider from "@mui/material/Slider";
+import { Link } from "react-router-dom";
 
 const Dorms = ({ search }) => {
-  function ValueLabelComponent(props) {
-    const { children, value } = props;
-  
-    return (
-      <Tooltip enterTouchDelay={0} placement="top" title={value}>
-        {children}
-      </Tooltip>
-    );
-  }
-  
-  ValueLabelComponent.propTypes = {
-    children: PropTypes.element.isRequired,
-    value: PropTypes.number.isRequired,
-  };
-  const AirbnbSlider = styled(Slider)(({ theme }) => ({
-    color: '#3a8589',
-    height: 3,
-    padding: '13px 0',
-    '& .MuiSlider-thumb': {
-      height: 27,
-      width: 27,
-      backgroundColor: '#fff',
-      border: '1px solid currentColor',
-      '&:hover': {
-        boxShadow: '0 0 0 8px rgba(58, 133, 137, 0.16)',
-      },
-      '& .airbnb-bar': {
-        height: 9,
-        width: 1,
-        backgroundColor: 'currentColor',
-        marginLeft: 1,
-        marginRight: 1,
-      },
-    },
-    '& .MuiSlider-track': {
-      height: 3,
-    },
-    '& .MuiSlider-rail': {
-      color: theme.palette.mode === 'dark' ? '#bfbfbf' : '#d8d8d8',
-      opacity: theme.palette.mode === 'dark' ? undefined : 1,
-      height: 3,
-    },
-  }));
-  
-  function AirbnbThumbComponent(props) {
-    const { children, ...other } = props;
-    return (
-      <SliderThumb {...other}>
-        {children}
-        <span className="airbnb-bar" />
-        <span className="airbnb-bar" />
-        <span className="airbnb-bar" />
-      </SliderThumb>
-    );
-  }
-  
-  AirbnbThumbComponent.propTypes = {
-    children: PropTypes.node,
-  };
-
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [priceRange, setPriceRange] = useState([20, 40]); // Varsayılan fiyat aralığı
-
+  const [priceSliderValue, setPriceSliderValue] = useState(10000); // Slider değeri
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
-  const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
+
+  const handlePriceSliderChange = (event, newValue) => {
+    setPriceSliderValue(newValue);
   };
   return (
     <Box>
-      <Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Box>
-        <Typography gutterBottom>Fiyata Göre Listele</Typography>
-      <AirbnbSlider
-      sx={{width:"75%"}}
-        slots={{ thumb: AirbnbThumbComponent }}
-        getAriaLabel={(index) => (index === 0 ? 'Minimum price' : 'Maximum price')}
-        value={priceRange}
-          onChange={handlePriceChange}
-          valueLabelDisplay="auto"
-        min={0}
-          max={100}
-      />
-      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box mx={5} width={"75%"}>
+          <Typography variant="h2"  gutterBottom>Fiyata Göre Listele</Typography>
+          <Slider
+          sx={{color:colors.blueAccent[100]}}
+            min={1}
+            max={10000}
+            value={priceSliderValue}
+            onChange={handlePriceSliderChange}
+            valueLabelDisplay="on"
+            aria-label="price slider"
+            
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            '@media (min-width: 768px)': {
+              display: "block",
+              
+            },
+          }}
+        >
           <Button
             sx={{
               m: 1,
-              mx: 3,
+              mx: 2.5,
               mt: 1,
               borderRadius: 5,
               fontSize: 22,
-              fontWeight:"bolder",
+              fontWeight: "bolder",
               color: colors.grey[100],
               background: colors.greenAccent[900],
             }}
@@ -116,11 +73,11 @@ const Dorms = ({ search }) => {
           <Button
             sx={{
               m: 1,
-              mx: 3,
+              mx: 2.5,
               mt: 1,
               borderRadius: 5,
               fontSize: 22,
-              fontWeight:"bolder",
+              fontWeight: "bolder",
               color: colors.grey[100],
               background: colors.greenAccent[900],
             }}
@@ -132,11 +89,11 @@ const Dorms = ({ search }) => {
           <Button
             sx={{
               m: 1,
-              mx: 3,
+              mx: 2.5,
               mt: 1,
               borderRadius: 5,
               fontSize: 22,
-              fontWeight:"bolder",
+              fontWeight: "bolder",
               color: colors.grey[100],
               background: colors.greenAccent[900],
             }}
@@ -145,15 +102,24 @@ const Dorms = ({ search }) => {
             {" "}
             Tüm Yurtlar
           </Button>
+          
         </Box>
+        <Typography  mt={2} mb={0}>T.C. Kredi ve Yurtlar Kurumu Yurdu yurt ücret ve imkanları için lütfen<Link to={"http://www.kyk.gov.tr/"}> http://www.kyk.gov.tr</Link> adresini ziyaret ediniz.</Typography>
       </Box>
+
       <Box m={5}>
-        <DormsCard search={search} selectedCategory={selectedCategory} />
+        <DormsCard
+          search={search}
+          selectedCategory={selectedCategory}
+          priceSliderValue={priceSliderValue}
+        />
       </Box>
     </Box>
   );
 };
+
 Dorms.propTypes = {
   search: PropTypes.string.isRequired,
 };
+
 export default Dorms;
