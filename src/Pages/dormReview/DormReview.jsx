@@ -218,23 +218,14 @@ function DormReview(args, Rargs, direction, ...argss) {
   const [dorms, setDorms] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [roomProps, setRoomProps] = useState([]);
+  const cookies = new Cookies();
 
+  const userToken = cookies.get("jwt_auth");
+  const user = userToken ? jwtDecode(userToken) : null;
+  const id = user ? user.id : null;
   const dormId = location.pathname.split("/")[2];
 
-  // useEffect(() => {
-  //   const fetchdormfeature = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:8800/dormfeature");
-
-  //       setDorms(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching dorms:", error);
-  //     }
-  //   };
-
-  //   fetchdormfeature();
-  // }, []);
-
+ 
   useEffect(() => {
     const fetchDorm = async (dormId) => {
       try {
@@ -284,11 +275,7 @@ function DormReview(args, Rargs, direction, ...argss) {
     fetchRoomProps(dormId);
   }, [dormId]);
 
-  const cookies = new Cookies();
-
-  const userToken = cookies.get("jwt_auth");
-  const user = userToken ? jwtDecode(userToken) : null;
-  const id = user ? user.id : null;
+  
   //room setting settings
   var settings = {
     dots: true,
@@ -491,6 +478,64 @@ function DormReview(args, Rargs, direction, ...argss) {
   };
   const [selectedPhoto, setSelectedPhoto] = useState(dormphotos[0].img);
 
+  
+  const [reservationDetails, setReservationDetails] = useState({
+    studentNo: '',
+    phoneNumb: '',
+    firstName: '',
+    lastName: '',
+    gender: '',
+    
+  });
+  const handleResSubmit = async (roomId) => {
+    console.log(roomId)
+    try {
+      const userValues = await axios.get(
+        `http://localhost:8800/users/${id}`
+      );
+      const userpassaport = userValues?.data.passaportNo;
+
+      const studentValues = await axios.get("http://localhost:8800/students");
+      const students = studentValues?.data;
+
+      const studentPassports = studentValues?.data.map(student => student.passaportNo);
+      
+      if (studentPassports.includes(userpassaport)) {
+
+        const studentDetails = students.find(student => student.passaportNo === userpassaport);
+
+      setReservationDetails({
+        studentNo: studentDetails.studentNo,
+        phoneNumb: studentDetails.phoneNumb,
+        firstName: studentDetails.firstName,
+        lastName: studentDetails.lastName,
+        gender: studentDetails.gender,
+      });
+
+        const response = await axios.post('http://localhost:8800/reservations', {
+          ...reservationDetails,
+          studentNo: studentDetails.studentNo,
+          phoneNumb: studentDetails.phoneNumb,
+          firstName: studentDetails.firstName,
+          lastName: studentDetails.lastName,
+          gender: studentDetails.gender,
+          dormId: Number(dormId),
+          roomId: Number(roomId),
+          
+
+        });
+        console.log(response.data)
+        setVisible(false); 
+
+      } else {
+        console.log("Öğrenci bulunamadı");
+      }
+
+     
+    } catch (error) {
+      console.error("Error submitting reservation:", error);
+    }
+  };
   return (
     <div>
       <Row noGutters>
@@ -882,6 +927,7 @@ function DormReview(args, Rargs, direction, ...argss) {
               const isRoomFull = studentCount >= room.roomCapacity;
               return (
                 <Col
+                key={room.id}
                   className="divvv"
                   xs={12}
                   sm={6}
@@ -969,7 +1015,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                           <CButton
                             className=""
                             color="success"
-                            onClick={() => setVisible(true)}
+                            onClick={() => setVisible(room.id)}
                           >
                             Rezervasyon Yap
                           </CButton>
@@ -978,7 +1024,7 @@ function DormReview(args, Rargs, direction, ...argss) {
                         {/* Warning Canvas */}
                         <COffcanvas
                           placement="bottom"
-                          visible={visible}
+                          visible={visible === room.id}
                           onHide={() => setVisible(false)}
                         >
                           <COffcanvasHeader>
@@ -994,8 +1040,11 @@ function DormReview(args, Rargs, direction, ...argss) {
                               Yollanacaktır. <br /> Rezervasyonu Onaylıyor
                               musunuz? <br />
                             </Typography>
-                            <Button color="success" className="mt-2">
-                              Gönder
+                            <Button 
+                              onClick={() => handleResSubmit(room.id)}
+                            type="submit"
+                            color="success" className="mt-2">
+                              Gönder {room.id}
                             </Button>
                           </COffcanvasBody>
                         </COffcanvas>
@@ -1122,27 +1171,7 @@ function DormReview(args, Rargs, direction, ...argss) {
           </COffcanvas>
         </Row>
       </Container>
-      {/* Room Properties shows */}
-      {/* {modal && (
-        <Box className="roomProps" color={colors.primary[300]}>
-          <Box className="overlay" onClick={toggle}>
-            <Box className="roomContent" backgroundColor={colors.grey[700]}>
-              <h2>Single Room</h2>
-              <p color={colors.greenAccent[400]}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
-                amet ratione natus facere rerum eos magnam, pariatur laudantium
-                porro ipsum labore, dolorum at libero sequi sunt tenetur iusto
-                maxime nemo ducimus dolores, cumque quos. Eaque tempore et
-                repudiandae laudantium numquam nihil explicabo eum nobis
-                deleniti. Non earum odio deleniti eligendi!
-              </p>
-              <button className="close-content" onClick={toggle}>
-                Kapat
-              </button>
-            </Box>
-          </Box>
-        </Box>
-      )} */}
+     
     </div>
   );
 }

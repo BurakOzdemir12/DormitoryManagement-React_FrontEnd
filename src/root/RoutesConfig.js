@@ -27,7 +27,7 @@ import RoomUpdate from "../scenes/room/RoomUpdate";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "universal-cookie";
 import RoomProps from "../scenes/roomProps/RoomProps";
-
+import AddDormAdmin from "../scenes/addDormAdmin/AddDormAdmin"
 // import Geography from "../scenes/geography";
 // import Calendar from "../scenes/calendar";
 const isNavigatingToLoginPage = window.location.pathname === "/login";
@@ -70,7 +70,6 @@ const RoutesConfig = () => {
     }
   }, [navigate]);
 
-  
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
@@ -86,7 +85,6 @@ const RoutesConfig = () => {
             <Topbar setIsSidebar={setIsSidebar} />
 
             <Routes>
-              
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/students" element={<Students />} />
               <Route path="/dormprops" element={<DormProps />} />
@@ -96,11 +94,12 @@ const RoutesConfig = () => {
               <Route path="/room" element={<Room />} />
               <Route path="/roomUpdate/:id" element={<RoomUpdate />} />
               <Route path="/roomprops" element={<RoomProps />} />
+              <Route path="/dormadminadd" element={<AddDormAdmin />} />
+
               <Route path="/comments" element={<Comments />} />
               <Route path="/statistics" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/reservations" element={<Reservations />} />
-              
             </Routes>
           </main>
         </div>

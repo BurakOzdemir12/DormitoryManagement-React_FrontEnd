@@ -60,8 +60,9 @@
 
 .chat-texts p {
   font-size: 18px;
-  font-weight: 300;
-  color: #a5a5a5;
+  font-weight: bold;
+  color: #d9f83e;
+
 }
 
 .chat-icons {
@@ -88,22 +89,21 @@
 .chat-message {
   max-width: 70%;
   display: flex;
-  gap: 20px;
+  flex-direction: column; /* Mesajları dikey hizala */
+  gap: 5px;
 }
 
 .chat-message.own {
+  text-align: end;
   align-self: flex-end;
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .chat-message.own .chat-texts p {
   background-color: #4a1515;
-}
-
-.chat-message img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .chat-message .chat-texts {
@@ -111,6 +111,15 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.chat-message .chat-text-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.chat-message.right .chat-text-name {
+  align-self: flex-end; /* Sağdaki mesajlar için kullanıcı adını sağa hizala */
 }
 
 .chat-message .chat-texts img {
@@ -176,5 +185,5 @@
   background-color: #4b5715;
   color: white;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 5px;
 }

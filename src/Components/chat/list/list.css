@@ -1,5 +1,11 @@
 .list {
   flex: 1;
   display: flex;
+  text-align: center;
   flex-direction: column;
+  overflow: auto;
+  gap: 25px;
+}
+hr {
+  border-bottom: #111;
 }

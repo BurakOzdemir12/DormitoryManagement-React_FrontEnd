@@ -119,8 +119,48 @@ const Index = () => {
   const [rooms, setRooms] = useState([]);
 const dormIdFromCookie = cookies.get("jwt_auth");
   const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+  const [reservations, setReservations] = useState([]);
 
-  console.log(dormIdData.dormId);
+
+  useEffect(() => {
+    const fetchMatchedReservation = async () => {
+      if (!dormIdData || !dormIdData.dormId) {
+        console.error("Error: Dorm ID is not available");
+        return;
+      }
+
+      try {
+        // Rezervasyonları çek ve filtrele
+        const res = await axios.get("http://localhost:8800/reservations");
+        const filteredReservations = res.data.filter(
+          (reservation) => reservation.dormId === dormIdData.dormId
+        );
+
+        // Benzersiz roomId'leri çıkar
+        const uniqueRoomIds = [...new Set(filteredReservations.map(r => r.roomId))];
+        
+        // Her roomId için oda bilgilerini çek
+        const roomRequests = uniqueRoomIds.map(roomId =>
+          axios.get(`http://localhost:8800/rooms/${roomId}`)
+        );
+        
+        const roomResponses = await Promise.all(roomRequests);
+        const roomsData = roomResponses.map(response => response.data);
+        
+        // Rezervasyonları oda bilgileriyle birleştir
+        const reservationsWithRoomData = filteredReservations.map(reservation => {
+          const roomData = roomsData.find(room => room.id === reservation.roomId);
+          return { ...reservation, roomNumber: roomData ? roomData.roomNumber : null };
+        });
+
+        setReservations(reservationsWithRoomData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchMatchedReservation();
+  }, []);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -352,9 +392,9 @@ const dormIdFromCookie = cookies.get("jwt_auth");
               Rezervasyon Listesi
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {reservations.map((reservation) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+              key={reservation.id}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
@@ -367,19 +407,23 @@ const dormIdFromCookie = cookies.get("jwt_auth");
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
+                  {reservation.firstName}{" "}{reservation.lastName}
                 </Typography>
                 <Typography color={colors.greenAccent[100]}>
-                  {transaction.user}
+                  {reservation.user}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>{reservation.date}</Box>
               <Box
                 backgroundColor={colors.greenAccent[500]}
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                 {reservation.isVerified===1 ?(
+                  "Rezervasyon Onaylandı"
+               ):(
+                "Beklemede"
+               )}
               </Box>
             </Box>
           ))}

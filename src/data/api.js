@@ -7,12 +7,14 @@ export const fetchDormFeature = async (dormId) => {
 };
 
 // Oda Özellikleri bilgilerini al
-export const fetchRoomFeatures = async (dormId) => {
+export const fetchRoomFeatures = async () => {
   try {
+    const userInfo = await fetchUserInfo(); 
+    const dormId = userInfo.dormId; 
     const response = await axiosInstance.get(`/roomprops/${dormId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching room features:", error);
+    console.error("Oda bilgileri gelmedi", error);
     throw error;
   }
 };
@@ -44,11 +46,21 @@ export const saveDormFeature = async (dormData, isEditMode, dormId) => {
 };
 
 // Oda Özellikleri Kaydet
-export const saveRoomFeature = async (roomData, isEditMode, dormId) => {
-  const rformData = new FormData();
-  Object.keys(roomData).forEach(key => {
-    rformData.append(key, roomData[key]);
-  });
+export const saveRoomFeature = async (featureData, isEditMode) => {
+  const userInfo = await fetchUserInfo(); 
+  const dormId = userInfo.dormId; 
+  featureData.dormId = dormId;  // dormId'yi featureData'ya ekle
+
+  const formData = new FormData();
+  formData.append("roomType", featureData.roomType);
+  formData.append("roomPrice", featureData.roomPrice);
+  formData.append("dormId", dormId);
+
+  if (Array.isArray(featureData.roomImage)) {
+    featureData.roomImage.forEach((image, index) => {
+      formData.append(`roomImage`, image);
+    });
+  }
 
   const config = {
     headers: {
@@ -57,9 +69,9 @@ export const saveRoomFeature = async (roomData, isEditMode, dormId) => {
   };
 
   if (isEditMode) {
-    await axiosInstance.put(`/roomprops/${dormId}`, rformData, config);
+    await axiosInstance.put(`/roomprops/${featureData.id}`, formData, config);
   } else {
-    await axiosInstance.post('/roomprops', rformData, config);
+    await axiosInstance.post(`/roomprops`, formData, config);
   }
 };
 
