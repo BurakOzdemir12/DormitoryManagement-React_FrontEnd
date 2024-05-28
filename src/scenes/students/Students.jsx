@@ -45,26 +45,26 @@ const Students = () => {
     fetchMatchedStudents();
   }, []);
   //Delete
-  const handleDormDelete = async (id) => {
-    try {
-      await axios.put(`http://localhost:8800/dormstudents/${id}/dorm`);
-      const res = await axios.get("http://localhost:8800/dormstudents");
-      const filteredStudents = res.data.filter(student => student.dormId === dormIdData.dormId);
-      setStudents(filteredStudents);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // const handleDelete = async (id) => {
+  // const handleDormDelete = async (id) => {
   //   try {
-  //     await axios.delete(`http://localhost:8800/dormstudents/${id}`);
-  //     setStudents((prevStudents) =>
-  //       prevStudents.filter((student) => student.id !== id)
-  //     );
+  //     await axios.put(`http://localhost:8800/dormstudents/${id}/dorm`);
+  //     const res = await axios.get("http://localhost:8800/dormstudents");
+  //     const filteredStudents = res.data.filter(student => student.dormId === dormIdData.dormId);
+  //     setStudents(filteredStudents);
   //   } catch (error) {
   //     console.log(error);
   //   }
   // };
+  const handleDormDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8800/dormstudents/${id}`);
+      setStudents((prevStudents) =>
+        prevStudents.filter((student) => student.id !== id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0 },

@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Cookies from "universal-cookie";
 import { ColorModeContext, useMode } from "../theme";
@@ -13,6 +18,9 @@ import { jwtDecode } from "jwt-decode";
 import ChatPage from "../Pages/chat/ChatPage";
 import Footer from "../Components/footer/Footer";
 import ScrollToTop from "../Components/ScrollToTop";
+import SignUp from "../scenes/signUp/SignUp";
+import Verification from "../Components/verification/Verification";
+import VerifyEmail from "../Components/verification/VerifyEmail";
 function App() {
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -44,17 +52,18 @@ function App() {
         <Navi />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/verification" element={<Verification />} />
+          <Route path="/verifyemail" element={<VerifyEmail />} />
           <Route path="/home" element={<Home />} />
           <Route path="/Dorms" element={<Dorms search={search} />} />
           <Route path="/Dorms/:id" element={<DormReview />} />
           <Route index path="/" element={<Home />} />
           <Route path="*" element={<Home />} />
           <Route path="/chatpage" element={<ChatPage />} />
-          
-
         </Routes>
-        <ScrollToTop/>
-        <Footer/>
+        <ScrollToTop />
+        <Footer />
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

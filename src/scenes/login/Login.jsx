@@ -54,7 +54,8 @@ function SignInSide() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [showAlert, setShowAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const resfreshToken = async () => {
     try {
       const res = await axios.post("/refresh", { token: user.resfreshToken });
@@ -89,6 +90,7 @@ function SignInSide() {
   );
   //login
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     try {
@@ -101,7 +103,8 @@ function SignInSide() {
        navigate(res.data.isAdmin ? "/dashboard" : "/home");
        window.location.reload()
     } catch (error) {
-      console.log(error);
+      setError(true);
+
     }
   };
   // const [theme, colorMode] = useMode();
@@ -143,8 +146,8 @@ function SignInSide() {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
-              Giriş Yap
+            <Typography color={colors.grey[100]} component="h1" variant="h5">
+              Öğrenci Girişi
             </Typography>
             <Box
               component="form"
@@ -162,6 +165,7 @@ function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                
               />
               <TextField
                 onChange={(e) => setPassword(e.target.value)}
@@ -174,7 +178,13 @@ function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
+              {error && (
+                <Typography color="error" variant="h5">
+                  Email veya Şifre hatalıdır lütfen tekrar deneyiniz.
+                </Typography>
+              )}
               <FormControlLabel
+              sx={{display:"none"}}
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
@@ -187,10 +197,10 @@ function SignInSide() {
                   mt: 3,
                   mb: 2,
                   background: colors.greenAccent[400],
-                  color: colors.primary[900],
+                  color: colors.grey[900],
                   '&:hover': {
                     backgroundColor: colors.greenAccent[500],
-                    color: colors.primary[300],
+                    color: colors.grey[100],
                   },
                 }}
               >
@@ -199,15 +209,15 @@ function SignInSide() {
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    <Typography color={colors.primary[100]}>
+                    {/* <Typography color={colors.primary[100]}>
                       Forgot password?
-                    </Typography>
+                    </Typography> */}
                   </Link>
                 </Grid>
                 <Grid item>
-                  {/* <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link> */}
+                  <Link href="/signup" variant="">
+                   <Typography variant="h3" color={colors.grey[100]}>Öğrencisin ve Hesabın Yok mu? Kayıt Ol</Typography> 
+                  </Link>
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />
