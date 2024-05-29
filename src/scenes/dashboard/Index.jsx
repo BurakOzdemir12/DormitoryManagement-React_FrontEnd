@@ -114,13 +114,29 @@ const Index = () => {
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
-
   //Fetch Rooms
   const [rooms, setRooms] = useState([]);
-const dormIdFromCookie = cookies.get("jwt_auth");
+  const dormIdFromCookie = cookies.get("jwt_auth");
   const dormIdData = dormIdFromCookie ? jwtDecode(dormIdFromCookie) : null;
+  const dormId = dormIdData?.dormId;
   const [reservations, setReservations] = useState([]);
+  const [dorms, setDorms] = useState([]);
+  const [fullRoomsCount, setFullRoomsCount] = useState(0);
 
+  useEffect(() => {
+    const fetchDorm = async (dormId) => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8800/dormfeature/${dormId}`
+        );
+        setDorms(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchDorm(dormId);
+  }, [dormId]);
 
   useEffect(() => {
     const fetchMatchedReservation = async () => {
@@ -137,21 +153,30 @@ const dormIdFromCookie = cookies.get("jwt_auth");
         );
 
         // Benzersiz roomId'leri çıkar
-        const uniqueRoomIds = [...new Set(filteredReservations.map(r => r.roomId))];
-        
+        const uniqueRoomIds = [
+          ...new Set(filteredReservations.map((r) => r.roomId)),
+        ];
+
         // Her roomId için oda bilgilerini çek
-        const roomRequests = uniqueRoomIds.map(roomId =>
+        const roomRequests = uniqueRoomIds.map((roomId) =>
           axios.get(`http://localhost:8800/rooms/${roomId}`)
         );
-        
+
         const roomResponses = await Promise.all(roomRequests);
-        const roomsData = roomResponses.map(response => response.data);
-        
+        const roomsData = roomResponses.map((response) => response.data);
+
         // Rezervasyonları oda bilgileriyle birleştir
-        const reservationsWithRoomData = filteredReservations.map(reservation => {
-          const roomData = roomsData.find(room => room.id === reservation.roomId);
-          return { ...reservation, roomNumber: roomData ? roomData.roomNumber : null };
-        });
+        const reservationsWithRoomData = filteredReservations.map(
+          (reservation) => {
+            const roomData = roomsData.find(
+              (room) => room.id === reservation.roomId
+            );
+            return {
+              ...reservation,
+              roomNumber: roomData ? roomData.roomNumber : null,
+            };
+          }
+        );
 
         setReservations(reservationsWithRoomData);
       } catch (err) {
@@ -165,8 +190,10 @@ const dormIdFromCookie = cookies.get("jwt_auth");
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:8800/rooms")
-        const filteredRooms= response.data.filter(rooms => rooms.dormId === dormIdData.dormId);
+        const response = await axios.get("http://localhost:8800/rooms");
+        const filteredRooms = response.data.filter(
+          (rooms) => rooms.dormId === dormIdData.dormId
+        );
         setRooms(filteredRooms);
       } catch (error) {
         console.error("Error fetching rooms:", error);
@@ -175,7 +202,20 @@ const dormIdFromCookie = cookies.get("jwt_auth");
 
     fetchRooms();
   }, []);
+  //full room length
+  useEffect(() => {
+    const countFullRooms = () => {
+      const fullRooms = rooms.filter((room) => {
+        const students = Array.isArray(room.student)
+          ? room.student
+          : JSON.parse(room.student);
+        return students.length >= room.roomCapacity;
+      });
+      setFullRoomsCount(fullRooms.length);
+    };
 
+    countFullRooms();
+  }, [rooms]);
   //delete Room
 
   const handleDelete = async (id) => {
@@ -184,7 +224,7 @@ const dormIdFromCookie = cookies.get("jwt_auth");
       await axios.delete(`http://localhost:8800/rooms/${id}`);
       //delete olunca bildiri göster
       // window.location.reload();
-      setRooms(prevRooms => prevRooms.filter(room => room.id !== id));
+      setRooms((prevRooms) => prevRooms.filter((room) => room.id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -210,6 +250,10 @@ const dormIdFromCookie = cookies.get("jwt_auth");
     setAnchorEl(null);
   };
   //
+  const pendingReservations = reservations.filter(
+    (reservation) => reservation.isVerified !== 1
+  );
+
   const [visible, setVisible] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -251,10 +295,20 @@ const dormIdFromCookie = cookies.get("jwt_auth");
           justifyContent="center"
         >
           <StatBox
-            title="800"
-            subtitle="Toplam Kapasite "
-            progress="0.75"
-            increase="+14%"
+            title={`${dorms.dormRoomCapacity} / ${
+              dorms.dormRoomCapacity - fullRoomsCount
+            }`}
+            subtitle="Toplam Oda Kapasitesi "
+            progress={
+              (dorms.dormRoomCapacity - fullRoomsCount) / dorms.dormRoomCapacity
+            }
+            increase={` ${
+              100 -
+              (
+                dorms.dormRoomCapacity /
+                (dorms.dormRoomCapacity - fullRoomsCount)
+              ).toFixed(2)
+            }%`}
             icon={
               <NightShelterOutlinedIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
@@ -281,6 +335,7 @@ const dormIdFromCookie = cookies.get("jwt_auth");
             }
           />
         </Box>
+
         <Box
           gridColumn="span 4"
           backgroundColor={colors.primary[400]}
@@ -289,13 +344,17 @@ const dormIdFromCookie = cookies.get("jwt_auth");
           justifyContent="center"
         >
           <StatBox
-            title="25"
+            title={pendingReservations.length}
             subtitle="Bekleyen Rezervasyon"
-            progress="0.75"
-            increase="+14%"
+            progress={pendingReservations.length / 10}
+            // increase={(pendingReservations.length * 100) / 100}
+            // increase="+14%"
             icon={
               <IconButton sx={{ m: 0 }}>
-                <Badge color="secondary" badgeContent={28}>
+                <Badge
+                  color="secondary"
+                  badgeContent={pendingReservations.length}
+                >
                   <PendingActionsOutlinedIcon
                     sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
                   />
@@ -304,6 +363,7 @@ const dormIdFromCookie = cookies.get("jwt_auth");
             }
           />
         </Box>
+
         {/* <Box
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
@@ -392,41 +452,43 @@ const dormIdFromCookie = cookies.get("jwt_auth");
               Rezervasyon Listesi
             </Typography>
           </Box>
-          {reservations.map((reservation) => (
-            <Box
-              key={reservation.id}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[300]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {reservation.firstName}{" "}{reservation.lastName}
-                </Typography>
-                <Typography color={colors.greenAccent[100]}>
-                  {reservation.user}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{reservation.date}</Box>
+          {reservations
+            .filter((reservation) => reservation.isVerified !== 1)
+            .map((reservation) => (
               <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
+                key={reservation.id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                p="15px"
               >
-                 {reservation.isVerified===1 ?(
-                  "Rezervasyon Onaylandı"
-               ):(
-                "Beklemede"
-               )}
+                <Box>
+                  <Typography
+                    color={colors.greenAccent[300]}
+                    variant="h5"
+                    fontWeight="600"
+                  >
+                    {reservation.firstName} {reservation.lastName}
+                  </Typography>
+                  <Typography color={colors.greenAccent[100]}>
+                    Oda Numarası: {reservation.roomNumber}
+                  </Typography>
+                </Box>
+                <Box color={colors.grey[100]}>
+                  Gönderilen Zaman
+                  <br />
+                  {new Date(reservation.createdAt).toLocaleString()}
+                </Box>
+                <Box
+                  backgroundColor={colors.greenAccent[500]}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  Onay Bekliyor
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
         </Box>
         {/* Room List */}
 
@@ -544,9 +606,7 @@ const dormIdFromCookie = cookies.get("jwt_auth");
                           </Row>
                           <CardText className="svgb d-flex ">
                             {isRoomFull ? (
-                              <h5 className="svgbH mt-2 mx-2 ">
-                                Oda Full
-                              </h5>
+                              <h5 className="svgbH mt-2 mx-2 ">Oda Full</h5>
                             ) : (
                               <h5 className="svgbH mt-2 mx-2 ">
                                 Güncel Kapasite: {room.roomCapacity}/

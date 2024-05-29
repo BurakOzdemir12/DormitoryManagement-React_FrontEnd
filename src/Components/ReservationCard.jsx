@@ -110,7 +110,20 @@ const ReservationCard = () => {
       console.error("Error deleting reservation:", error);
     }
   };
-
+  const handleAssignRoom = async (id, roomId, studentData) => {
+    try {
+      // Öğrenci bilgilerini odaya ata
+      await axios.put(`http://localhost:8800/rooms/assign/${roomId}`, {
+        student: studentData,
+      });
+      
+      // Başarılı mesajı göstermek için istediğiniz bir yöntem
+      console.log("Öğrenci odaya başarıyla atandı!");
+    } catch (error) {
+      console.error("Odaya atama hatası:", error);
+    }
+  };
+  
   return (
     <Box 
       display="grid"
@@ -233,6 +246,13 @@ const ReservationCard = () => {
               <Button
                 type="submit"
                 variant="contained"
+                onClick={() =>
+                  handleAssignRoom(
+                    reservation.id,
+                    reservation.roomId,
+                    `${reservation.studentNo} `
+                  )
+                }
                 sx={{
                   justifySelf: "center",
                   mt: 3,

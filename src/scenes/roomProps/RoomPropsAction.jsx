@@ -6,7 +6,7 @@ import {jwtDecode} from 'jwt-decode';
 
 const RoomPropsAction = ({ setDormId }) => {
   const { setFieldValue } = useFormikContext();
-  const cookies = useMemo(() => new Cookies(), []); // useMemo ile cookies oluşturuldu
+  const cookies = useMemo(() => new Cookies(), []); 
 
   useEffect(() => {
     const initializeForm = async () => {
@@ -14,7 +14,7 @@ const RoomPropsAction = ({ setDormId }) => {
         const token = cookies.get("jwt_auth");
         if (token) {
           const decoded = jwtDecode(token);
-          const userDormId = decoded.dormId; // JWT'den dormId alınması
+          const userDormId = decoded.dormId; 
           
           if (userDormId) {
             setDormId(userDormId);
