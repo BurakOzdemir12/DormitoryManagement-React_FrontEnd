@@ -14,6 +14,8 @@ BAŞLARKEN:
 6 - Terminalde git clone "ilgili HTTPS kodunu tırnak işareti olmadan yazınız."
 
 6 - Dosya yüklendikten sonra tekrardan yurtyonetimi adresinde olan terminal dosyanızda npm install yazınız.
+![image](https://github.com/BurakOzdemir12/yurtyonetimi/assets/83121609/bc472426-2b17-49ac-9007-c91b1fb00d45)
+
 
 7- Tüm dosyalar kurulduktan sonra tekrardan github'a giriniz, isterseniz "https://github.com/BurakOzdemir12/backend.git " buradaki HTTPS kodunu alıp yurtyonetimindeyseniz terminalde cd.. yazıp ana dizininize giriniz.
 
