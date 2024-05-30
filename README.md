@@ -34,3 +34,8 @@ BAŞLARKEN:
 15 - 2. Terminalde cd backend yazınız. Dizine gidince npm start yazınız ve backend servisini başlatınız.
 
 16 - Eğer sayfa açılmazsa, localhost:3000/ yazarak anasayfamıza gidebilirsiniz iyi eğlenceler...
+
+Klasörleme biçimi bu şekilde olmalıdır.
+![image](https://github.com/BurakOzdemir12/yurtyonetimi/assets/83121609/19fd82cc-c051-408f-ad26-5a6f6826a69c)
+
+
