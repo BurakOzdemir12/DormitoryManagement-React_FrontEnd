@@ -1,6 +1,11 @@
 This Project made by 3 Bachelor student for graduation. I took a role for the Front-End part, Thank you for reach our project 
+
 Used Technologies:
-- React, Node.js, Mui, Tailwind, Figma, MySQl Workbench.
+-  React
+-  Node.js
+-  Mui
+-  Tailwind.css
+-  MySQl Workbench.
   
 Dormitory Management Project for;
 - Administrators who wants to manage Dorms/Accommodations.
